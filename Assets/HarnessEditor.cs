@@ -72,9 +72,10 @@ public class HarnessEditor : MonoBehaviour
     {
         foreach (var connection in HarnessSO.connections)
         {
-            var fromConnectible = HarnessSO.connectors.SelectMany(conn => conn.Pins).Single(pin => pin.Id == connection.ConnectionFromId);
+            var fromConnectible = HarnessSO.connectors.SelectMany(conn => conn.Pins).SingleOrDefault(pin => pin.Id == connection.ConnectionFromId);
             var toConnectibles = HarnessSO.connectors.SelectMany(conn => conn.Pins).Where(pin => connection.ConnectionToId.Contains(pin.Id));
-
+            if (fromConnectible == null)
+                return;
             foreach (var toConn in toConnectibles)
             {
                 Gizmos.DrawLine(fromConnectible.position, toConn.position);

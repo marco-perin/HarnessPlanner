@@ -16,6 +16,9 @@ public class Pin : ConnectibleBase
     {
         get
         {
+            if (parentConnector == null)
+                return "MISSING";
+
             _id = $"{parentConnector.id}.{Id}";
             return _id;
         }
