@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.CoreData.Interfaces;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 

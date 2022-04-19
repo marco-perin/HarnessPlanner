@@ -9,7 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e91c8679c9f54784aa72082bda5d34e4, type: 3}
-  m_Name: New Harness Dict SO
+  m_Script: {fileID: 11500000, guid: 9011679ca7a96ea4897e740458679e2e, type: 3}
+  m_Name: Source
   m_EditorClassIdentifier: 
-  entries: []
+  _name: Battery
+  maxAvailability: 0
+  positiveConnectible:
+    _relativeId: 
+  negativeConnectible:
+    _relativeId: 
