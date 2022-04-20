@@ -65,7 +65,7 @@ public class ConnectionsManagerSingleton : Singleton<ConnectionsManagerSingleton
     {
         foreach (GraphicConnection c in connections)
         {
-            Gizmos.DrawLine(c.From.transform.position, c.To.transform.position);
+            Gizmos.DrawLine(c.From.transform.position + Vector3.forward * 0.01f, c.To.transform.position + Vector3.forward * 0.01f) ;
         }
     }
 
