@@ -8,7 +8,7 @@ namespace Assets.CoreData.ScriptableObjects
     public class BaseObjectSO : ScriptableObject, INodeSO
     {
         [SerializeField] private GameObject prefab;
-        private string _name;
+        [SerializeField] private string _name;
 
         public GameObject Prefab { get => prefab; set => prefab = value; }
         public string Name { get => _name; set => _name = value; }

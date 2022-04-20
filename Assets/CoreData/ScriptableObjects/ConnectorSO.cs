@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.CoreData.ScriptableObjects
 {
-    [CreateAssetMenu(fileName = "ConnectorSO", menuName = "CoreDataSO/ConnectorSO")]
+    //[CreateAssetMenu(fileName = "ConnectorSO", menuName = "CoreDataSO/ConnectorSO")]
     public class ConnectorSO : LinkBase, ILink<IConnectibleRelative>, INamed
     {
         [SerializeField] private string _name;

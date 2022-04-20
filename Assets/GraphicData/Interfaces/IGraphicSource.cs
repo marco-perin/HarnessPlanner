@@ -2,5 +2,5 @@
 
 namespace Assets.GraphicData.Interfaces
 {
-    public interface IGraphicSource : ISource, IGraphicInstance { }
+    public interface IGraphicSource : IGraphicInstance { }
 }

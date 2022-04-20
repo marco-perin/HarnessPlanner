@@ -8,6 +8,8 @@ using System.Linq;
 using Assets.CoreData.Interfaces;
 using Assets.CoreData.ScriptableObjects;
 using Assets.GraphicData.ScriptableObjects;
+using Assets.GraphicData.Types;
+using Assets.GraphicData.Interfaces;
 
 public class SaveManager : MonoBehaviour
 {
@@ -19,25 +21,39 @@ public class SaveManager : MonoBehaviour
         connectionsManager = ConnectionsManagerSingleton.Instance;
     }
 
-    public void Save(string fileName = "SaveFile.json")
+    public void Save()
     {
+        Save("SaveFile.json");
+    }
+
+    public void Save(string fileName)
+    {
+        Debug.Log($"Saving with name: {fileName}");
+
         var mbgis = nodesParent.GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>();
         var basetypes = mbgis.Select(mbgi => mbgi.GraphicInstance);
-        var nodes = basetypes.Where(bt => bt is SinkGraphic).Select(bt => bt as SinkGraphic).ToList();
 
-        foreach (var g in nodes)
-            Debug.Log(JsonUtility.ToJson(g));
+        var nodes = basetypes.Where(bt => bt is BaseGraphicObject);
+        var sinks = nodes.Where(bt => bt is SinkGraphicBaseWrapper);
+        var sources = nodes.Where(x => x is SourceGraphicBaseWrapper);
 
         SaveData sd = new SaveData()
         {
-            nodes = nodes
+            sinks = sinks.Select(n => n as SinkGraphicBaseWrapper).ToList(),
+            sources = sources.Select(n => n as SourceGraphicBaseWrapper).ToList()
         };
 
         string json = JsonUtility.ToJson(sd, true);
         Debug.Log(json);
-        File.WriteAllText(Path.Combine(Application.dataPath, fileName), json);
-        json = JsonConvert.SerializeObject(sd, Formatting.Indented);
-        File.WriteAllText(Path.Combine(Application.dataPath, "SaveFileNSJson.json"), json);
+
+        string fullPath = Path.Combine(Application.dataPath, "Saves", fileName);
+        string dirPath = fullPath.Substring(0, fullPath.LastIndexOfAny("/\\".ToCharArray()));
+        var d = Directory.CreateDirectory(dirPath);
+        //d.Close();
+
+        File.WriteAllText(fullPath, json);
+        //json = JsonConvert.SerializeObject(sd, Formatting.Indented);
+        //File.WriteAllText(Path.Combine(Application.dataPath, "Saves", "SaveFileNSJson.json"), json);
 
 
         //Debug.Log(JsonConvert.SerializeObject(c.GraphicInstance));
@@ -46,32 +62,79 @@ public class SaveManager : MonoBehaviour
         //JsonConvert.SerializeObject()
     }
 
-    public void Load(string fileName = "SaveFile.json")
+    public void Load()
     {
-        string json = File.ReadAllText(Path.Combine(Application.dataPath, fileName));
+        Load("SaveFile.json");
+    }
+
+    public void Load(string fileName)
+    {
+
+        string json = File.ReadAllText(Path.Combine(Application.dataPath, "Saves", fileName));
         SaveData sd = JsonUtility.FromJson<SaveData>(json);
 
-        foreach(var n in sd.nodes)
+        foreach (var sinkGraphic in sd.sinks)
         {
-
+            CreateSinkGraphicWrapper(sinkGraphic);
         }
 
+        foreach (var sinkGraphic in sd.sources)
+        {
+            CreateGraphicWrapper(sinkGraphic);
+        }
     }
+
+    private void CreateGraphicWrapper(BaseGraphicObject wrapper)
+    {
+        // Create The graphic instance wrapper
+        //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
+
+        // Instantiate the scene GameObject prefab
+        var sinkPrefabGo = Instantiate((wrapper.BaseWrapped as INode).BaseSO.Prefab, nodesParent);
+        sinkPrefabGo.transform.position = wrapper.Position;
+        sinkPrefabGo.name = (wrapper.BaseWrapped as INode).BaseSO.Name;
+
+        // Add the graphical Sync to the prefab object
+        var graphSyncMB = sinkPrefabGo.AddComponent<GraphicalSOSync>();
+        graphSyncMB.GraphicInstance = wrapper;
+
+        graphSyncMB.GenerateConnectibles();
+    }
+
+    private void CreateSinkGraphicWrapper(SinkGraphicBaseWrapper wrapper)
+    {
+        // Create The graphic instance wrapper
+        //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
+
+        // Instantiate the scene GameObject prefab
+        var sinkPrefabGo = Instantiate(wrapper.BaseWrapped.BaseSO.Prefab, nodesParent);
+        sinkPrefabGo.transform.position = wrapper.Position;
+        sinkPrefabGo.name = wrapper.BaseWrapped.Name;
+
+        // Add the graphical Sync to the prefab object
+        var graphSyncMB = sinkPrefabGo.AddComponent<GraphicalSOSync>();
+        graphSyncMB.GraphicInstance = wrapper;
+
+        graphSyncMB.GenerateConnectibles();
+    }
+
 }
 
 [Serializable]
 public class SaveData
 {
-    public List<SinkGraphic> nodes;
+    //public List<SinkGraphicBaseWrapper> sinks;
+    public List<SinkGraphicBaseWrapper> sinks;
+    public List<SourceGraphicBaseWrapper> sources;
 }
 
-[Serializable]
-public class NodeSaveData
-{
-    public List<NodeSaveData> childs;
+//[Serializable]
+//public class NodeSaveData
+//{
+//    public List<NodeSaveData> childs;
 
-    NodeSaveData()
-    {
-        childs = new List<NodeSaveData>();
-    }
-}
+//    NodeSaveData()
+//    {
+//        childs = new List<NodeSaveData>();
+//    }
+//}

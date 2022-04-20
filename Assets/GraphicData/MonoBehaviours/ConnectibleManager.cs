@@ -15,20 +15,22 @@ public class ConnectibleManager : MonoBehaviourGraphicInstanced, IClickable
 
     public bool IsConnecting { get => connecting; }
 
-    void Update()
+    private void Start()
     {
-        if (!Input.anyKeyDown) return;
+        InputManager.Instance.AddAction(KeyCode.C, () => StartConnecting());
+        InputManager.Instance.AddAction(KeyCode.D, () => StopConnecting());
+    }
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            connecting = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.N))
-        {
-            ConnectionsManagerSingleton.Instance.ResetConnectionState();
-            connecting = false;
-        }
+    private void StartConnecting()
+    {
+        ConnectionsManagerSingleton.Instance.ResetConnectionState();
+        connecting = true;
+    }
 
+    private void StopConnecting()
+    {
+        ConnectionsManagerSingleton.Instance.ResetConnectionState();
+        connecting = false;
     }
 
     public void Click()

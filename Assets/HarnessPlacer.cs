@@ -5,6 +5,10 @@ using Assets.GraphicData.Types;
 using Assets.UXData.Interfaces;
 using UnityEngine;
 
+#if  ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
+
 public enum PlacingType
 {
     None,
@@ -27,19 +31,22 @@ public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
 
     public bool IsPlacing { get => placing != PlacingType.None; }
 
-    void Update()
+
+    private void Start()
     {
-        if (!Input.anyKeyDown) return;
+        InputManager.Instance.AddAction(KeyCode.S,
+            () => placing = PlacingType.Sink,
+            true
+            );
 
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            placing = PlacingType.Sink;
-        }
-        else if (Input.GetKeyDown(KeyCode.N))
-        {
-            placing = PlacingType.None;
-        }
+        InputManager.Instance.AddAction(KeyCode.P,
+            () => placing = PlacingType.Source,
+            true
+            );
 
+        InputManager.Instance.AddAction(KeyCode.None,
+            () => placing = PlacingType.None
+            );
     }
 
 
@@ -62,9 +69,25 @@ public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
 
     private void PlaceSource(Vector3 pos)
     {
-        throw new NotImplementedException();
-
+        //throw new NotImplementedException();
+        var baseObj = new SourceBase(sourceBaseSo);
         //var prefabGo = Instantiate(sourceBaseSo.Prefab, newObjectsParentTransform);
+        IGraphicInstance graphicInstanceWrapper = new SourceGraphicBaseWrapper
+        {
+            BaseWrapped = baseObj,
+            Position = new Vector3(pos.x, pos.y, 0.1f)
+        };
+
+        // Instantiate the scene GameObject prefab
+        var prefabGo = Instantiate(baseObj.BaseSO.Prefab, newObjectsParentTransform);
+        prefabGo.transform.position = pos;
+        prefabGo.name = baseObj.Name;
+
+        // Add the graphical Sync to the prefab object
+        var graphSyncMB = prefabGo.AddComponent<GraphicalSOSync>();
+        graphSyncMB.GraphicInstance = graphicInstanceWrapper;
+
+        graphSyncMB.GenerateConnectibles();
         //prefabGo.transform.position = pos;
         //prefabGo.name = sinkBaseSo.name;
         //var graphSyncMB = prefabGo.AddComponent<GraphicalSOSync>();
@@ -80,19 +103,19 @@ public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
 
     private void PlaceSink(Vector3 pos)
     {
-        var sinkBase = new SinkBase(sinkBaseSo);
+        var baseObj = new SinkBase(sinkBaseSo);
         // Create The graphic instance wrapper
         //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
         IGraphicInstance graphicInstanceWrapper = new SinkGraphicBaseWrapper
         {
-            BaseWrapped = sinkBase,
+            BaseWrapped = baseObj,
             Position = new Vector3(pos.x, pos.y, 0.1f)
         };
 
         // Instantiate the scene GameObject prefab
-        var sinkPrefabGo = Instantiate(sinkBase.BaseSO.Prefab, newObjectsParentTransform);
+        var sinkPrefabGo = Instantiate(baseObj.BaseSO.Prefab, newObjectsParentTransform);
         sinkPrefabGo.transform.position = pos;
-        sinkPrefabGo.name = sinkBase.Name;
+        sinkPrefabGo.name = baseObj.Name;
 
         // Add the graphical Sync to the prefab object
         var graphSyncMB = sinkPrefabGo.AddComponent<GraphicalSOSync>();

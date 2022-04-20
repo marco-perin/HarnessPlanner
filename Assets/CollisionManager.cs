@@ -99,7 +99,7 @@ public class CollisionManager : MonoBehaviour
 
         if (currentOrLastInteractable == null)
         {
-            Debug.Log("currentOrLastInteractable was null");
+            //Debug.Log("currentOrLastInteractable was null");
             return;
         }
 

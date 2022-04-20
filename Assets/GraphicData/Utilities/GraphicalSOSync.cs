@@ -60,6 +60,15 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 AttributeText.text = "" + sink.Consumption + " A";
 
                 break;
+            case SourceBase source:
+
+
+                NameText.text = source.Name;
+                gameObject.name = source.Name;
+
+                AttributeText.text = "Max: " + source.MaxAvailability + " A";
+
+                break;
             default:
                 break;
         }
