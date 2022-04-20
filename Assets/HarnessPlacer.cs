@@ -62,12 +62,13 @@ public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
 
     private void PlaceSource(Vector3 pos)
     {
-        var prefabGo = Instantiate(sourceBaseSo.Prefab, newObjectsParentTransform);
-        prefabGo.transform.position = pos;
-        prefabGo.name = sinkBaseSo.name;
-        var graphSyncMB = prefabGo.AddComponent<GraphicalSOSync>();
-
         throw new NotImplementedException();
+
+        //var prefabGo = Instantiate(sourceBaseSo.Prefab, newObjectsParentTransform);
+        //prefabGo.transform.position = pos;
+        //prefabGo.name = sinkBaseSo.name;
+        //var graphSyncMB = prefabGo.AddComponent<GraphicalSOSync>();
+
 
         //IGraphicInstance source = ScriptableObject.CreateInstance<SourceGraphicBaseWrapperSO>();
         //source.BaseWrapped = sinkBaseSo;
@@ -79,18 +80,19 @@ public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
 
     private void PlaceSink(Vector3 pos)
     {
+        var sinkBase = new SinkBase(sinkBaseSo);
         // Create The graphic instance wrapper
         //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
-        IGraphicInstance graphicInstanceWrapper = new SinkGraphicBaseWrapperSO
+        IGraphicInstance graphicInstanceWrapper = new SinkGraphicBaseWrapper
         {
-            BaseWrapped = sinkBaseSo,
+            BaseWrapped = sinkBase,
             Position = new Vector3(pos.x, pos.y, 0.1f)
         };
 
         // Instantiate the scene GameObject prefab
-        var sinkPrefabGo = Instantiate(sinkBaseSo.Prefab, newObjectsParentTransform);
+        var sinkPrefabGo = Instantiate(sinkBase.BaseSO.Prefab, newObjectsParentTransform);
         sinkPrefabGo.transform.position = pos;
-        sinkPrefabGo.name = sinkBaseSo.name;
+        sinkPrefabGo.name = sinkBase.Name;
 
         // Add the graphical Sync to the prefab object
         var graphSyncMB = sinkPrefabGo.AddComponent<GraphicalSOSync>();

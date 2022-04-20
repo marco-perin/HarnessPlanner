@@ -15,14 +15,14 @@ namespace Assets.CoreData.Types
     [Serializable]
     internal class HarnessTopologyGraphic : HarnessTopologyBase
     {
-        [SerializeField] private SourceGraphicSO[] sources;
-        [SerializeField] private IGraphicSink[] sinks;
-        [SerializeField] private LinkGraphicSO[] links;
+        [SerializeField] private SourceGraphic[] sources;
+        [SerializeField] private SinkGraphic[] sinks;
+        [SerializeField] private LinkGraphic[] links;
         [SerializeField] private LinkConnectionAbsoluteBase[] linksRaw;
 
-        public new IGraphicSource[] Sources { get => sources; set => sources = value as SourceGraphicSO[]; }
-        public new IGraphicSink[] Sinks { get => sinks; set => sinks = value; }
-        public new IGraphicLink<IConnectibleRelative>[] LinksRelative { get => links; set => links = value as LinkGraphicSO[]; }
+        public new IGraphicSource[] Sources { get => sources; set => sources = value as SourceGraphic[]; }
+        public new IGraphicSink[] Sinks { get => sinks; set => sinks = value as SinkGraphic[]; }
+        public new IGraphicLink<IConnectibleRelative>[] LinksRelative { get => links; set => links = value as LinkGraphic[]; }
         public override ILinkConnection<IConnectibleAbsolute>[] LinksRaw { get => linksRaw; set => linksRaw = value as LinkConnectionAbsoluteBase[]; }
     }
 

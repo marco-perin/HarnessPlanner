@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.CoreData.Types
 {
-    public class LinkBaseSO : BaseObjectSO, ILink<IConnectibleRelative>
+    public class LinkBase : ILink<IConnectibleRelative>
     {
         [SerializeField] private protected LinkConnectionRelativeBase[] linkConnections;
 

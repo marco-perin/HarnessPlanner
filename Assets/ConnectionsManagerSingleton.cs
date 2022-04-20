@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.CoreData.Interfaces;
 using UnityEngine;
 
 public enum ConnectionState
@@ -51,7 +52,7 @@ public class ConnectionsManagerSingleton : Singleton<ConnectionsManagerSingleton
     {
         if (connectionState == ConnectionState.Connected)
         {
-            Debug.Log($"Connecting {connectFrom.gameObject.name} to {connectTo.gameObject.name}");
+            Debug.Log($"Connecting {((INode)connectFrom.GraphicInstance.BaseWrapped).BaseSO.Name} to {((INode)connectTo.GraphicInstance.BaseWrapped).BaseSO.Name}");
 
             connections.Add(new GraphicConnection(connectFrom, connectTo));
 

@@ -1,6 +1,6 @@
 ﻿namespace Assets.CoreData.Interfaces
 {
-    public interface ISink : IBaseType, IBipole<IConnectibleRelative>
+    public interface ISink : INode, IBipole<IConnectibleRelative>
     {
         double Consumption { get; set; }
     }

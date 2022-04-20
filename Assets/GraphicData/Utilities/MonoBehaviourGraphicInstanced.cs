@@ -19,7 +19,8 @@ public class MonoBehaviourGraphicInstanced : MonoBehaviour
     {
         get
         {
-            _MBContainer ??= GetComponent<MonoBehaviourGraphicInstanceContainer>();
+            if (_MBContainer == null)
+                _MBContainer = GetComponent<MonoBehaviourGraphicInstanceContainer>();
             return _MBContainer;
         }
         set => _MBContainer = value;

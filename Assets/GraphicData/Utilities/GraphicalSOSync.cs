@@ -51,7 +51,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
 
         switch (GraphicInstance.BaseWrapped)
         {
-            case SinkBaseSO sink:
+            case SinkBase sink:
 
 
                 NameText.text = sink.Name;

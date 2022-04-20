@@ -7,17 +7,17 @@ using UnityEngine;
 
 namespace Assets.GraphicData.Types
 {
-    public class LinkGraphicSO : LinkBaseSO, IGraphicLink<IConnectibleRelative>
+    public class LinkGraphic : LinkBase, IGraphicLink<IConnectibleRelative>
     {
         [SerializeField] private string id;
         [SerializeField] private Vector3 position;
-        [SerializeField] protected LinkBaseSO baseWrapped;
+        [SerializeField] protected LinkBase baseWrapped;
         [SerializeField] private Vector2 size;
 
         public virtual string Id { get => id; set => id = value; }
         public virtual Vector3 Position { get => position; set => position = value; }
         public virtual Vector2 Size { get => size; set => size = value; }
-        public IBaseTypeSO BaseWrapped { get => baseWrapped; set => baseWrapped = value as LinkBaseSO; }
+        public IBaseType BaseWrapped { get => baseWrapped; set => baseWrapped = value as LinkBase; }
     }
 
 

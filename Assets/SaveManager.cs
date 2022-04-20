@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Linq;
 using Assets.CoreData.Interfaces;
+using Assets.CoreData.ScriptableObjects;
+using Assets.GraphicData.ScriptableObjects;
 
 public class SaveManager : MonoBehaviour
 {
@@ -17,22 +19,25 @@ public class SaveManager : MonoBehaviour
         connectionsManager = ConnectionsManagerSingleton.Instance;
     }
 
-    public void Save()
+    public void Save(string fileName = "SaveFile.json")
     {
-        var mbgis = nodesParent.GetComponentsInChildren<MonoBehaviourGraphicInstanced>();
-        var gis = mbgis.Select(mbgi => mbgi.GraphicInstance.BaseWrapped).ToList();
+        var mbgis = nodesParent.GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>();
+        var basetypes = mbgis.Select(mbgi => mbgi.GraphicInstance);
+        var nodes = basetypes.Where(bt => bt is SinkGraphic).Select(bt => bt as SinkGraphic).ToList();
 
-        foreach (var g in gis)
+        foreach (var g in nodes)
             Debug.Log(JsonUtility.ToJson(g));
 
         SaveData sd = new SaveData()
         {
-            nodes = gis
+            nodes = nodes
         };
 
-        string json = JsonUtility.ToJson(gis, true);
-        Debug.Log(JsonUtility.ToJson(sd));
-        File.WriteAllText(Path.Combine(Application.dataPath, "SaveFile.json"), json);
+        string json = JsonUtility.ToJson(sd, true);
+        Debug.Log(json);
+        File.WriteAllText(Path.Combine(Application.dataPath, fileName), json);
+        json = JsonConvert.SerializeObject(sd, Formatting.Indented);
+        File.WriteAllText(Path.Combine(Application.dataPath, "SaveFileNSJson.json"), json);
 
 
         //Debug.Log(JsonConvert.SerializeObject(c.GraphicInstance));
@@ -40,12 +45,24 @@ public class SaveManager : MonoBehaviour
         //foreach(
         //JsonConvert.SerializeObject()
     }
+
+    public void Load(string fileName = "SaveFile.json")
+    {
+        string json = File.ReadAllText(Path.Combine(Application.dataPath, fileName));
+        SaveData sd = JsonUtility.FromJson<SaveData>(json);
+
+        foreach(var n in sd.nodes)
+        {
+
+        }
+
+    }
 }
 
 [Serializable]
 public class SaveData
 {
-    public List<IBaseTypeSO> nodes;
+    public List<SinkGraphic> nodes;
 }
 
 [Serializable]

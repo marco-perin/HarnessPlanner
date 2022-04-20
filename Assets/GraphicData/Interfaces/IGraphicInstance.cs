@@ -8,6 +8,6 @@ namespace Assets.GraphicData.Interfaces
     {
         Vector3 Position { get; set; }
         Vector2 Size { get; set; }
-        IBaseTypeSO BaseWrapped { get; set; }
+        IBaseType BaseWrapped { get; set; }
     }
 }

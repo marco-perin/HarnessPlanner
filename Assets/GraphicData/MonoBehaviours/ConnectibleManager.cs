@@ -8,7 +8,7 @@ using UnityEngine;
 
 
 
-public class ConnectibleManager : MonoBehaviour, IClickable
+public class ConnectibleManager : MonoBehaviourGraphicInstanced, IClickable
 {
     [Header("Runtime Variables")]
     public bool connecting;

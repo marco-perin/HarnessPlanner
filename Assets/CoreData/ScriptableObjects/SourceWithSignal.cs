@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Assets.CoreData.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "SourceWithSignal", menuName = "CoreDataSO/SourceWithSignal")]
-    public class SourceWithSignalSO : SourceBaseSO, ISourceWithSignal
+    public class SourceWithSignal : SourceBase, ISourceWithSignal
     {
         [SerializeField]
         private SignalConnectibleBase[] signalConnectibles;

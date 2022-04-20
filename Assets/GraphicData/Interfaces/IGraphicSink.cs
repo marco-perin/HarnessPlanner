@@ -2,5 +2,6 @@
 
 namespace Assets.GraphicData.Interfaces
 {
-    public interface IGraphicSink : ISink, IGraphicInstance { }
+    public interface IGraphicSink : IGraphicInstance //, ISink
+    { }
 }

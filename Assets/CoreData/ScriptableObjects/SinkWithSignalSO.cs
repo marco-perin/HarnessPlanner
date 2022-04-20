@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Assets.CoreData.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "SinkWithSignal", menuName = "CoreDataSO/SinkWithSignal")]
-    public class SinkWithSignalSO : SinkBaseSO, ISinkWithSignal
+    public class SinkWithSignalSO : SinkBase, ISinkWithSignal
     {
         [SerializeField]
         private SignalConnectibleBase[] signalConnectibles;
