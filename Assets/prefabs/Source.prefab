@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4400865779383342067
+--- !u!1001 &6872959364634333351
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -9,8 +9,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 191237119019476421, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_Name
-      value: Node
+      value: Source
       objectReference: {fileID: 0}
+    - target: {fileID: 2004263798266097267, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a0b89534bacfcdc43b3a1ceaa8cef895, type: 2}
     - target: {fileID: 6655062902175122834, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_RootOrder
       value: 0

@@ -20,4 +20,4 @@ MonoBehaviour:
   negativeConnectible:
     _relativeId: NEG
     prefab: {fileID: 191237119019476421, guid: 79247eaa1bc019c42a1b4dfdee99a2ab, type: 3}
-  prefab: {fileID: 191237119019476421, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
+  prefab: {fileID: 4590414014182815286, guid: 75222cf6f3d0c644993e1eddfcbf3741, type: 3}

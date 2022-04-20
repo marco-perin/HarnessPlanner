@@ -9,7 +9,7 @@ namespace Assets.GraphicData.ScriptableObjects
     [CreateAssetMenu(fileName = "Harness", menuName = "CoreDataSO/Harness")]
     public class HarnessGraphicSO : HarnessSO, IHarnessData
     {
-        [SerializeField] private HarnessTopologyGraphic topology;
+        //[SerializeField] private HarnessTopologyGraphic topology;
 
         public override IHarnessTopology Topology { get => topology; set => topology = value as HarnessTopologyGraphic; }
     }

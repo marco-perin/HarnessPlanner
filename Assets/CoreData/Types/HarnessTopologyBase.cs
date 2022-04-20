@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Assets.CoreData.Types
 {
     [Serializable]
-    internal class HarnessTopologyBase : IHarnessTopology
+    public class HarnessTopologyBase : IHarnessTopology
     {
         [SerializeField] private SourceBaseSO[] sources;
         [SerializeField] private ISink[] sinks;

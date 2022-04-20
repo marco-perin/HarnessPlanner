@@ -17,7 +17,7 @@ namespace Assets.GraphicData.Types
         public virtual string Id { get => id; set => id = value; }
         public virtual Vector3 Position { get => position; set => position = value; }
         public virtual Vector2 Size { get => size; set => size = value; }
-        public virtual IBaseTypeSO BaseWrapped { get => baseWrapped; set => baseWrapped = value as LinkBaseSO; }
+        public IBaseTypeSO BaseWrapped { get => baseWrapped; set => baseWrapped = value as LinkBaseSO; }
     }
 
 

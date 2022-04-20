@@ -1,8 +1,8 @@
 ﻿namespace Assets.CoreData.Interfaces
 {
-    public interface IWithId
+    public interface IWithId : IWithGettableId
     {
-        string Id { get; set; }
+        new string Id { get; set; }
     }
 
     public interface IWithGettableId
