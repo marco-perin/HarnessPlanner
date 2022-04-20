@@ -5,6 +5,13 @@ using Assets.GraphicData.Types;
 using Assets.UXData.Interfaces;
 using UnityEngine;
 
+public enum PlacingType
+{
+    None,
+    Source,
+    Sink,
+    Link
+}
 public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
 {
     [Header("Scene Config")]
@@ -73,9 +80,12 @@ public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
     private void PlaceSink(Vector3 pos)
     {
         // Create The graphic instance wrapper
-        IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
-        graphicInstanceWrapper.BaseWrapped = sinkBaseSo;
-        graphicInstanceWrapper.Position = new Vector3(pos.x, pos.y, 0.1f);
+        //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
+        IGraphicInstance graphicInstanceWrapper = new SinkGraphicBaseWrapperSO
+        {
+            BaseWrapped = sinkBaseSo,
+            Position = new Vector3(pos.x, pos.y, 0.1f)
+        };
 
         // Instantiate the scene GameObject prefab
         var sinkPrefabGo = Instantiate(sinkBaseSo.Prefab, newObjectsParentTransform);
