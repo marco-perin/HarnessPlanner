@@ -15,7 +15,7 @@ public enum ConnectionState
     Connected = 2
 }
 
-public class ConnectionsManagerSingleton : Singleton<ConnectionsManagerSingleton>
+public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerSingleton>
 {
     public ConnectionState connectionState;
 

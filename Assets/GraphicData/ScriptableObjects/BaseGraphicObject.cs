@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Assets.GraphicData.ScriptableObjects
 {
     [Serializable]
-    public abstract class BaseGraphicObject : IGraphicSource
+    public abstract class BaseGraphicObject : IGraphicInstance
     {
         [SerializeField] protected string id;
         [SerializeField] private BaseNode baseWrapped;

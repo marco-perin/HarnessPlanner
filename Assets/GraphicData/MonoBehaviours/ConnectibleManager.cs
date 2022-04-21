@@ -23,20 +23,20 @@ public class ConnectibleManager : MonoBehaviourGraphicInstanced, IClickable
 
     private void StartConnecting()
     {
-        ConnectionsManagerSingleton.Instance.ResetConnectionState();
+        MainConnectionsManagerSingleton.Instance.ResetConnectionState();
         connecting = true;
     }
 
     private void StopConnecting()
     {
-        ConnectionsManagerSingleton.Instance.ResetConnectionState();
+        MainConnectionsManagerSingleton.Instance.ResetConnectionState();
         connecting = false;
     }
 
     public void Click()
     {
         if (IsConnecting)
-            ConnectionsManagerSingleton.Instance.Connect(this, null);
+            MainConnectionsManagerSingleton.Instance.Connect(this, null);
 
     }
 

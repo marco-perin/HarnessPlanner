@@ -6,6 +6,7 @@ using Assets.CoreData.ScriptableObjects;
 using Assets.CoreData.Types;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GraphicalSOSync : MonoBehaviourGraphicInstanced
 {
@@ -39,6 +40,21 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
         set => attributeText = value;
     }
 
+    [SerializeField]
+    private Button connectionsBtn;
+
+    public Button ConnectionsBtn
+    {
+        get
+        {
+            if (connectionsBtn == null)
+                connectionsBtn = transform.GetChild(0).Find("ConnectButton").GetComponent<Button>();
+
+            return connectionsBtn;
+        }
+        set => connectionsBtn = value;
+    }
+
     ConnectionPrefabManager connectionPrefabManager;
 
     void Update()
@@ -56,6 +72,9 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 gameObject.name = sink.Name;
 
                 AttributeText.text = "" + sink.Consumption + " A";
+
+                ConnectionsBtn.onClick.RemoveAllListeners();
+                //ConnectionsBtn.onClick.AddListener(() =>);
 
                 break;
             case SourceBase source:
@@ -75,7 +94,8 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
 
             case NodeLinkBase nodeLink:
 
-                connectionPrefabManager = connectionPrefabManager != null ? connectionPrefabManager : GetComponent<ConnectionPrefabManager>();
+                if (connectionPrefabManager == null)
+                    connectionPrefabManager = GetComponent<ConnectionPrefabManager>();
 
                 connectionPrefabManager.To.position = nodeLink.ToNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.From.position = nodeLink.FromNode.Position + GraphicInstance.Position.z * Vector3.forward;

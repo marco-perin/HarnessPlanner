@@ -14,11 +14,11 @@ using Assets.GraphicData.Interfaces;
 public class SaveManager : MonoBehaviour
 {
     public Transform nodesParent;
-    public ConnectionsManagerSingleton connectionsManager;
+    public MainConnectionsManagerSingleton connectionsManager;
 
     private void Start()
     {
-        connectionsManager = ConnectionsManagerSingleton.Instance;
+        connectionsManager = MainConnectionsManagerSingleton.Instance;
     }
 
     public void Save()
