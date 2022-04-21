@@ -1,5 +1,4 @@
 ﻿using Assets.CoreData.Interfaces;
-using Assets.CoreData.ScriptableObjects;
 using System;
 using UnityEngine;
 

@@ -10,6 +10,10 @@ namespace Assets.CoreData.ScriptableObjects
         [SerializeField]
         private SignalConnectibleBase[] signalConnectibles;
 
+        public SinkWithSignalSO(SinkBaseSO baseSO) : base(baseSO)
+        {
+        }
+
         public ISignalConnectible[] SignalConnectibles { get => signalConnectibles; set => signalConnectibles = value as SignalConnectibleBase[]; }
     }
 }

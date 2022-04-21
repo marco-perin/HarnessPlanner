@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6757300518936065378, guid: 2045e04b87060504ead31942e2c9659e, type: 3}
   _name: test source
+  pinConfiguration:
+    pinNames:
+    - POS
+    - NEG

@@ -5,13 +5,7 @@ using UnityEngine;
 namespace Assets.CoreData.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "SinkBaseSO", menuName = "CoreDataBaseSO/SinkBaseSO")]
-    public class SinkBaseSO : BaseObjectSO, INodeSO, INamed
+    public class SinkBaseSO : BasePinnedObjectSO, INodeSO, INamed, IPinned
     {
-
-        [SerializeField] private ConnectibleRelativeBase positiveConnectible;
-        [SerializeField] private ConnectibleRelativeBase negativeConnectible;
-
-        public virtual IConnectibleRelative PositiveConnectible { get => positiveConnectible; set => positiveConnectible = value as ConnectibleRelativeBase; }
-        public virtual IConnectibleRelative NegativeConnectible { get => negativeConnectible; set => negativeConnectible = value as ConnectibleRelativeBase; }
     }
 }

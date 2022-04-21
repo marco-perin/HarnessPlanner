@@ -15,8 +15,5 @@ namespace Assets.GraphicData.Types
         }
 
         public new ISink BaseWrapped { get => baseWrapped; set => baseWrapped = value as SinkBase; }
-        public IConnectibleRelative PositiveConnectible { get => BaseWrapped.PositiveConnectible; set => BaseWrapped.PositiveConnectible = value; }
-        public IConnectibleRelative NegativeConnectible { get => BaseWrapped.NegativeConnectible; set => BaseWrapped.NegativeConnectible = value; }
-
     }
 }

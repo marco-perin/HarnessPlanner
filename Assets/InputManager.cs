@@ -8,9 +8,12 @@ public class InputManager : Singleton<InputManager>
 {
     public Dictionary<KeyCode, EventList> actions;
 
-    void Start()
+    protected override void PostAwake()
     {
-        actions = new Dictionary<KeyCode, EventList>();
+        if (IsThisInstance())
+        {
+            actions = new Dictionary<KeyCode, EventList>();
+        }
     }
 
     // Update is called once per frame

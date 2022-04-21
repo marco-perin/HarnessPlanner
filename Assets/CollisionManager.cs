@@ -50,7 +50,7 @@ public class CollisionManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //prevMouseWorldPos = transform.position;
+        prevMouseWorldPos = GetMousePosOnWorld(GetMouseRay());
     }
 
     public Transform currInteractable;
@@ -99,7 +99,6 @@ public class CollisionManager : MonoBehaviour
 
         if (currentOrLastInteractable == null)
         {
-            //Debug.Log("currentOrLastInteractable was null");
             return;
         }
 

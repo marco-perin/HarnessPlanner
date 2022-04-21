@@ -33,14 +33,18 @@ public class SaveManager : MonoBehaviour
         var mbgis = nodesParent.GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>();
         var basetypes = mbgis.Select(mbgi => mbgi.GraphicInstance);
 
-        var nodes = basetypes.Where(bt => bt is BaseGraphicObject);
-        var sinks = nodes.Where(bt => bt is SinkGraphicBaseWrapper);
-        var sources = nodes.Where(x => x is SourceGraphicBaseWrapper);
+        var baseObjects = basetypes.Where(bt => bt is BaseGraphicObject);
+        var sinks = baseObjects.Where(bt => bt is SinkGraphicBaseWrapper);
+        var sources = baseObjects.Where(x => x is SourceGraphicBaseWrapper);
+        var nodes = baseObjects.Where(x => x is ConnectionNodeBaseGraphicBaseWrapper);
+        var links = baseObjects.Where(x => x is NodeLinkBaseGraphicBaseWrapper);
 
         SaveData sd = new SaveData()
         {
             sinks = sinks.Select(n => n as SinkGraphicBaseWrapper).ToList(),
-            sources = sources.Select(n => n as SourceGraphicBaseWrapper).ToList()
+            sources = sources.Select(n => n as SourceGraphicBaseWrapper).ToList(),
+            nodes = nodes.Select(n => n as ConnectionNodeBaseGraphicBaseWrapper).ToList(),
+            links = links.Select(n => n as NodeLinkBaseGraphicBaseWrapper).ToList()
         };
 
         string json = JsonUtility.ToJson(sd, true);
@@ -81,6 +85,15 @@ public class SaveManager : MonoBehaviour
         foreach (var sinkGraphic in sd.sources)
         {
             CreateGraphicWrapper(sinkGraphic);
+        }
+
+        foreach (var nodeGraphic in sd.nodes)
+        {
+            CreateGraphicWrapper(nodeGraphic);
+        }
+        foreach (var link in sd.links)
+        {
+            CreateGraphicWrapper(link);
         }
     }
 
@@ -126,6 +139,8 @@ public class SaveData
     //public List<SinkGraphicBaseWrapper> sinks;
     public List<SinkGraphicBaseWrapper> sinks;
     public List<SourceGraphicBaseWrapper> sources;
+    public List<ConnectionNodeBaseGraphicBaseWrapper> nodes;
+    public List<NodeLinkBaseGraphicBaseWrapper> links;
 }
 
 //[Serializable]

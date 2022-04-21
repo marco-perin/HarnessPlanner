@@ -15,6 +15,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             Instance = this as T;
             DontDestroyOnLoad(this.gameObject);
+            PostAwake();
         }
+
     }
+    protected virtual void PostAwake() { }
+    protected bool IsThisInstance() => this == Instance;
 }

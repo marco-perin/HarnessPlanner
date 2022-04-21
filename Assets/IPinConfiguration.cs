@@ -4,7 +4,7 @@ using UnityEngine;
 public interface IPinConfiguration
 {
     int PinCount { get; }
-    IEnumerable<Vector3> PinPositions { get; }
+    IEnumerable<string> PinNames { get; }
 }
 
 

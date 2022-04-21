@@ -217,7 +217,7 @@ RectTransform:
   - {fileID: 1913862863}
   - {fileID: 588616421}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -441,36 +441,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 588616420}
   m_CullTransparentMesh: 1
---- !u!1 &790007289
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 790007290}
-  m_Layer: 0
-  m_Name: Parent
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &790007290
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 790007289}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &918028850
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,6 +710,7 @@ GameObject:
   - component: {fileID: 1680205924}
   - component: {fileID: 1680205925}
   - component: {fileID: 1680205926}
+  - component: {fileID: 1680205922}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -747,6 +718,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1680205922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680205921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045908e6041871748b672a3f4bab8f1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1680205923
 Transform:
   m_ObjectHideFlags: 0
@@ -801,9 +784,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectionState: 0
+  harnessSettings: {fileID: 11400000, guid: b44ecbc61c4a5a14eb9b1b19cc2a9f55, type: 2}
   connectFrom: {fileID: 0}
   connectTo: {fileID: 0}
   connections: []
+  connectionsParent: {fileID: 1296546496}
 --- !u!114 &1680205926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -816,7 +801,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2883e7a8487c3cd4bad078335e1228e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodesParent: {fileID: 790007290}
+  nodesParent: {fileID: 1296546496}
   connectionsManager: {fileID: 0}
 --- !u!1 &1846181968
 GameObject:
@@ -986,9 +971,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463d542c809b0e04e9ec1d834c47fcf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newObjectsParentTransform: {fileID: 790007290}
-  sinkBaseSo: {fileID: 11400000, guid: ccb597df71e9d6c47a76963f62b38005, type: 2}
-  sourceBaseSo: {fileID: 11400000, guid: 0b397100059918f47963850c619392cd, type: 2}
+  newObjectsParentTransform: {fileID: 1296546496}
+  harnessSettings: {fileID: 11400000, guid: b44ecbc61c4a5a14eb9b1b19cc2a9f55, type: 2}
   placing: 0
 --- !u!64 &1874260538
 MeshCollider:
@@ -1211,7 +1195,6 @@ GameObject:
   - component: {fileID: 2140913277}
   - component: {fileID: 2140913276}
   - component: {fileID: 2140913275}
-  - component: {fileID: 2140913278}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1265,17 +1248,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2140913278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140913274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 045908e6041871748b672a3f4bab8f1b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -14,8 +14,8 @@ namespace Assets.GraphicData.Types
         }
 
         public new ISource BaseWrapped { get => baseWrapped; set => baseWrapped = value as SourceBase; }
-        public IConnectibleRelative PositiveConnectible { get => BaseWrapped.PositiveConnectible; set => BaseWrapped.PositiveConnectible = value; }
-        public IConnectibleRelative NegativeConnectible { get => BaseWrapped.NegativeConnectible; set => BaseWrapped.NegativeConnectible = value; }
+        //public IConnectibleRelative PositiveConnectible { get => BaseWrapped.PositiveConnectible; set => BaseWrapped.PositiveConnectible = value; }
+        //public IConnectibleRelative NegativeConnectible { get => BaseWrapped.NegativeConnectible; set => BaseWrapped.NegativeConnectible = value; }
 
     }
 }

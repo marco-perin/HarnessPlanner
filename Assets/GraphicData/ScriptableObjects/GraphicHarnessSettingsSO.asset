@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da3a8cf80298d754e8291c6fa0ec9cf3, type: 3}
+  m_Name: GraphicHarnessSettingsSO
+  m_EditorClassIdentifier: 
+  nodesPlaceHeight: 0.1
+  connectionsPlaceHeight: 0.2
+  defaultSourcePrefab: {fileID: 11400000, guid: 0b397100059918f47963850c619392cd, type: 2}
+  defaultSinkPrefab: {fileID: 11400000, guid: ccb597df71e9d6c47a76963f62b38005, type: 2}
+  defaultNodePrefab: {fileID: 11400000, guid: 094d17249552dec4d8175788b16579b2, type: 2}
+  defaultLinkPrefab: {fileID: 11400000, guid: 9d8dfbef6f90a7e40a51ce754c8130ad, type: 2}

@@ -6,12 +6,12 @@ using UnityEngine;
 [Serializable]
 public class PinConfigBase : IPinConfiguration
 {
-    public virtual int PinCount { get => PinPositions.Count(); }
+    public virtual int PinCount { get => PinNames.Count(); }
 
     [SerializeField]
-    private List<Vector3> pinPositions;
+    private List<string> pinNames = new List<string>();
 
-    public virtual IEnumerable<Vector3> PinPositions { get => pinPositions; set => pinPositions = value.ToList(); }
+    public virtual IEnumerable<string> PinNames { get => pinNames; set => pinNames = value.ToList(); }
 }
 
 

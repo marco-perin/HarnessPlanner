@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: SinkBaseSO
   m_EditorClassIdentifier: 
   prefab: {fileID: 4590414014182815286, guid: 75222cf6f3d0c644993e1eddfcbf3741, type: 3}
-  positiveConnectible:
-    _relativeId: POS
-    prefab: {fileID: 0}
-  negativeConnectible:
-    _relativeId: NEG
-    prefab: {fileID: 0}
   _name: test sink
+  pinConfiguration:
+    pinNames:
+    - POS
+    - NEG
