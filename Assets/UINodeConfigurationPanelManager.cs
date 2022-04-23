@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.CoreData.Interfaces;
 using Assets.CoreData.ScriptableObjects;
 using Assets.CoreData.Types;
@@ -18,10 +19,15 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
 
     public IGraphicInstance graphicInstance;
 
+    public List<INode> connectedNodesList;
+    private List<INode> selectedNodesList;
+
+    //public IEnumerable<INode> AvailableNodes;
 
     void Start()
     {
-
+        selectedNodesList = new();
+        connectedNodesList = new();
     }
 
     public void ClosePanel()
@@ -65,25 +71,78 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
 
         };
 
-            name_input.text = (gInstance.BaseWrapped as INode).Name;
+        attribute_input.onValueChanged.RemoveAllListeners();
 
-            name_input.onValueChanged.RemoveAllListeners();
-
-            name_input.onValueChanged.AddListener((newName) => (gInstance.BaseWrapped as INode).Name = newName);
-        
-
-
-        if (gInstance.BaseWrapped is INode pinned_obj)
+        switch (gInstance.BaseWrapped)
         {
-            if (pinned_obj.BaseSO is IPinned pinned_so)
-                foreach (var pinData in pinned_so.PinConfiguration.PinDataArray)
-                {
-                    var panelMgr = Instantiate(pinLinePrefab, pinRowsContainer).GetComponent<UIConnectionPanelManager>();
-                    panelMgr.SetPinData(pinData);
-                }
+            case SinkBase sb:
+                attribute_input.onValueChanged.AddListener((value) => sb.Consumption = double.Parse(value));
+                break;
+            case SourceBase sb:
+                attribute_input.onValueChanged.AddListener((value) => sb.MaxAvailability = double.Parse(value));
+                break;
         }
 
 
+        name_input.text = (gInstance.BaseWrapped as INode).Name;
+
+        name_input.onValueChanged.RemoveAllListeners();
+
+        name_input.onValueChanged.AddListener((newName) => (gInstance.BaseWrapped as INode).Name = newName);
+
+
+        var connectedNodes = MainConnectionsManagerSingleton.Instance.GetNodesConnectedToNode(gInstance);
+
+        if (connectedNodes.Any())
+        {
+            connectedNodesList.Clear();
+            foreach (var node in connectedNodes)
+            {
+                if (node.BaseWrapped is INode inode && inode.BaseSO is IPinnedObjectSO pinnedObjectSO)
+                    connectedNodesList.Add(inode);
+            }
+        }
+
+        if (gInstance.BaseWrapped is INode pinned_obj && pinned_obj.BaseSO is IPinned pinned_so)
+        {
+            var pinCount = pinned_so.PinConfiguration.PinDataArray.Count();
+
+            // remove Additional childs, if any
+            for (int i = pinRowsContainer.childCount - 1; i >= pinCount; i--)
+            {
+                Destroy(pinRowsContainer.GetChild(i).gameObject);
+            }
+
+            for (int i = 0; i < pinCount; i++)
+            {
+                IPinData pinData = pinned_so.PinConfiguration.PinDataArray.ElementAt(i);
+
+                UIConnectionPanelManager panelMgr;
+                if (i < pinRowsContainer.childCount)
+                    panelMgr = pinRowsContainer.GetChild(i).GetComponent<UIConnectionPanelManager>();
+                else
+                    panelMgr = Instantiate(pinLinePrefab, pinRowsContainer).GetComponent<UIConnectionPanelManager>();
+
+                panelMgr.SetPinData(pinData);
+
+                panelMgr.SetParent(this);
+
+            }
+        }
+
+
+
+    }
+
+    public IEnumerable<INode> SelectNode(INode node, INode previousSelectedNode)
+    {
+        if (previousSelectedNode != null)
+            selectedNodesList.Remove(previousSelectedNode);
+
+        selectedNodesList.Add(node);
+
+        // TODO: Check for faster implementations (caching)
+        return connectedNodesList.Where(cn => !selectedNodesList.Contains(cn));
     }
 
 

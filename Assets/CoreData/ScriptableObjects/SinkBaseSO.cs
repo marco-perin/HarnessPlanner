@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Assets.CoreData.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "SinkBaseSO", menuName = "CoreDataBaseSO/SinkBaseSO")]
-    public class SinkBaseSO : BasePinnedObjectSO, INodeSO, INamed, IPinned
+    public class SinkBaseSO : BasePinnedObjectSO
     {
     }
 }

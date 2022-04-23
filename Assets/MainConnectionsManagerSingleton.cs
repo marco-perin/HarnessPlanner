@@ -60,7 +60,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
                         .Select(mbgi => mbgi.GraphicInstance.BaseWrapped as NodeLinkBase);
     }
 
-    public List<INode> GetNodesConnectedToNode(INode currentNode)
+    public IEnumerable<IGraphicInstance> GetNodesConnectedToNode(IGraphicInstance currentNode)
     {
 
         var result = GetConnectedNodesRecursive(currentNode);
@@ -68,19 +68,20 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         //if (incidentEdges.Any())
         //    Debug.Log($"incidentEdges = {incidentEdges.Select(e => $"[{e.FromNode.BaseWrapped.Id}] <-> [{e.ToNode.BaseWrapped.Id}]").Aggregate((n, curr) => n + "\n" + curr)}");
         if (result.Any())
-            Debug.Log($"connectedNodes = {result.Select(n => n.Name).Aggregate((curr, newNode) => $"{curr}, [{newNode}]")}");
+            Debug.Log($"connectedNodes = {result.Select(n => (n.BaseWrapped as INode).Name).Aggregate((curr, newNode) => $"{curr}, [{newNode}]")}");
+
         return result;
     }
 
-    private List<INode> GetConnectedNodesRecursive(INode currentNode)
+    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode)
     {
         // Temp dict
-        Dictionary<string, INode> visitedNodes = new();
+        Dictionary<string, IGraphicInstance> visitedNodes = new();
 
         return GetConnectedNodesRecursive(currentNode, ref visitedNodes);
     }
 
-    private List<INode> GetConnectedNodesRecursive(INode currentNode, ref Dictionary<string, INode> visitedNodes)
+    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<string, IGraphicInstance> visitedNodes)
     {
         var edges = ActiveConnections.ToList();
         var incidentEdges = edges
@@ -93,7 +94,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
         incidentEdges = incidentEdges.Union(reversedIncidentEdges).ToList();
 
-        var result = new List<INode>();
+        var result = new List<IGraphicInstance>();
 
         // Happens only if the user clicks on a non connected node
         if (!incidentEdges.Any()) return result;
@@ -105,7 +106,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
                 continue;
 
             // Node not visited, add it
-            INode toNode = edge.ToNode.BaseWrapped as INode;
+            IGraphicInstance toNode = edge.ToNode;
             result.Add(toNode);
             visitedNodes[edge.ToNode.Id] = toNode;
 

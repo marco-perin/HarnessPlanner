@@ -33,9 +33,15 @@ public class ConnectibleManager : MonoBehaviourGraphicInstanced, IPointerClickHa
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (IsConnecting)
-            MainConnectionsManagerSingleton.Instance.Connect(this);
-        else
-            MainConnectionsManagerSingleton.Instance.GetNodesConnectedToNode(this.GraphicInstance.BaseWrapped as INode);
+        if (!IsConnecting) return;
+
+        float dragDistance = Vector2.Distance(eventData.pressPosition, eventData.position);
+        float dragThreshold = 10f;
+        bool isDrag = dragDistance > dragThreshold;
+
+        if (isDrag)
+            return;
+
+        MainConnectionsManagerSingleton.Instance.Connect(this);
     }
 }
