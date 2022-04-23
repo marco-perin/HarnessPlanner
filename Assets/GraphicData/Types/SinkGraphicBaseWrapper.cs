@@ -9,10 +9,10 @@ namespace Assets.GraphicData.Types
     [Serializable]
     public class SinkGraphicBaseWrapper : SinkGraphic, ISinkBaseWrapper
     {
-        public SinkGraphicBaseWrapper()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
+        //public SinkGraphicBaseWrapper()
+        //{
+        //    //Id = Guid.NewGuid().ToString();
+        //}
 
         public new ISink BaseWrapped { get => baseWrapped; set => baseWrapped = value as SinkBase; }
     }

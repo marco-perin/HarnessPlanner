@@ -18,8 +18,11 @@ namespace Assets.CoreData.ScriptableObjects
 
         public double Consumption { get => consumption; set => consumption = value; }
 
-        //public virtual IConnectibleRelative PositiveConnectible { get => baseSO.PositiveConnectible; set => baseSO.PositiveConnectible = value as ConnectibleRelativeBase; }
-        //public virtual IConnectibleRelative NegativeConnectible { get => baseSO.NegativeConnectible; set => baseSO.NegativeConnectible = value as ConnectibleRelativeBase; }
+        public override TNode Clone<TNode>()
+        {
+            var a = base.Clone<SinkBase>();
 
+            return a as TNode;
+        }
     }
 }

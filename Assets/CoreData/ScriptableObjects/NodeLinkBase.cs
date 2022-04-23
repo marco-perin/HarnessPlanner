@@ -17,8 +17,38 @@ namespace Assets.CoreData.Types
         {
         }
 
+        public NodeLinkBase(NodeLinkBase nodeLinkBase) : base(nodeLinkBase)
+        {
+            Length = nodeLinkBase.Length;
+            FromNode = nodeLinkBase.FromNode;
+            ToNode = nodeLinkBase.ToNode;
+        }
+
         public float Length { get => length; set => length = value; }
         public IGraphicInstance ToNode { get => toNode; set => toNode = value as BaseGraphicObject; }
         public IGraphicInstance FromNode { get => fromNode; set => fromNode = value as BaseGraphicObject; }
+
+        public override TNode Clone<TNode>()
+        {
+            var newObj = new NodeLinkBase(this)
+            {
+                FromNode = FromNode,
+                ToNode = ToNode
+            };
+
+            return newObj as TNode;
+        }
+
+        public INodeLinkBase SwappedEdges
+        {
+            get
+            {
+                var linkBase = Clone<NodeLinkBase>();
+                linkBase.FromNode = ToNode;
+                linkBase.ToNode = FromNode;
+                return linkBase as INodeLinkBase;
+            }
+        }
+
     }
 }

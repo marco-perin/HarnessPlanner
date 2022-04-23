@@ -10,5 +10,13 @@ namespace Assets.CoreData.Types
         public ConnectionNodeBase(ConnectionNodeBaseSO baseSO) : base(baseSO)
         {
         }
+        public override TNode Clone<TNode>()
+        {
+            var a = base.Clone<TNode>();
+
+            a.BaseSO = (ConnectionNodeBaseSO)this.BaseSO;
+
+            return a;
+        }
     }
 }

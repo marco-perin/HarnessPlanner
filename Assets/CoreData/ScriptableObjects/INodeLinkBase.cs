@@ -7,5 +7,7 @@ namespace Assets.CoreData.Interfaces
     {
         public IGraphicInstance ToNode { get; set; }
         public IGraphicInstance FromNode { get; set; }
+
+        public INodeLinkBase SwappedEdges { get; }
     }
 }

@@ -60,13 +60,59 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
                         .Select(mbgi => mbgi.GraphicInstance.BaseWrapped as NodeLinkBase);
     }
 
-    public void GetNodesConnectedToNode(INode currentNode)
+    public List<INode> GetNodesConnectedToNode(INode currentNode)
+    {
+
+        var result = GetConnectedNodesRecursive(currentNode);
+
+        //if (incidentEdges.Any())
+        //    Debug.Log($"incidentEdges = {incidentEdges.Select(e => $"[{e.FromNode.BaseWrapped.Id}] <-> [{e.ToNode.BaseWrapped.Id}]").Aggregate((n, curr) => n + "\n" + curr)}");
+        if (result.Any())
+            Debug.Log($"connectedNodes = {result.Select(n => n.Name).Aggregate((curr, newNode) => $"{curr}, [{newNode}]")}");
+        return result;
+    }
+
+    private List<INode> GetConnectedNodesRecursive(INode currentNode)
+    {
+        // Temp dict
+        Dictionary<string, INode> visitedNodes = new();
+
+        return GetConnectedNodesRecursive(currentNode, ref visitedNodes);
+    }
+
+    private List<INode> GetConnectedNodesRecursive(INode currentNode, ref Dictionary<string, INode> visitedNodes)
     {
         var edges = ActiveConnections.ToList();
-        var incidentEdges = edges.Where(e => (e.FromNode.BaseWrapped).Id == currentNode.Id || e.ToNode.BaseWrapped.Id == currentNode.Id);
+        var incidentEdges = edges
+            .Where(e => e.FromNode.Id == currentNode.Id).ToList();
 
-        if (incidentEdges.Any())
-            Debug.Log($"incidentEdges = {incidentEdges.Select(e => $"[{e.FromNode.BaseWrapped.Id}] <-> [{e.ToNode.BaseWrapped.Id}]").Aggregate((n, curr) => n + "\n" + curr)}");
+        var reversedIncidentEdges = edges
+                .Where(e => e.ToNode.Id == currentNode.Id).ToList();
+
+        reversedIncidentEdges = reversedIncidentEdges.Select(e => e.SwappedEdges).ToList();
+
+        incidentEdges = incidentEdges.Union(reversedIncidentEdges).ToList();
+
+        var result = new List<INode>();
+
+        // Happens only if the user clicks on a non connected node
+        if (!incidentEdges.Any()) return result;
+
+        foreach (var edge in incidentEdges)
+        {
+            // Node Already visited
+            if (visitedNodes.ContainsKey(edge.ToNode.Id))
+                continue;
+
+            // Node not visited, add it
+            INode toNode = edge.ToNode.BaseWrapped as INode;
+            result.Add(toNode);
+            visitedNodes[edge.ToNode.Id] = toNode;
+
+            result.AddRange(GetConnectedNodesRecursive(toNode, ref visitedNodes));
+        }
+
+        return result;
     }
 
     public void Connect(ConnectibleManager connManager)
@@ -88,7 +134,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
     {
         if (connectionState == ConnectionState.Connected)
         {
-            Debug.Log($"Connecting {((INode)connectFrom.GraphicInstance.BaseWrapped).BaseSO.Name} to {((INode)connectTo.GraphicInstance.BaseWrapped).BaseSO.Name}");
+            //Debug.Log($"Connecting {((INode)connectFrom.GraphicInstance.BaseWrapped).BaseSO.Name} to {((INode)connectTo.GraphicInstance.BaseWrapped).BaseSO.Name}");
             var from = connectFrom;
             var to = connectTo;
 
