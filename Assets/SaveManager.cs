@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Assets.CoreData.Interfaces;
-using Assets.CoreData.ScriptableObjects;
 using Assets.GraphicData.ScriptableObjects;
 using Assets.GraphicData.Types;
-using Assets.GraphicData.Interfaces;
+using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
@@ -39,7 +35,7 @@ public class SaveManager : MonoBehaviour
         var nodes = baseObjects.Where(x => x is ConnectionNodeBaseGraphicBaseWrapper);
         var links = baseObjects.Where(x => x is NodeLinkBaseGraphicBaseWrapper);
 
-        SaveData sd = new SaveData()
+        SaveData sd = new()
         {
             sinks = sinks.Select(n => n as SinkGraphicBaseWrapper).ToList(),
             sources = sources.Select(n => n as SourceGraphicBaseWrapper).ToList(),
@@ -48,22 +44,13 @@ public class SaveManager : MonoBehaviour
         };
 
         string json = JsonUtility.ToJson(sd, true);
-        Debug.Log(json);
+        //Debug.Log(json);
 
         string fullPath = Path.Combine(Application.dataPath, "Saves", fileName);
-        string dirPath = fullPath.Substring(0, fullPath.LastIndexOfAny("/\\".ToCharArray()));
+        string dirPath = fullPath[..fullPath.LastIndexOfAny("/\\".ToCharArray())];
         var d = Directory.CreateDirectory(dirPath);
-        //d.Close();
 
         File.WriteAllText(fullPath, json);
-        //json = JsonConvert.SerializeObject(sd, Formatting.Indented);
-        //File.WriteAllText(Path.Combine(Application.dataPath, "Saves", "SaveFileNSJson.json"), json);
-
-
-        //Debug.Log(JsonConvert.SerializeObject(c.GraphicInstance));
-        //return true;
-        //foreach(
-        //JsonConvert.SerializeObject()
     }
 
     public void Load()
@@ -79,18 +66,19 @@ public class SaveManager : MonoBehaviour
 
         foreach (var sinkGraphic in sd.sinks)
         {
-            CreateSinkGraphicWrapper(sinkGraphic);
+            CreateGraphicWrapper(sinkGraphic);
         }
 
-        foreach (var sinkGraphic in sd.sources)
+        foreach (var sourceGraphic in sd.sources)
         {
-            CreateGraphicWrapper(sinkGraphic);
+            CreateGraphicWrapper(sourceGraphic);
         }
 
         foreach (var nodeGraphic in sd.nodes)
         {
             CreateGraphicWrapper(nodeGraphic);
         }
+
         foreach (var link in sd.links)
         {
             CreateGraphicWrapper(link);
@@ -114,42 +102,13 @@ public class SaveManager : MonoBehaviour
         graphSyncMB.GenerateConnectibles();
     }
 
-    private void CreateSinkGraphicWrapper(SinkGraphicBaseWrapper wrapper)
-    {
-        // Create The graphic instance wrapper
-        //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
-
-        // Instantiate the scene GameObject prefab
-        var sinkPrefabGo = Instantiate(wrapper.BaseWrapped.BaseSO.Prefab, nodesParent);
-        sinkPrefabGo.transform.position = wrapper.Position;
-        sinkPrefabGo.name = wrapper.BaseWrapped.Name;
-
-        // Add the graphical Sync to the prefab object
-        var graphSyncMB = sinkPrefabGo.AddComponent<GraphicalSOSync>();
-        graphSyncMB.GraphicInstance = wrapper;
-
-        graphSyncMB.GenerateConnectibles();
-    }
-
 }
 
 [Serializable]
 public class SaveData
 {
-    //public List<SinkGraphicBaseWrapper> sinks;
-    public List<SinkGraphicBaseWrapper> sinks;
-    public List<SourceGraphicBaseWrapper> sources;
-    public List<ConnectionNodeBaseGraphicBaseWrapper> nodes;
+    [SerializeReference] public List<SinkGraphicBaseWrapper> sinks;
+    [SerializeReference] public List<SourceGraphicBaseWrapper> sources;
+    [SerializeReference] public List<ConnectionNodeBaseGraphicBaseWrapper> nodes;
     public List<NodeLinkBaseGraphicBaseWrapper> links;
 }
-
-//[Serializable]
-//public class NodeSaveData
-//{
-//    public List<NodeSaveData> childs;
-
-//    NodeSaveData()
-//    {
-//        childs = new List<NodeSaveData>();
-//    }
-//}
