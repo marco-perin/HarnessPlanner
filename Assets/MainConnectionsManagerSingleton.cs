@@ -28,22 +28,44 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
     public Transform connectionsParent;
 
-
     public void ResetConnectionState()
     {
+        continousConnection = false;
         connectionState = ConnectionState.None;
     }
 
-    public void Connect(ConnectibleManager connManager, Transform connection_transform = null)
+    private bool continousConnection = false;
+
+    private void Start()
     {
+        InputManager.Instance.AddKeyDownAction(KeyCode.LeftShift, () =>
+        {
+            continousConnection = true;
+            if (connectFrom != null)
+                connectionState = ConnectionState.Started;
+        });
+
+        InputManager.Instance.AddKeyUpAction(KeyCode.LeftShift, () =>
+        {
+            continousConnection = false;
+            connectionState = ConnectionState.None;
+        });
+    }
+
+
+    public void Connect(ConnectibleManager connManager)
+    {
+        //Debug.Log($"Connecting connManager {connManager.name} in state {connectionState}, with continous turned");
+
         switch (connectionState)
         {
             case ConnectionState.None:
 
                 connectFrom = connManager;
-
                 connectionState++;
+
                 break;
+
             case ConnectionState.Started:
 
                 connectTo = connManager;
@@ -63,9 +85,14 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
             var to = connectTo;
 
             CreateConnection(from, to);
-
-            // Finish up connection 
-            connectionState = ConnectionState.None;
+            if (!continousConnection)
+                // Finish up connection 
+                connectionState = ConnectionState.None;
+            else
+            {
+                connectFrom = connectTo;
+                connectionState = ConnectionState.Started;
+            }
         }
     }
 

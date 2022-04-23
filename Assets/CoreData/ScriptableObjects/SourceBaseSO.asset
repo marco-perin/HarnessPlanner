@@ -16,5 +16,9 @@ MonoBehaviour:
   _name: test source
   pinConfiguration:
     pinNames:
-    - POS
-    - NEG
+    - id: 1
+      name: POS
+      description: 
+    - id: 0
+      name: NEG
+      description: 

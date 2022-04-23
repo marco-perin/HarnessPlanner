@@ -5,7 +5,8 @@ using Assets.CoreData.Types;
 using Assets.GraphicData.Interfaces;
 using Assets.GraphicData.ScriptableObjects;
 using Assets.GraphicData.Types;
-using Assets.UXData.Interfaces;
+//using Assets.UXData.Interfaces;
+using UnityEngine.EventSystems;
 using UnityEngine;
 
 #if  ENABLE_INPUT_SYSTEM
@@ -21,7 +22,7 @@ public enum PlacingType
     Link
 }
 
-public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
+public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionStartableV3
 {
     [Header("Scene Config")]
     public Transform newObjectsParentTransform;
@@ -41,26 +42,32 @@ public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
 
     private void Start()
     {
-        InputManager.Instance.AddAction(KeyCode.S,
+        InputManager.Instance.AddKeyDownAction(KeyCode.S,
             () => placing = PlacingType.Sink,
             true
             );
 
-        InputManager.Instance.AddAction(KeyCode.P,
+        InputManager.Instance.AddKeyDownAction(KeyCode.P,
             () => placing = PlacingType.Source,
             true
             );
 
-        InputManager.Instance.AddAction(KeyCode.N,
+        InputManager.Instance.AddKeyDownAction(KeyCode.N,
             () => placing = PlacingType.Node,
             true
             );
 
-        InputManager.Instance.AddAction(KeyCode.None,
+        InputManager.Instance.AddKeyDownAction(KeyCode.None,
             () => placing = PlacingType.None
             );
     }
 
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        //Debug.Log("OnPointerDown Of Harness placer");
+        StartInteraction(eventData.pointerPressRaycast.worldPosition);
+    }
 
     public void StartInteraction(Vector3 param)
     {
@@ -175,4 +182,5 @@ public class HarnessPlacer : MonoBehaviour, IInteractionStartableV3
 
         graphSyncMB.GenerateConnectibles();
     }
+
 }

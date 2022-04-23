@@ -1,54 +1,76 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputManager : Singleton<InputManager>
 {
-    public Dictionary<KeyCode, EventList> actions;
+    public Dictionary<KeyCode, EventList> actionsKeyDown;
+    public Dictionary<KeyCode, EventList> actionsKeyUp;
 
     protected override void PostAwake()
     {
         if (IsThisInstance())
         {
-            actions = new Dictionary<KeyCode, EventList>();
+            actionsKeyDown = new Dictionary<KeyCode, EventList>();
+            actionsKeyUp = new Dictionary<KeyCode, EventList>();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (IsNotPressingAnyKey()) return;
-
-        if (!Input.GetMouseButtonDown(0))
-            if (actions[KeyCode.None]?.actions.Count > 0)
+        var arr = actionsKeyUp;
+        if (!Input.GetMouseButtonUp(0))
+            if (arr.ContainsKey(KeyCode.None) && arr[KeyCode.None]?.actions.Count > 0)
             {
-                ExecuteKeyCodeActions(KeyCode.None);
+                ExecuteKeyCodeForActionsDict(KeyCode.None, arr);
             }
 
-        foreach (KeyCode keyCode in actions.Keys.Where(kc => kc != KeyCode.None))
+        foreach (KeyCode keyCode in arr.Keys.Where(kc => kc != KeyCode.None))
+        {
+            if (Input.GetKeyUp(keyCode))
+            {
+                ExecuteKeyCodeForActionsDict(keyCode, arr);
+            }
+        }
+
+        if (IsNotPressingAnyButton()) return;
+
+        arr = actionsKeyDown;
+
+        if (!Input.GetMouseButtonDown(0))
+            if (arr.ContainsKey(KeyCode.None) && arr[KeyCode.None]?.actions.Count > 0)
+            {
+                ExecuteKeyCodeForActionsDict(KeyCode.None, arr);
+            }
+
+        foreach (KeyCode keyCode in arr.Keys.Where(kc => kc != KeyCode.None))
         {
             if (Input.GetKeyDown(keyCode))
             {
-                ExecuteKeyCodeActions(keyCode);
+                ExecuteKeyCodeForActionsDict(keyCode, arr);
             }
         }
 
     }
 
-    private void ExecuteKeyCodeActions(KeyCode keyCode)
+    private void ExecuteKeyCodeForActionsDict(KeyCode keyCode, Dictionary<KeyCode, EventList> actionsArray)
     {
-        Debug.Assert(actions.ContainsKey(keyCode));
+        Debug.Assert(actionsArray.ContainsKey(keyCode));
 
-        foreach (Action action in actions[keyCode].actions)
+        foreach (Action action in actionsArray[keyCode].actions)
         {
             Debug.Assert(action != null);
-            action();
+            if (actionsArray == actionsKeyUp)
+                Debug.Log("Executing KeyUp Action for key " + keyCode);
+            action?.Invoke();
         }
     }
 
-    private static bool IsNotPressingAnyKey()
+
+    private static bool IsNotPressingAnyButton()
     {
         return !Input.anyKeyDown;
     }
@@ -61,21 +83,38 @@ public class InputManager : Singleton<InputManager>
     /// <param name="action"></param>
     /// <param name="exclusive"></param>
     /// <exception cref="ArgumentException">If the exclusivity is violated</exception>
-    public void AddAction(KeyCode key, Action action, bool exclusive = false)
+    public void AddKeyDownAction(KeyCode key, Action action, bool exclusive = false)
     {
         // Prevent the None key to be exclusive
         Debug.Assert(!(key == KeyCode.None && exclusive == true), "You cannot add to the Keycode.None key an exlusive event");
-
-        if (!actions.ContainsKey(key))
+        //Debug.Log($"Adding action to Key {key} as {(exclusive ? "" : "not")} exclusive");
+        if (!actionsKeyDown.ContainsKey(key))
         {
-            actions[key] = new EventList(exclusive);
+            actionsKeyDown[key] = new EventList(exclusive);
         }
-        else if (exclusive || actions[key].exclusive)
+        else if (exclusive || actionsKeyDown[key].exclusive)
             throw new ArgumentException(
                 "Exclusive event was trying to be added, " +
                 "but another one with the same key was already present!");
 
-        actions[key].actions.Add(action);
+        actionsKeyDown[key].actions.Add(action);
+    }
+
+    public void AddKeyUpAction(KeyCode key, Action action, bool exclusive = false)
+    {
+        // Prevent the None key to be exclusive
+        Debug.Assert(!(key == KeyCode.None && exclusive == true), "You cannot add to the Keycode.None key an exlusive event");
+
+        if (!actionsKeyUp.ContainsKey(key))
+        {
+            actionsKeyUp[key] = new EventList(exclusive);
+        }
+        else if (exclusive || actionsKeyUp[key].exclusive)
+            throw new ArgumentException(
+                "Exclusive event was trying to be added, " +
+                "but another one with the same key was already present!");
+
+        actionsKeyUp[key].actions.Add(action);
     }
 
     public class EventList

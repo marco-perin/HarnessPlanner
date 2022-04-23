@@ -9,7 +9,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 191237119019476421, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_Name
-      value: Node
+      value: Sink
+      objectReference: {fileID: 0}
+    - target: {fileID: 854480132189489166, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6393844520243736739, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6655062902175122834, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_RootOrder

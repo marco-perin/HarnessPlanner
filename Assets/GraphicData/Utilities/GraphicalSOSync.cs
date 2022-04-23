@@ -48,7 +48,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
         get
         {
             if (connectionsBtn == null)
-                connectionsBtn = transform.GetChild(0).Find("ConnectButton").GetComponent<Button>();
+                connectionsBtn = transform.GetChild(0).Find("ConnectionsBtn").GetComponent<Button>();
 
             return connectionsBtn;
         }
@@ -56,6 +56,20 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
     }
 
     ConnectionPrefabManager connectionPrefabManager;
+
+    private void Start()
+    {
+        switch (GraphicInstance.BaseWrapped)
+        {
+            case SinkBase:
+            case SourceBase:
+                ConnectionsBtn.onClick.RemoveAllListeners();
+                ConnectionsBtn.onClick.AddListener(() => UINodePanelSpawner.Instance.SpawnPanel(GraphicInstance));
+                break;
+            default:
+                break;
+        }
+    }
 
     void Update()
     {
@@ -72,9 +86,8 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 gameObject.name = sink.Name;
 
                 AttributeText.text = "" + sink.Consumption + " A";
-
-                ConnectionsBtn.onClick.RemoveAllListeners();
-                //ConnectionsBtn.onClick.AddListener(() =>);
+                
+                //ConnectionsBtn.onClick.RemoveAllListeners();
 
                 break;
             case SourceBase source:
@@ -85,6 +98,8 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 gameObject.name = source.Name;
 
                 AttributeText.text = "Max: " + source.MaxAvailability + " A";
+
+                //ConnectionsBtn.onClick.RemoveAllListeners();
 
                 break;
 
