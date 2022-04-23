@@ -12,6 +12,19 @@ public class SaveManager : MonoBehaviour
     public Transform nodesParent;
     public MainConnectionsManagerSingleton connectionsManager;
 
+    private string BaseSavePath
+    {
+        get
+        {
+            return
+#if UNITY_EDITOR
+                Path.Combine(Application.dataPath, "Saves");
+#else
+            Path.Combine(Application.persistentDataPath, "Saves");
+#endif
+        }
+    }
+
     private void Start()
     {
         connectionsManager = MainConnectionsManagerSingleton.Instance;
@@ -44,9 +57,8 @@ public class SaveManager : MonoBehaviour
         };
 
         string json = JsonUtility.ToJson(sd, true);
-        //Debug.Log(json);
 
-        string fullPath = Path.Combine(Application.dataPath, "Saves", fileName);
+        string fullPath = Path.Combine(BaseSavePath, fileName);
         string dirPath = fullPath[..fullPath.LastIndexOfAny("/\\".ToCharArray())];
         var d = Directory.CreateDirectory(dirPath);
 
@@ -61,7 +73,7 @@ public class SaveManager : MonoBehaviour
     public void Load(string fileName)
     {
 
-        string json = File.ReadAllText(Path.Combine(Application.dataPath, "Saves", fileName));
+        string json = File.ReadAllText(Path.Combine(BaseSavePath, fileName));
         SaveData sd = JsonUtility.FromJson<SaveData>(json);
 
         foreach (var sinkGraphic in sd.sinks)
