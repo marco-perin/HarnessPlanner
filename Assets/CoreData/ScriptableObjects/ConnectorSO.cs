@@ -1,15 +1,15 @@
-﻿using Assets.CoreData.Interfaces;
-using Assets.CoreData.Types;
-using UnityEngine;
+﻿//using Assets.CoreData.Interfaces;
+//using Assets.CoreData.Types;
+//using UnityEngine;
 
-namespace Assets.CoreData.ScriptableObjects
-{
-    //[CreateAssetMenu(fileName = "ConnectorSO", menuName = "CoreDataSO/ConnectorSO")]
-    public class ConnectorSO : LinkBase, ILink<IConnectibleRelative>, INamed
-    {
-        [SerializeField] private string _name;
+//namespace Assets.CoreData.ScriptableObjects
+//{
+//    //[CreateAssetMenu(fileName = "ConnectorSO", menuName = "CoreDataSO/ConnectorSO")]
+//    public class ConnectorSO : LinkBase, ILink<IConnectibleRelative>, INamed
+//    {
+//        [SerializeField] private string _name;
 
-        public string Name { get => _name; set => _name = value; }
+//        public string Name { get => _name; set => _name = value; }
 
-    }
-}
+//    }
+//}

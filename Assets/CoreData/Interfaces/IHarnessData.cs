@@ -2,7 +2,7 @@
 {
     public interface IHarnessData : INamed, IDescribed, IVersioned, IDateTimed
     {
-        IHarnessTopology Topology { get; set; }
+        //IHarnessTopology Topology { get; set; }
     }
 
     public interface IHarnessTopology

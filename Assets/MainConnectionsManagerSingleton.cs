@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.CoreData.Interfaces;
 using Assets.CoreData.Types;
 using Assets.GraphicData.Interfaces;
@@ -52,27 +52,35 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         });
     }
 
+    public IEnumerable<INodeLinkBase> ActiveConnections
+    {
+        get => connectionsParent
+                        .GetComponentsInChildren<GraphicalSOSync>()
+                        .Where(mbgi => mbgi.GraphicInstance is NodeLinkBaseGraphicBaseWrapper nlbgi)
+                        .Select(mbgi => mbgi.GraphicInstance.BaseWrapped as NodeLinkBase);
+    }
+
+    public void GetNodesConnectedToNode(INode currentNode)
+    {
+        var edges = ActiveConnections.ToList();
+        var incidentEdges = edges.Where(e => (e.FromNode.BaseWrapped).Id == currentNode.Id || e.ToNode.BaseWrapped.Id == currentNode.Id);
+
+        if (incidentEdges.Any())
+            Debug.Log($"incidentEdges = {incidentEdges.Select(e => $"[{e.FromNode.BaseWrapped.Id}] <-> [{e.ToNode.BaseWrapped.Id}]").Aggregate((n, curr) => n + "\n" + curr)}");
+    }
 
     public void Connect(ConnectibleManager connManager)
     {
-        //Debug.Log($"Connecting connManager {connManager.name} in state {connectionState}, with continous turned");
-
         switch (connectionState)
         {
             case ConnectionState.None:
-
                 connectFrom = connManager;
                 connectionState++;
-
                 break;
-
             case ConnectionState.Started:
-
                 connectTo = connManager;
-
                 connectionState++;
                 break;
-
         }
     }
 
@@ -98,8 +106,6 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
     private void CreateConnection(ConnectibleManager from, ConnectibleManager to)
     {
-        // Debug connections
-        //connections.Add(new GraphicConnection(from, to));
 
         IGraphicInstance wrapper = new NodeLinkBaseGraphicBaseWrapper()
         {
@@ -114,6 +120,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
         HarnessPlacer.CreateGraphicWrapper(wrapper, connectionsParent);
     }
+
 
     private void OnDrawGizmos()
     {

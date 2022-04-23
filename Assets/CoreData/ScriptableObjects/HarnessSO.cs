@@ -12,12 +12,12 @@ namespace Assets.CoreData.ScriptableObjects
         [SerializeField] protected string description;
         [SerializeField] protected string version;
         [SerializeField] protected DateTime date;
-        [SerializeField] protected HarnessTopologyBase topology;
+        //[SerializeField] protected HarnessTopologyBase topology;
 
         public string Name { get => _name; set => _name = value; }
         public string Description { get => description; set => description = value; }
         public string Version { get => version; set => version = value; }
         public DateTime Date { get => date; set => date = value; }
-        public virtual IHarnessTopology Topology { get => topology; set => topology = value as HarnessTopologyBase; }
+        //public virtual IHarnessTopology Topology { get => topology; set => topology = value as HarnessTopologyBase; }
     }
 }

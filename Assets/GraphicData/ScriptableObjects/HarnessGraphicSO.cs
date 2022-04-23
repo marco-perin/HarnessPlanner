@@ -11,6 +11,6 @@ namespace Assets.GraphicData.ScriptableObjects
     {
         //[SerializeField] private HarnessTopologyGraphic topology;
 
-        public override IHarnessTopology Topology { get => topology; set => topology = value as HarnessTopologyGraphic; }
+        //public override IHarnessTopology Topology { get => topology; set => topology = value as HarnessTopologyGraphic; }
     }
 }

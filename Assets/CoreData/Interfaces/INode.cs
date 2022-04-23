@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.CoreData.Interfaces
 {
-    public interface IBaseType { }
+    public interface IBaseType : IWithId { }
     public interface INode : IBaseType, INamed
     {
         INodeSO BaseSO { get; set; }
@@ -26,6 +26,7 @@ namespace Assets.CoreData.Interfaces
     public abstract class BaseNode : INode
     {
         [SerializeField] protected string _name;
+        [SerializeField] protected string _id;
 
         public BaseNode(INodeSO baseSO)
         {
@@ -34,10 +35,12 @@ namespace Assets.CoreData.Interfaces
             {
                 Name = baseSO.Name;
             }
+            Id = Guid.NewGuid().ToString();
         }
 
         public abstract INodeSO BaseSO { get; set; }
         public string Name { get => _name; set => _name = value; }
+        public string Id { get => _id; set => _id = value; }
     }
 
     public interface INodeSO : IWithPrefab, INamed { }
