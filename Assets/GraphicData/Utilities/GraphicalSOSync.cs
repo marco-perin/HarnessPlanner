@@ -86,7 +86,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 gameObject.name = sink.Name;
 
                 AttributeText.text = "" + sink.Consumption + " A";
-                
+
                 //ConnectionsBtn.onClick.RemoveAllListeners();
 
                 break;
@@ -114,6 +114,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
 
                 connectionPrefabManager.To.position = nodeLink.ToNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.From.position = nodeLink.FromNode.Position + GraphicInstance.Position.z * Vector3.forward;
+                connectionPrefabManager.LengthText.text = nodeLink.Length + "m";
 
                 break;
             default:

@@ -174,7 +174,7 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionS
     {
         var sinkPrefabGo = Instantiate((wrapper.BaseWrapped as INode).BaseSO.Prefab, parent);
         sinkPrefabGo.transform.position = wrapper.Position;
-        sinkPrefabGo.name = (wrapper.BaseWrapped as INode).BaseSO.Name;
+        sinkPrefabGo.name = (wrapper.BaseWrapped as INode).Name;
 
         // Add the graphical Sync to the prefab object
         var graphSyncMB = sinkPrefabGo.AddComponent<GraphicalSOSync>();

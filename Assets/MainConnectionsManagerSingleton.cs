@@ -60,6 +60,8 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
                         .Select(mbgi => mbgi.GraphicInstance.BaseWrapped as NodeLinkBase);
     }
 
+    #region GRAPH_ALGORITHMS
+
     public IEnumerable<IGraphicInstance> GetNodesConnectedToNode(IGraphicInstance currentNode)
     {
 
@@ -75,24 +77,40 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
     private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode)
     {
-        // Temp dict
-        Dictionary<string, IGraphicInstance> visitedNodes = new();
+        return GetConnectedNodesWithPaths(currentNode, out _);
+    }
+
+    private IEnumerable<IGraphicInstance> GetConnectedNodesWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes)
+    {
+        visitedNodes = new();
+
+
+        // ATTENTION: Without the following line the algorithm resets the nodes name, except for the currentNode, I still don't understand why.
+        //            ( And also the program takes into account the starting node )
+        visitedNodes.Add(currentNode, new List<INodeLinkBase>());
 
         return GetConnectedNodesRecursive(currentNode, ref visitedNodes);
     }
 
-    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<string, IGraphicInstance> visitedNodes)
+    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes)
+    {
+        // Temp list
+        List<INodeLinkBase> previousEdges = new();
+        return GetConnectedNodesRecursive(currentNode, ref visitedNodes, previousEdges.AsEnumerable());
+    }
+
+    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes, IEnumerable<INodeLinkBase> previousEdges)
     {
         var edges = ActiveConnections.ToList();
         var incidentEdges = edges
-            .Where(e => e.FromNode.Id == currentNode.Id).ToList();
+            .Where(e => e.FromNode.Id == currentNode.Id);//.ToList();
 
         var reversedIncidentEdges = edges
-                .Where(e => e.ToNode.Id == currentNode.Id).ToList();
+                .Where(e => e.ToNode.Id == currentNode.Id);//.ToList();
 
-        reversedIncidentEdges = reversedIncidentEdges.Select(e => e.SwappedEdges).ToList();
+        reversedIncidentEdges = reversedIncidentEdges.Select(e => e.SwappedEdges);//.ToList();
 
-        incidentEdges = incidentEdges.Union(reversedIncidentEdges).ToList();
+        incidentEdges = incidentEdges.Union(reversedIncidentEdges);//.ToList();
 
         var result = new List<IGraphicInstance>();
 
@@ -101,21 +119,26 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
         foreach (var edge in incidentEdges)
         {
+            IGraphicInstance toNode = edge.ToNode;
+
             // Node Already visited
-            if (visitedNodes.ContainsKey(edge.ToNode.Id))
+            if (visitedNodes.ContainsKey(toNode))
                 continue;
 
             // Node not visited, add it
-            IGraphicInstance toNode = edge.ToNode;
             result.Add(toNode);
-            visitedNodes[edge.ToNode.Id] = toNode;
 
-            result.AddRange(GetConnectedNodesRecursive(toNode, ref visitedNodes));
+            visitedNodes[toNode] = incidentEdges;
+
+            result.AddRange(GetConnectedNodesRecursive(toNode, ref visitedNodes, previousEdges.Append(edge)));
         }
+        if (result.Any())
+            Debug.Log($"connectedNodes @{(currentNode.BaseWrapped as INode)?.Name} : {result.Select(n => (n.BaseWrapped as INode).Name).Aggregate((curr, newNode) => $"{curr}, [{newNode}]")}");
 
         return result;
     }
 
+    #endregion GRAPH_ALGORITHMS
     public void Connect(ConnectibleManager connManager)
     {
         switch (connectionState)
