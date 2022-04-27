@@ -9,9 +9,10 @@ namespace Assets.GraphicData.ScriptableObjects
     [Serializable]
     public class SinkGraphic : BaseGraphicObject, IGraphicSink
     {
-        [SerializeField] protected SinkBase baseWrapped;
+        [SerializeField]
+        [SerializeReference]
+        protected SinkBase baseWrapped;
 
         public override IBaseType BaseWrapped { get => baseWrapped; set => baseWrapped = value as SinkBase; }
     }
-
 }

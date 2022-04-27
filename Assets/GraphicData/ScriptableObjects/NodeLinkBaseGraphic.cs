@@ -9,7 +9,8 @@ namespace Assets.GraphicData.ScriptableObjects
     [Serializable]
     public class NodeLinkBaseGraphic : BaseGraphicObject, IGraphicNodeLinkBase
     {
-        [SerializeField] protected NodeLinkBase baseWrapped;
+        [SerializeField]
+        [SerializeReference] protected NodeLinkBase baseWrapped;
 
         public override IBaseType BaseWrapped { get => baseWrapped; set => baseWrapped = value as NodeLinkBase; }
 

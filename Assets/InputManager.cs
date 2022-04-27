@@ -18,7 +18,6 @@ public class InputManager : Singleton<InputManager>
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         var arr = actionsKeyUp;

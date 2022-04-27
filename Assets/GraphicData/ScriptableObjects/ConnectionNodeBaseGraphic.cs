@@ -9,7 +9,8 @@ namespace Assets.GraphicData.ScriptableObjects
     [Serializable]
     public class ConnectionNodeBaseGraphic : BaseGraphicObject, IConnectionNodeBase
     {
-        [SerializeField] protected ConnectionNodeBase baseWrapped;
+        [SerializeField]
+        [SerializeReference] protected ConnectionNodeBase baseWrapped;
 
         public override IBaseType BaseWrapped { get => baseWrapped; set => baseWrapped = value as ConnectionNodeBase; }
 

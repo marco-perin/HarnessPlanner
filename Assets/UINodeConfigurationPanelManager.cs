@@ -11,6 +11,7 @@ using UnityEngine;
 public class UINodeConfigurationPanelManager : MonoBehaviour
 {
     public TMP_InputField name_input;
+    public TMP_Text name_text;
     public TMP_InputField attribute_input;
     public TMP_Text attribute_text;
 
@@ -19,25 +20,31 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
 
     public IGraphicInstance graphicInstance;
 
-    public List<INode> connectedNodesList;
+    public List<IBaseNodeWithPinnedSO> connectedNodesList;
     private List<INode> selectedNodesList;
 
     //public IEnumerable<INode> AvailableNodes;
 
-    void Start()
+    void Awake()
     {
-        selectedNodesList = new();
-        connectedNodesList = new();
+        selectedNodesList ??= new();
+        connectedNodesList ??= new();
     }
 
     public void ClosePanel()
     {
-        UINodePanelSpawner.Instance.ClosePanel();
+        if (name_input != null)
+            name_input.onValueChanged.RemoveAllListeners();
+
+        if (attribute_input != null)
+            attribute_input.onValueChanged.RemoveAllListeners();
+
+        UINodePanelSpawner.Instance.ClosePanels();
     }
 
     public void SetGraphicInstance(IGraphicInstance gInstance)
     {
-
+        graphicInstance = gInstance;
         if (gInstance == null)
             return;
 
@@ -45,6 +52,7 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         {
             SinkBase sb => "Consumption: ",
             SourceBase sb => "Max Current: ",
+            NodeLinkBase lb => "Length: ",
             _ => null
         };
 
@@ -52,6 +60,7 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         {
             SinkBase => TMP_InputField.ContentType.DecimalNumber,
             SourceBase => TMP_InputField.ContentType.DecimalNumber,
+            NodeLinkBase => TMP_InputField.ContentType.DecimalNumber,
             _ => TMP_InputField.ContentType.Standard,
 
         };
@@ -61,15 +70,6 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         else
             attribute_text.text = text;
 
-        attribute_input.contentType = attributeInputType;
-
-        attribute_input.text = gInstance.BaseWrapped switch
-        {
-            SinkBase sb => sb.Consumption.ToString(),
-            SourceBase sb => sb.MaxAvailability.ToString(),
-            _ => "",
-
-        };
 
         attribute_input.onValueChanged.RemoveAllListeners();
 
@@ -81,24 +81,46 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
             case SourceBase sb:
                 attribute_input.onValueChanged.AddListener((value) => sb.MaxAvailability = double.Parse(value));
                 break;
+            case NodeLinkBase lb:
+                attribute_input.onValueChanged.AddListener((value) => lb.Length = double.Parse(value));
+                break;
         }
 
+        attribute_input.contentType = attributeInputType;
 
-        name_input.text = (gInstance.BaseWrapped as INode).Name;
+        attribute_input.text = gInstance.BaseWrapped switch
+        {
+            SinkBase sb => sb.Consumption.ToString(),
+            SourceBase sb => sb.MaxAvailability.ToString(),
+            NodeLinkBase lb => lb.Length.ToString(),
+            _ => ""
+        };
 
-        name_input.onValueChanged.RemoveAllListeners();
+        switch (gInstance.BaseWrapped)
+        {
+            case SinkBase:
+            case SourceBase:
+                name_input.onValueChanged.RemoveAllListeners();
 
-        name_input.onValueChanged.AddListener((newName) => (gInstance.BaseWrapped as INode).Name = newName);
+                name_input.text = (gInstance.BaseWrapped as INode).Name;
+                name_input.onValueChanged.AddListener((newName) => (gInstance.BaseWrapped as INode).Name = newName);
 
+                break;
+            case NodeLinkBase lb:
+                attribute_input.Select();
+                attribute_input.ActivateInputField();
+                break;
 
-        var connectedNodes = MainConnectionsManagerSingleton.Instance.GetNodesConnectedToNode(gInstance);
+        }
+
+        IEnumerable<IGraphicInstance> connectedNodes = MainConnectionsManagerSingleton.Instance.GetNodesConnectedToNode(gInstance);
 
         if (connectedNodes.Any())
         {
             connectedNodesList.Clear();
             foreach (var node in connectedNodes)
             {
-                if (node.BaseWrapped is INode inode && inode.BaseSO is IPinnedObjectSO pinnedObjectSO)
+                if (node.BaseWrapped is IBaseNodeWithPinnedSO inode)
                     connectedNodesList.Add(inode);
             }
         }
@@ -127,22 +149,67 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
 
                 panelMgr.SetParent(this);
 
+                panelMgr.InitOptions(gInstance.BaseWrapped as IBaseNodeWithPinnedSO);
+                //panelMgr.sele(pinned_so);
+
             }
         }
 
-
-
     }
 
-    public IEnumerable<INode> SelectNode(INode node, INode previousSelectedNode)
+    internal void SelectPinForNode(IPinData fromPinData, IBaseNodeWithPinnedSO node, IPinData pinData)
     {
-        if (previousSelectedNode != null)
-            selectedNodesList.Remove(previousSelectedNode);
 
-        selectedNodesList.Add(node);
+        Debug.Assert(node != null);
+        Debug.Assert(pinData != null);
+
+        if (graphicInstance.BaseWrapped is not IBaseNodeWithPinnedSO pinnedSo)
+            return;
+
+        var connections = pinnedSo.Connections as IEnumerable<NodeConnectionTo>;
+
+        if (connections != null && connections.Any(c => c.PinFromData.Equals(fromPinData)))
+        {
+            connections = connections.Select(c =>
+            {
+                if (c.PinFromData.Equals(fromPinData))
+                {
+                    c.ConnectedNode = node;
+                    c.PinToData = pinData;
+                }
+
+                return c;
+            });
+        }
+        else
+        {
+            var newConnection = new NodeConnectionTo()
+            {
+                PinFromData = fromPinData,
+                ConnectedNode = node,
+                PinToData = pinData
+            };
+
+            if (connections != null)
+                connections = connections.Append(newConnection);
+            else
+                connections = new List<NodeConnectionTo>() { newConnection };
+            //connections.
+
+            pinnedSo.Connections = connections;
+        }
+    }
+
+    public void SelectNode(IBaseNodeWithPinnedSO node, IBaseNodeWithPinnedSO previousSelectedNode)
+    {
+        Debug.Assert(node != null);
+        //    if (previousSelectedNode != null)
+        //        selectedNodesList.Remove(previousSelectedNode);
+
+        //    selectedNodesList.Add(node);
 
         // TODO: Check for faster implementations (caching)
-        return connectedNodesList.Where(cn => !selectedNodesList.Contains(cn));
+        //return connectedNodesList.Where(cn => !selectedNodesList.Contains(cn));
     }
 
 

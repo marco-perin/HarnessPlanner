@@ -17,11 +17,14 @@ MonoBehaviour:
   pinConfiguration:
     pinNames:
     - id: 1
+      pinNumber: 1
       name: POS
       description: 
     - id: 2
+      pinNumber: 2
       name: NEG
       description: 
     - id: 3
+      pinNumber: 3
       name: LOL
       description: 

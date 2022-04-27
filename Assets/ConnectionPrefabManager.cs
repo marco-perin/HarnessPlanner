@@ -7,16 +7,21 @@ using UnityEngine.EventSystems;
 
 [ExecuteInEditMode]
 
-public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerClickHandler// IPointerEnterHandler, IPointerExitHandler
+public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerClickHandler
 {
     public Transform From;
     public Transform To;
+    public Canvas LengthTextCanvas;
     public TMP_Text LengthText;
     public EdgeCollider2D EdgeCollider;
     public LineRenderer LineRenderer;
 
     [Range(2, 200)]
     public int pointNumber = 100;
+
+    public float textDistance = 0.3f;
+
+
     public static IEnumerable<float> points;
 
     // Start is called before the first frame update
@@ -24,6 +29,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
     {
         Debug.Assert(From != null);
         Debug.Assert(To != null);
+        Debug.Assert(LengthTextCanvas != null);
         Debug.Assert(LengthText != null);
 
         if (EdgeCollider == null)
@@ -42,6 +48,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
     {
         if (EdgeCollider == null) return;
         if (LineRenderer == null) return;
+        if (LengthTextCanvas == null) return;
         if (LengthText == null) return;
 
         //var points = EdgeCollider.points;
@@ -63,7 +70,11 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
 #endif
 #endif
 
-        LengthText.transform.position = Vector3.Lerp(From.position, To.position, 0.5f) + Quaternion.FromToRotation(Vector3.right, To.position - From.position) * Vector3.up * 0.2f;
+        var updir = Quaternion.FromToRotation(Vector3.right, To.position - From.position) * Vector3.up;
+        if (Vector3.Dot(updir, Vector3.up) < 0)
+            updir = -updir;
+
+        LengthTextCanvas.transform.position = Vector3.Lerp(From.position, To.position, 0.5f) + updir * textDistance;
         LineRenderer.SetPositions(points.Select(t => Vector3.Lerp(From.position, To.position, t)).ToArray());
         EdgeCollider.SetPoints(points.Select(t => Vector2.Lerp(From.position, To.position, t)).ToList());
     }
@@ -80,6 +91,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-
+        if ((eventData.pressPosition - eventData.position).sqrMagnitude < 2)
+            UINodePanelSpawner.Instance.SpawnPanel(GraphicInstance);
     }
 }

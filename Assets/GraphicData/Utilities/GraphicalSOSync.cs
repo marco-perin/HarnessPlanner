@@ -131,6 +131,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
         //    original: MainManagerSingleton.Instance.Settings.DefaultConnectiblePrefab,
         //    parent: transform
         //    );
-        gameObject.AddComponent<ConnectibleManager>();
+        if (GraphicInstance.BaseWrapped is not NodeLinkBase)
+            gameObject.AddComponent<ConnectibleManager>();
     }
 }

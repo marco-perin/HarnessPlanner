@@ -180,6 +180,7 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionS
         var graphSyncMB = sinkPrefabGo.AddComponent<GraphicalSOSync>();
         graphSyncMB.GraphicInstance = wrapper;
 
+
         graphSyncMB.GenerateConnectibles();
     }
 

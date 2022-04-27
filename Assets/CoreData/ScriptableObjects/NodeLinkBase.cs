@@ -9,7 +9,7 @@ namespace Assets.CoreData.Types
     [Serializable]
     public class NodeLinkBase : BaseNode<NodeLinkBaseSO>, INodeLinkBase
     {
-        [SerializeField] private float length;
+        [SerializeField] private double length;
         [SerializeField][SerializeReference] private BaseGraphicObject fromNode;
         [SerializeField][SerializeReference] private BaseGraphicObject toNode;
 
@@ -24,7 +24,7 @@ namespace Assets.CoreData.Types
             ToNode = nodeLinkBase.ToNode;
         }
 
-        public float Length { get => length; set => length = value; }
+        public double Length { get => length; set => length = value; }
         public IGraphicInstance ToNode { get => toNode; set => toNode = value as BaseGraphicObject; }
         public IGraphicInstance FromNode { get => fromNode; set => fromNode = value as BaseGraphicObject; }
 

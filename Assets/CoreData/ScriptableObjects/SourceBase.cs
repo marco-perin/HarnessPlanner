@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Assets.CoreData.ScriptableObjects
 {
     [Serializable]
-    public class SourceBase : BaseNode<SourceBaseSO>, ISource
+    public class SourceBase : BaseNodeWithPinnedSO<SourceBaseSO>, ISource
     {
         [SerializeField] private double maxAvailability;
         //[SerializeField] private ConnectibleRelativeBase positiveConnectible;

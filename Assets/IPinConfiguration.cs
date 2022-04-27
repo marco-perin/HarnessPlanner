@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Assets.CoreData.Interfaces;
 using UnityEngine;
 
 public interface IPinConfiguration
@@ -7,9 +9,9 @@ public interface IPinConfiguration
     IEnumerable<IPinData> PinDataArray { get; }
 }
 
-public interface IPinData
+public interface IPinData : IWithId, IEquatable<IPinData>
 {
-    int Id { get; set; }
+    int PinNumber { get; set; }
     string Name { get; }
     string Description { get; }
 }

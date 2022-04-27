@@ -7,10 +7,12 @@ using Assets.GraphicData.ScriptableObjects;
 using Assets.GraphicData.Types;
 using UnityEngine;
 
-public class SaveManager : MonoBehaviour
+public class SaveManager : Singleton<SaveManager>
 {
     public Transform nodesParent;
     public MainConnectionsManagerSingleton connectionsManager;
+
+    public string saveFileName = "SaveFile.json";
 
     private string BaseSavePath
     {
@@ -28,11 +30,21 @@ public class SaveManager : MonoBehaviour
     private void Start()
     {
         connectionsManager = MainConnectionsManagerSingleton.Instance;
+
+    }
+
+
+    public void SetFileName(string fileName)
+    {
+        saveFileName = fileName;
+        if (!saveFileName.EndsWith(".json"))
+            saveFileName += ".json";
     }
 
     public void Save()
     {
-        Save("SaveFile.json");
+
+        Save(saveFileName);
     }
 
     public void Save(string fileName)
@@ -67,7 +79,9 @@ public class SaveManager : MonoBehaviour
 
     public void Load()
     {
-        Load("SaveFile.json");
+        if (!saveFileName.EndsWith(".json"))
+            saveFileName += ".json";
+        Load(saveFileName);
     }
 
     public void Load(string fileName)

@@ -69,8 +69,8 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
         //if (incidentEdges.Any())
         //    Debug.Log($"incidentEdges = {incidentEdges.Select(e => $"[{e.FromNode.BaseWrapped.Id}] <-> [{e.ToNode.BaseWrapped.Id}]").Aggregate((n, curr) => n + "\n" + curr)}");
-        if (result.Any())
-            Debug.Log($"connectedNodes = {result.Select(n => (n.BaseWrapped as INode).Name).Aggregate((curr, newNode) => $"{curr}, [{newNode}]")}");
+        //if (result.Any())
+        //    Debug.Log($"connectedNodes = {result.Select(n => (n.BaseWrapped as INode).Name).Aggregate((curr, newNode) => $"{curr}, [{newNode}]")}");
 
         return result;
     }
@@ -132,8 +132,8 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
             result.AddRange(GetConnectedNodesRecursive(toNode, ref visitedNodes, previousEdges.Append(edge)));
         }
-        if (result.Any())
-            Debug.Log($"connectedNodes @{(currentNode.BaseWrapped as INode)?.Name} : {result.Select(n => (n.BaseWrapped as INode).Name).Aggregate((curr, newNode) => $"{curr}, [{newNode}]")}");
+        //if (result.Any())
+        //    Debug.Log($"connectedNodes @{(currentNode.BaseWrapped as INode)?.Name} : {result.Select(n => (n.BaseWrapped as INode).Name).Aggregate((curr, newNode) => $"{curr}, [{newNode}]")}");
 
         return result;
     }

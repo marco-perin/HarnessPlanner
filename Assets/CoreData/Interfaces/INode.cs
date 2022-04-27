@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Assets.CoreData.ScriptableObjects;
+using Assets.CoreData.Types;
 using UnityEngine;
 
 namespace Assets.CoreData.Interfaces
@@ -9,6 +12,19 @@ namespace Assets.CoreData.Interfaces
     {
         INodeSO BaseSO { get; set; }
         TNode Clone<TNode>() where TNode : class, INode;
+    }
+
+    [Serializable]
+    public class BaseNodeWithPinnedSO<TSO> : BaseNode<TSO>, IBaseNodeWithPinnedSO where TSO : BaseObjectSO
+    {
+        [SerializeField] private List<NodeConnectionTo> connections;
+
+        public BaseNodeWithPinnedSO(TSO baseSO) : base(baseSO)
+        {
+            Connections = new List<NodeConnectionTo>();
+        }
+        public IEnumerable<INodeConnectionTo> Connections { get => connections; set => connections = value.Select(c => c as NodeConnectionTo).ToList(); }
+
     }
 
     [Serializable]
@@ -34,7 +50,6 @@ namespace Assets.CoreData.Interfaces
 
             return newObj as TNode;
         }
-
     }
 
     [Serializable]

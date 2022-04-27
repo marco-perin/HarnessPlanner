@@ -10,7 +10,9 @@ namespace Assets.GraphicData.ScriptableObjects
     [Serializable]
     public class SourceGraphic : BaseGraphicObject, IGraphicSource
     {
-        [SerializeField] protected SourceBase baseWrapped;
+        [SerializeField]
+        [SerializeReference]
+        protected SourceBase baseWrapped;
 
         public override IBaseType BaseWrapped { get => baseWrapped; set => baseWrapped = value as SourceBase; }
 

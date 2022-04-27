@@ -16,7 +16,7 @@ public class ConnectibleManager : MonoBehaviourGraphicInstanced, IPointerClickHa
     private void Start()
     {
         InputManager.Instance.AddKeyDownAction(KeyCode.C, () => StartConnecting());
-        InputManager.Instance.AddKeyDownAction(KeyCode.D, () => StopConnecting());
+        InputManager.Instance.AddKeyDownAction(KeyCode.V, () => StopConnecting());
     }
 
     private void StartConnecting()

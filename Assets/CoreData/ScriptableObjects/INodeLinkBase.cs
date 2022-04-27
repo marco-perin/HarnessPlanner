@@ -3,7 +3,7 @@ using Assets.GraphicData.Interfaces;
 
 namespace Assets.CoreData.Interfaces
 {
-    public interface INodeLinkBase : INode, IWithLenghtFloat
+    public interface INodeLinkBase : INode, IWithLenghtDouble
     {
         public IGraphicInstance ToNode { get; set; }
         public IGraphicInstance FromNode { get; set; }
