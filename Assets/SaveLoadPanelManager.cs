@@ -7,7 +7,7 @@ public class SaveLoadPanelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inputField.text = SaveManager.Instance.saveFileName;
+        inputField.text = SaveManager.Instance.saveFileName.Replace(SaveManager.Instance.Extension, "");
     }
 
     public void SetFileName(string fileName)

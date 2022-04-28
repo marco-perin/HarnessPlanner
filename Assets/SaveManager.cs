@@ -12,7 +12,8 @@ public class SaveManager : Singleton<SaveManager>
     public Transform nodesParent;
     public MainConnectionsManagerSingleton connectionsManager;
 
-    public string saveFileName = "SaveFile.json";
+    public string saveFileName = "SaveFile";
+    private string extension = ".json";
 
     private string BaseSavePath
     {
@@ -27,6 +28,8 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
+    public string Extension { get => extension; internal set => extension = value; }
+
     private void Start()
     {
         connectionsManager = MainConnectionsManagerSingleton.Instance;
@@ -37,8 +40,8 @@ public class SaveManager : Singleton<SaveManager>
     public void SetFileName(string fileName)
     {
         saveFileName = fileName;
-        if (!saveFileName.EndsWith(".json"))
-            saveFileName += ".json";
+        if (!saveFileName.EndsWith(Extension))
+            saveFileName += Extension;
     }
 
     public void Save()
@@ -49,7 +52,7 @@ public class SaveManager : Singleton<SaveManager>
 
     public void Save(string fileName)
     {
-        Debug.Log($"Saving with name: {fileName}");
+        //Debug.Log($"Saving with name: {fileName}");
 
         var mbgis = nodesParent.GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>();
         var basetypes = mbgis.Select(mbgi => mbgi.GraphicInstance);
@@ -79,8 +82,9 @@ public class SaveManager : Singleton<SaveManager>
 
     public void Load()
     {
-        if (!saveFileName.EndsWith(".json"))
-            saveFileName += ".json";
+        if (!saveFileName.EndsWith(Extension))
+            saveFileName += Extension;
+
         Load(saveFileName);
     }
 
