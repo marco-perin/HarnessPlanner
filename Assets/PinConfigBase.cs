@@ -57,9 +57,27 @@ public class PinData : IPinData, IEquatable<PinData>
         return Id == other.Id;
     }
 
+    public override bool Equals(object obj)
+    {
+        //Check for null and compare run-time types.
+        if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+        {
+            return false;
+        }
+        else
+        {
+            return this.Equals((PinData)obj);
+        }
+    }
+
     public bool Equals(PinData other)
     {
         return Equals(other as PinData);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Name, Description, PinNumber);
     }
 
     //public override int GetHashCode() => (X, Y).GetHashCode();

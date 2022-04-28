@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [ExecuteInEditMode]
-
 public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerClickHandler
 {
     public Transform From;
@@ -24,7 +23,6 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
 
     public static IEnumerable<float> points;
 
-    // Start is called before the first frame update
     void Start()
     {
         Debug.Assert(From != null);
@@ -43,7 +41,6 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
         LineRenderer.positionCount = pointNumber + 1;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (EdgeCollider == null) return;
@@ -78,16 +75,6 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
         LineRenderer.SetPositions(points.Select(t => Vector3.Lerp(From.position, To.position, t)).ToArray());
         EdgeCollider.SetPoints(points.Select(t => Vector2.Lerp(From.position, To.position, t)).ToList());
     }
-
-    //public void OnPointerEnter(PointerEventData eventData)
-    //{
-    //    //Cursor.SetCursor(null,Cursor.)
-    //}
-
-    //public void OnPointerExit(PointerEventData eventData)
-    //{
-    //    throw new System.NotImplementedException();
-    //}
 
     public void OnPointerClick(PointerEventData eventData)
     {
