@@ -87,6 +87,10 @@ public class SaveManager : Singleton<SaveManager>
     public void Load(string fileName)
     {
 
+
+        for (int i = nodesParent.childCount - 1; i >= 0; i--)
+            Destroy(nodesParent.GetChild(i).gameObject);
+
         string json = File.ReadAllText(Path.Combine(BaseSavePath, fileName));
         SaveData sd = JsonUtility.FromJson<SaveData>(json);
 
