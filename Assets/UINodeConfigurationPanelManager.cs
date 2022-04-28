@@ -76,13 +76,13 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         switch (gInstance.BaseWrapped)
         {
             case SinkBase sb:
-                attribute_input.onValueChanged.AddListener((value) => sb.Consumption = double.Parse(value));
+                attribute_input.onValueChanged.AddListener((value) => sb.Consumption = ParseFieldIfValid(sb.Consumption, value));
                 break;
             case SourceBase sb:
-                attribute_input.onValueChanged.AddListener((value) => sb.MaxAvailability = double.Parse(value));
+                attribute_input.onValueChanged.AddListener((value) => sb.MaxAvailability = ParseFieldIfValid(sb.MaxAvailability, value));
                 break;
             case NodeLinkBase lb:
-                attribute_input.onValueChanged.AddListener((value) => lb.Length = double.Parse(value));
+                attribute_input.onValueChanged.AddListener((value) => lb.Length = ParseFieldIfValid(lb.Length, value));
                 break;
         }
 
@@ -150,11 +150,14 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
                 panelMgr.SetParent(this);
 
                 panelMgr.InitOptions(gInstance.BaseWrapped as IBaseNodeWithPinnedSO);
-                //panelMgr.sele(pinned_so);
 
             }
         }
+    }
 
+    internal double ParseFieldIfValid(double field, string inValue)
+    {
+        return double.TryParse(inValue, out var res) ? res : field;
     }
 
     internal void SelectPinForNode(IPinData fromPinData, IBaseNodeWithPinnedSO node, IPinData pinData)
