@@ -6,9 +6,23 @@ public class DataProcessPanelManager : MonoBehaviour
 {
     public TMPro.TMP_InputField inputField;
 
-
-    void ProcessData()
+    private void Start()
     {
+        inputField.text = MainCalculatorSingleton.Instance.BatteryNodeName;
+    }
 
+    public void SetBatteryName()
+    {
+        SetBatteryNameDirect(inputField.text);
+    }
+
+    public void SetBatteryNameDirect(string name)
+    {
+        MainCalculatorSingleton.Instance.BatteryNodeName = name;
+    }
+
+    public void ProcessData()
+    {
+        MainCalculatorSingleton.Instance.CalculateCurrents();
     }
 }

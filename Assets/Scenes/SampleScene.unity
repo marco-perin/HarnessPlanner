@@ -1556,7 +1556,7 @@ RectTransform:
   m_Children:
   - {fileID: 1504746500}
   m_Father: {fileID: 1438454579}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -2309,9 +2309,9 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SaveLoadPanelManager, Assembly-CSharp
-        m_MethodName: SetFileName
+      - m_Target: {fileID: 1718509472}
+        m_TargetAssemblyTypeName: DataProcessPanelManager, Assembly-CSharp
+        m_MethodName: SetBatteryNameDirect
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2489,10 +2489,10 @@ RectTransform:
   m_Children:
   - {fileID: 1536520442}
   - {fileID: 983063107}
-  - {fileID: 1529123534}
-  - {fileID: 3560056219118162558}
   - {fileID: 1718509471}
   - {fileID: 931463204}
+  - {fileID: 1529123534}
+  - {fileID: 3560056219118162558}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2687,7 +2687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1694458339648481241, guid: 05c71f8c2d96776439c5c6302aab0767, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1694458339648481241, guid: 05c71f8c2d96776439c5c6302aab0767, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3043,6 +3043,7 @@ GameObject:
   - component: {fileID: 1680205927}
   - component: {fileID: 1680205928}
   - component: {fileID: 1680205929}
+  - component: {fileID: 1680205930}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3148,6 +3149,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6430d22a4394c4091b69c09a5f59e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1680205930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680205921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55b196867aa04b742891dc071c756f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodesParent: {fileID: 1296546496}
+  BatteryNodeName: Battery
 --- !u!1 &1718509470
 GameObject:
   m_ObjectHideFlags: 0
@@ -3166,7 +3181,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1718509471
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3182,7 +3197,7 @@ RectTransform:
   - {fileID: 1316787464}
   - {fileID: 2032281773}
   m_Father: {fileID: 1438454579}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3201,7 +3216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc916700ac3a1b479fe06187303949a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputField: {fileID: 0}
+  inputField: {fileID: 1316787465}
 --- !u!114 &1718509473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3663,9 +3678,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1680205926}
-        m_TargetAssemblyTypeName: SaveManager, Assembly-CSharp
-        m_MethodName: Save
+      - m_Target: {fileID: 1718509472}
+        m_TargetAssemblyTypeName: DataProcessPanelManager, Assembly-CSharp
+        m_MethodName: ProcessData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3833,7 +3848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8657222046517362777, guid: bd5e70f71cadf3b44810dd48ad4e0386, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8657222046517362777, guid: bd5e70f71cadf3b44810dd48ad4e0386, type: 3}
       propertyPath: m_AnchorMax.x

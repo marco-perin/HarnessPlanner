@@ -75,6 +75,19 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
       return result;
    }
 
+
+   /// <summary>
+   /// Returns the node connected to the provided <paramref name="currentNode"/>,
+   /// returning a dictionary representing the paths taken up to a certain node.
+   /// </summary>
+   /// <param name="currentNode"></param>
+   /// <param name="visitedNodes"></param>
+   /// <returns></returns>
+   public IEnumerable<IGraphicInstance> GetNodesConnectedToNodeWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes)
+   {
+      return GetConnectedNodesWithPaths(currentNode, out visitedNodes);
+   }
+
    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode)
    {
       return GetConnectedNodesWithPaths(currentNode, out _);
