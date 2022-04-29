@@ -52,7 +52,8 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
         foreach (var l in currentPerLink.Keys)
         {
-            Debug.Log($"Current for Link [{(l.FromNode.BaseWrapped is INode fn ? fn.Name : "Node")}-{(l.ToNode.BaseWrapped is INode tn ? tn.Name : "Node")}]: {currentPerLink[l]}A");
+            var minAWG = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderBy(c => c.MaxCurrent).First(c => c.MaxCurrent >= currentPerLink[l]).Awg;
+            Debug.Log($"Current for Link [{(l.FromNode.BaseWrapped is INode fn ? fn.Name : "Node")}-{(l.ToNode.BaseWrapped is INode tn ? tn.Name : "Node")}]: {currentPerLink[l]}A -> {minAWG}awg");
         }
     }
 }

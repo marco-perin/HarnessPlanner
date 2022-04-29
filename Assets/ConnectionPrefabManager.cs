@@ -20,7 +20,6 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
 
     public float textDistance = 0.3f;
 
-
     public static IEnumerable<float> points;
 
     void Start()

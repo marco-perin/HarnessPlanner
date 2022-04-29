@@ -10,12 +10,12 @@ namespace Assets.MaterialsData
     public class AvailableConductorDataEditor : EditorWindow
     {
 
+
         private string awg_Field = "awg";
         private string cma_Field = "cma";
+        private string area_Field = "Area";
         private string maxCurrent_Field = "maxcurrent";
         public bool isFirstLineHeader = true;
-
-        //private string CMA_Field = "CMA";
 
         [MenuItem("HarnessPlanner/LoadAvailableConductorsCSV")]
         static void InitWindow()
@@ -35,10 +35,10 @@ namespace Assets.MaterialsData
                 return;
 
 
-
             EditorGUILayout.BeginHorizontal();
             awg_Field = EditorGUILayout.TextField("AWG Field", awg_Field);
             cma_Field = EditorGUILayout.TextField("CMA field", cma_Field);
+            area_Field = EditorGUILayout.TextField("Area field", area_Field);
             maxCurrent_Field = EditorGUILayout.TextField("MaxCurrent Field", maxCurrent_Field);
             EditorGUILayout.EndHorizontal();
 
@@ -48,27 +48,23 @@ namespace Assets.MaterialsData
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField(c.Awg);
                 EditorGUILayout.LabelField("" + c.CMA);
+                EditorGUILayout.LabelField("" + c.Area);
                 EditorGUILayout.LabelField("" + c.MaxCurrent);
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.EndVertical();
             EditorGUILayout.Separator();
 
-            //EditorGUILayout.BeginHorizontal();
-            //EditorGUILayout.LabelField();
             isFirstLineHeader = EditorGUILayout.Toggle("First Line is Header", isFirstLineHeader);
-            //EditorGUILayout.EndHorizontal();
+
             if (GUILayout.Button("Load From CSV"))
             {
                 Apply(data, isFirstLineHeader);
             }
-            // The actual window code goes here
         }
 
-        //[MenuItem("HarnessPlanner/LoadAvailableConductorsCSV")]
         void Apply(AvailableConductorData conductorData, bool headerFirstLine)
         {
-            //AvailableConductorData texture = Selection.activeObject as AvailableConductorData;
             if (conductorData == null)
             {
                 EditorUtility.DisplayDialog("Select Texture", "You must select an AvailableConductorData first!", "OK");
@@ -104,9 +100,10 @@ namespace Assets.MaterialsData
 
                 conductorData.availableConductors.Add(new()
                 {
-                    Awg = values[colsIndexes[awg_Field]],
-                    CMA = int.TryParse(values[colsIndexes[cma_Field]], out var res) ? res : 0,
-                    MaxCurrent = double.TryParse(values[colsIndexes[maxCurrent_Field]], out var resMC) ? resMC : 0,
+                    Awg = values[colsIndexes[awg_Field.ToLower()]],
+                    CMA = int.TryParse(values[colsIndexes[cma_Field.ToLower()]], out var res) ? res : 0,
+                    Area = double.TryParse(values[colsIndexes[area_Field.ToLower()]], out var resArea) ? resArea : 0,
+                    MaxCurrent = double.TryParse(values[colsIndexes[maxCurrent_Field.ToLower()]], out var resMC) ? resMC : 0,
                 });
 
                 lineNr++;
