@@ -68,7 +68,9 @@ public class SaveManager : Singleton<SaveManager>
             sinks = sinks.Select(n => n as SinkGraphicBaseWrapper).ToList(),
             sources = sources.Select(n => n as SourceGraphicBaseWrapper).ToList(),
             nodes = nodes.Select(n => n as ConnectionNodeBaseGraphicBaseWrapper).ToList(),
-            links = links.Select(n => n as NodeLinkBaseGraphicBaseWrapper).ToList()
+            links = links.Select(n => n as NodeLinkBaseGraphicBaseWrapper).ToList(),
+            // TODO: make this more robust.
+            canvasShift = nodesParent.transform.position,
         };
 
         string json = JsonUtility.ToJson(sd, true);
@@ -91,12 +93,15 @@ public class SaveManager : Singleton<SaveManager>
     public void Load(string fileName)
     {
 
-
         for (int i = nodesParent.childCount - 1; i >= 0; i--)
             Destroy(nodesParent.GetChild(i).gameObject);
+        var fullPath = Path.Combine(BaseSavePath, fileName);
+        if (!File.Exists(fullPath)) return;
 
-        string json = File.ReadAllText(Path.Combine(BaseSavePath, fileName));
+        string json = File.ReadAllText(fullPath);
         SaveData sd = JsonUtility.FromJson<SaveData>(json);
+
+        nodesParent.transform.position = sd.canvasShift;
 
         foreach (var sinkGraphic in sd.sinks)
         {
@@ -126,7 +131,7 @@ public class SaveManager : Singleton<SaveManager>
 
         // Instantiate the scene GameObject prefab
         var sinkPrefabGo = Instantiate((wrapper.BaseWrapped as INode).BaseSO.Prefab, nodesParent);
-        sinkPrefabGo.transform.position = wrapper.Position;
+        sinkPrefabGo.transform.localPosition = wrapper.Position;
         sinkPrefabGo.name = (wrapper.BaseWrapped as INode).BaseSO.Name;
 
         // Add the graphical Sync to the prefab object
@@ -141,6 +146,8 @@ public class SaveManager : Singleton<SaveManager>
 [Serializable]
 public class SaveData
 {
+
+    public Vector2 canvasShift;
     [SerializeReference] public List<SinkGraphicBaseWrapper> sinks;
     [SerializeReference] public List<SourceGraphicBaseWrapper> sources;
     [SerializeReference] public List<ConnectionNodeBaseGraphicBaseWrapper> nodes;

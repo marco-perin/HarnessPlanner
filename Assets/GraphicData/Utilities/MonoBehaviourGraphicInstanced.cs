@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(MonoBehaviourGraphicInstanceContainer))]
 public class MonoBehaviourGraphicInstanced : MonoBehaviour
 {
+
     private MonoBehaviourGraphicInstanceContainer _MBContainer;
 
     public IGraphicInstance GraphicInstance

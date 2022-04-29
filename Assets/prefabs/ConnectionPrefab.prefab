@@ -619,6 +619,7 @@ GameObject:
   - component: {fileID: 3050555575616152203}
   - component: {fileID: 4265050177499252775}
   - component: {fileID: 12591273649658987}
+  - component: {fileID: 2569642923288833934}
   m_Layer: 0
   m_Name: ConnectionPrefab
   m_TagString: Untagged
@@ -808,3 +809,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _so_clone: {fileID: 0}
   _so_base_type: {fileID: 0}
+--- !u!114 &2569642923288833934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5917173387353544843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f00e1dbf0b62df489269275ef2c92b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragSpeed: 1
+  targetPosition: {x: 0, y: 0, z: 0}
+  dragOtherTransform: 1
+  transformToDrag: {fileID: 0}
+  dragButton: 2

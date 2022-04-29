@@ -1561,7 +1561,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 170, y: 130}
+  m_SizeDelta: {x: 200, y: 150}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &931463206
 MonoBehaviour:
@@ -1962,6 +1962,7 @@ GameObject:
   - component: {fileID: 1082507329}
   - component: {fileID: 1082507328}
   - component: {fileID: 1082507327}
+  - component: {fileID: 1082507330}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -2042,6 +2043,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1082507325}
   m_CullTransparentMesh: 1
+--- !u!114 &1082507330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082507325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56aa23b79eb7c5c449f8fb086376513b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragOtherTransform: 1
+  transformToDrag: {fileID: 1296546496}
+  dragButton: 2
 --- !u!1 &1242611294
 GameObject:
   m_ObjectHideFlags: 0
@@ -2185,6 +2201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1296546496}
+  - component: {fileID: 1296546497}
   m_Layer: 0
   m_Name: HarnessParent
   m_TagString: Untagged
@@ -2200,13 +2217,28 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296546495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1296546497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296546495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56aa23b79eb7c5c449f8fb086376513b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragOtherTransform: 0
+  transformToDrag: {fileID: 0}
+  dragButton: 2
 --- !u!1 &1316787463
 GameObject:
   m_ObjectHideFlags: 0
@@ -2573,7 +2605,13 @@ MonoBehaviour:
     V - stop connecting
 
     any
-    other - reset state'
+    other - reset state
+
+
+    Left btn over node - drag node
+
+    Mid btn - drag
+    canvas'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2600,7 +2638,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 13.65
+  m_fontSize: 12.2
   m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3072,7 +3110,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1680205921}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

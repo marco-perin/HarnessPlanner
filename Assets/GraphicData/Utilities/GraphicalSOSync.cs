@@ -71,6 +71,14 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
         }
     }
 
+    private Vector3 Position
+    {
+        set
+        {
+            transform.localPosition = value;
+        }
+    }
+
     void Update()
     {
         if (GraphicInstance == null) return;
@@ -80,7 +88,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
         {
             case SinkBase sink:
 
-                transform.position = GraphicInstance.Position;
+                Position = GraphicInstance.Position;
 
                 NameText.text = sink.Name;
                 gameObject.name = sink.Name;
@@ -92,7 +100,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 break;
             case SourceBase source:
 
-                transform.position = GraphicInstance.Position;
+                Position = GraphicInstance.Position;
 
                 NameText.text = source.Name;
                 gameObject.name = source.Name;
@@ -104,7 +112,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 break;
 
             case ConnectionNodeBase node:
-                transform.position = GraphicInstance.Position;
+                Position = GraphicInstance.Position;
                 break;
 
             case NodeLinkBase nodeLink:
@@ -112,8 +120,8 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 if (connectionPrefabManager == null)
                     connectionPrefabManager = GetComponent<ConnectionPrefabManager>();
 
-                connectionPrefabManager.To.position = nodeLink.ToNode.Position + GraphicInstance.Position.z * Vector3.forward;
-                connectionPrefabManager.From.position = nodeLink.FromNode.Position + GraphicInstance.Position.z * Vector3.forward;
+                connectionPrefabManager.To.localPosition = nodeLink.ToNode.Position + GraphicInstance.Position.z * Vector3.forward;
+                connectionPrefabManager.From.localPosition = nodeLink.FromNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.LengthText.text = nodeLink.Length + "m";
 
                 break;

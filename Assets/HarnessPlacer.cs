@@ -66,7 +66,7 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionS
     public void OnPointerDown(PointerEventData eventData)
     {
         //Debug.Log("OnPointerDown Of Harness placer");
-        StartInteraction(eventData.pointerPressRaycast.worldPosition);
+        StartInteraction(newObjectsParentTransform.InverseTransformPoint(eventData.pointerPressRaycast.worldPosition));
     }
 
     public void StartInteraction(Vector3 param)
@@ -173,7 +173,7 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionS
     public static void CreateGraphicWrapper(IGraphicInstance wrapper, Transform parent)
     {
         var sinkPrefabGo = Instantiate((wrapper.BaseWrapped as INode).BaseSO.Prefab, parent);
-        sinkPrefabGo.transform.position = wrapper.Position;
+        sinkPrefabGo.transform.localPosition = wrapper.Position;
         sinkPrefabGo.name = (wrapper.BaseWrapped as INode).Name;
 
         // Add the graphical Sync to the prefab object

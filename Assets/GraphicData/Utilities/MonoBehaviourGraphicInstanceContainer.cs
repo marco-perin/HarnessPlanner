@@ -11,6 +11,7 @@ public class MonoBehaviourGraphicInstanceContainer : MonoBehaviour
     [SerializeField]
     private BaseObjectSO _so_base_type;
 
+    [SerializeField]
     private IGraphicInstance _graphicInstance;
 
     public IGraphicInstance GraphicInstance
