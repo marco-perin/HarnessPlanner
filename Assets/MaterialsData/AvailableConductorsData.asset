@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa820a23653d144b9ed24f1a2ad4bde, type: 3}
+  m_Name: AvailableConductorsData
+  m_EditorClassIdentifier: 
+  availableConductors:
+  - awg: 4
+    cma: 41433
+    maxCurrent: 56
+  - awg: 8
+    cma: 16455
+    maxCurrent: 32
+  - awg: 10
+    cma: 10398
+    maxCurrent: 24
+  - awg: 12
+    cma: 6511
+    maxCurrent: 16
+  - awg: 14
+    cma: 4104
+    maxCurrent: 12
+  - awg: 15
+    cma: 3257
+    maxCurrent: 10
+  - awg: 16
+    cma: 2575
+    maxCurrent: 8
+  - awg: 17
+    cma: 2048
+    maxCurrent: 6.8
+  - awg: 18
+    cma: 1559
+    maxCurrent: 5.6
+  - awg: 20
+    cma: 1006
+    maxCurrent: 4
+  - awg: 22
+    cma: 631
+    maxCurrent: 2.4
+  - awg: 24
+    cma: 404
+    maxCurrent: 1.6
+  - awg: 26
+    cma: 254
+    maxCurrent: 0.8
+  - awg: 28
+    cma: 160
+    maxCurrent: 0.56
