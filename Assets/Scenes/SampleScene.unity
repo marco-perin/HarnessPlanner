@@ -614,7 +614,7 @@ MonoBehaviour:
   m_BlockingObjects: 3
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
 --- !u!114 &282317555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1963,8 +1963,9 @@ GameObject:
   - component: {fileID: 1082507328}
   - component: {fileID: 1082507327}
   - component: {fileID: 1082507330}
+  - component: {fileID: 1082507331}
   m_Layer: 5
-  m_Name: Image
+  m_Name: BackgroundImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2005,6 +2006,7 @@ MonoBehaviour:
   newObjectsParentTransform: {fileID: 1296546496}
   harnessSettings: {fileID: 11400000, guid: b44ecbc61c4a5a14eb9b1b19cc2a9f55, type: 2}
   placing: 0
+  inputButton: 0
 --- !u!114 &1082507328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2058,6 +2060,19 @@ MonoBehaviour:
   dragOtherTransform: 1
   transformToDrag: {fileID: 1296546496}
   dragButton: 2
+--- !u!114 &1082507331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082507325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdab1099cc5c2b7438f8d18a06fbc266, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transformToScroll: {fileID: 1296546496}
 --- !u!1 &1242611294
 GameObject:
   m_ObjectHideFlags: 0
@@ -2202,6 +2217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1296546496}
   - component: {fileID: 1296546497}
+  - component: {fileID: 1296546498}
   m_Layer: 0
   m_Name: HarnessParent
   m_TagString: Untagged
@@ -2239,6 +2255,22 @@ MonoBehaviour:
   dragOtherTransform: 0
   transformToDrag: {fileID: 0}
   dragButton: 2
+--- !u!114 &1296546498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296546495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc62968f0798bfd428ff20143e5ab01f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraToScroll: {fileID: 0}
+  scrollSpeed: 1
+  sizeMin: 1.5
+  sizeMax: 100
 --- !u!1 &1316787463
 GameObject:
   m_ObjectHideFlags: 0
@@ -2462,7 +2494,7 @@ MonoBehaviour:
   m_BlockingObjects: 3
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
 --- !u!114 &1438454577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3233,7 +3265,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1718509471
 RectTransform:
   m_ObjectHideFlags: 0

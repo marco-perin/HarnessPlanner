@@ -353,7 +353,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8378739351075346784
 RectTransform:
   m_ObjectHideFlags: 0
@@ -620,6 +620,7 @@ GameObject:
   - component: {fileID: 4265050177499252775}
   - component: {fileID: 12591273649658987}
   - component: {fileID: 2569642923288833934}
+  - component: {fileID: -8502648164171115266}
   m_Layer: 0
   m_Name: ConnectionPrefab
   m_TagString: Untagged
@@ -826,3 +827,16 @@ MonoBehaviour:
   dragOtherTransform: 1
   transformToDrag: {fileID: 0}
   dragButton: 2
+--- !u!114 &-8502648164171115266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5917173387353544843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdab1099cc5c2b7438f8d18a06fbc266, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transformToScroll: {fileID: 0}

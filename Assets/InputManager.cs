@@ -62,8 +62,6 @@ public class InputManager : Singleton<InputManager>
         foreach (Action action in actionsArray[keyCode].actions)
         {
             Debug.Assert(action != null);
-            if (actionsArray == actionsKeyUp)
-                Debug.Log("Executing KeyUp Action for key " + keyCode);
             action?.Invoke();
         }
     }

@@ -4,7 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.MaterialsData
+namespace Assets.MaterialsData.Editor
 {
 
     public class AvailableConductorDataEditor : EditorWindow
