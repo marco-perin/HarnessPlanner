@@ -12,6 +12,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
     public Transform To;
     public Canvas LengthTextCanvas;
     public TMP_Text LengthText;
+    public TMP_Text DataText;
     public EdgeCollider2D EdgeCollider;
     public LineRenderer LineRenderer;
 
@@ -19,6 +20,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
     public int pointNumber = 100;
 
     public float textDistance = 0.3f;
+    public float infoDistance = 0.4f;
 
     public static IEnumerable<float> points;
 
@@ -28,6 +30,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
         Debug.Assert(To != null);
         Debug.Assert(LengthTextCanvas != null);
         Debug.Assert(LengthText != null);
+        Debug.Assert(DataText != null);
 
         if (EdgeCollider == null)
             EdgeCollider = GetComponent<EdgeCollider2D>();
@@ -46,6 +49,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
         if (LineRenderer == null) return;
         if (LengthTextCanvas == null) return;
         if (LengthText == null) return;
+        if (DataText == null) return;
 
         //var points = EdgeCollider.points;
         ////points[0] = new Vector3(From.position.x, From.position.z);
@@ -66,11 +70,20 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
 #endif
 #endif
 
-        var updir = Quaternion.FromToRotation(Vector3.right, To.position - From.position) * Vector3.up;
+
+        var midpoint = Vector3.Lerp(From.position, To.position, 0.5f);
+        LengthTextCanvas.transform.position = midpoint;
+
+        var rot = Quaternion.FromToRotation(Vector3.right, To.position - From.position);
+        var angle = rot.eulerAngles.z;
+        var updir = rot * Vector3.up;
         if (Vector3.Dot(updir, Vector3.up) < 0)
             updir = -updir;
 
-        LengthTextCanvas.transform.position = Vector3.Lerp(From.position, To.position, 0.5f) + updir * textDistance;
+        LengthText.transform.position = midpoint + updir * textDistance;
+        //updir = updir.normalized * InfoText.rectTransform.rect.width * Mathf.Sin(angle * Mathf.PI / 180);
+        DataText.transform.position = midpoint - updir * infoDistance;
+
         LineRenderer.SetPositions(points.Select(t => Vector3.Lerp(From.position, To.position, t)).ToArray());
         EdgeCollider.SetPoints(points.Select(t => Vector2.Lerp(From.localPosition, To.localPosition, t)).ToList());
     }

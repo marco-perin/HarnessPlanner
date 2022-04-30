@@ -6,12 +6,6 @@ using UnityEngine;
 public class MonoBehaviourGraphicInstanceContainer : MonoBehaviour
 {
     [SerializeField]
-    private ScriptableObject _so_clone;
-
-    [SerializeField]
-    private BaseObjectSO _so_base_type;
-
-    [SerializeField]
     private IGraphicInstance _graphicInstance;
 
     public IGraphicInstance GraphicInstance
@@ -19,8 +13,6 @@ public class MonoBehaviourGraphicInstanceContainer : MonoBehaviour
         get => _graphicInstance;
         set
         {
-            _so_clone = value as ScriptableObject;
-            _so_base_type = value.BaseWrapped as BaseObjectSO;
             _graphicInstance = value;
         }
     }

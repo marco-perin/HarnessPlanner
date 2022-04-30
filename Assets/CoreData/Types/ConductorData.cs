@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Assets.CoreData.Interfaces;
 using UnityEngine;
 
-namespace Assets.MaterialsData
+namespace Assets.CoreData.Types
 {
     [Serializable]
-    public class ConductorData
+    public class ConductorData : IConductorData
     {
         [SerializeField] private string awg;
         [SerializeField] private int cma;

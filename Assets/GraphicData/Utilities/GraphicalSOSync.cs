@@ -123,6 +123,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 connectionPrefabManager.To.localPosition = nodeLink.ToNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.From.localPosition = nodeLink.FromNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.LengthText.text = nodeLink.Length + "m";
+                connectionPrefabManager.DataText.text = "m";
 
                 break;
             default:

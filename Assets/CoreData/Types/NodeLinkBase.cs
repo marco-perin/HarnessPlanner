@@ -10,6 +10,7 @@ namespace Assets.CoreData.Types
     public class NodeLinkBase : BaseNode<NodeLinkBaseSO>, INodeLinkBase
     {
         [SerializeField] private double length;
+        [SerializeField] private LinkInfo linkInfo;
         [SerializeField][SerializeReference] private BaseGraphicObject fromNode;
         [SerializeField][SerializeReference] private BaseGraphicObject toNode;
 
@@ -46,9 +47,10 @@ namespace Assets.CoreData.Types
                 var linkBase = Clone<NodeLinkBase>();
                 linkBase.FromNode = ToNode;
                 linkBase.ToNode = FromNode;
-                return linkBase as INodeLinkBase;
+                return linkBase;
             }
         }
 
+        public ILinkInfo LinkInfo { get => linkInfo; set => linkInfo = value as LinkInfo; }
     }
 }

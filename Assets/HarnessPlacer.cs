@@ -20,13 +20,13 @@ public enum PlacingType
     Link
 }
 
-public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionStartableV3
+public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
 {
     [Header("Scene Config")]
     public Transform newObjectsParentTransform;
 
-    [Header("Scriptable Objects")]
-    public GraphicHarnessSettingsSO harnessSettings;
+    //[Header("Scriptable Objects")]
+    public GraphicHarnessSettingsSO HarnessSettings { get => ProgramManagerSingleton.Instance.HarnessSettingsSO; }
 
     [Header("Runtime Variables")]
     public PlacingType placing;
@@ -69,6 +69,10 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionS
     {
         if (IsPlacing)
         {
+            var snapGridSize = HarnessSettings.SnapGridSize;
+            param.x = Mathf.Round(param.x / snapGridSize) * snapGridSize;
+            param.y = Mathf.Round(param.y / snapGridSize) * snapGridSize;
+
 
             switch (placing)
             {
@@ -90,12 +94,12 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionS
     private void PlaceSource(Vector3 pos)
     {
         //throw new NotImplementedException();
-        var baseObj = new SourceBase(harnessSettings.DefaultSourcePrefab);
-        //var prefabGo = Instantiate(sourceBaseSo.Prefab, newObjectsParentTransform);
+        var baseObj = new SourceBase(HarnessSettings.DefaultSourcePrefab);
+
         IGraphicInstance wrapper = new SourceGraphicBaseWrapper
         {
             BaseWrapped = baseObj,
-            Position = new Vector3(pos.x, pos.y, harnessSettings.NodesPlaceHeight)
+            Position = new Vector3(pos.x, pos.y, HarnessSettings.NodesPlaceHeight)
         };
 
 
@@ -104,13 +108,13 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionS
 
     private void PlaceSink(Vector3 pos)
     {
-        var baseObj = new SinkBase(harnessSettings.DefaultSinkPrefab);
+        var baseObj = new SinkBase(HarnessSettings.DefaultSinkPrefab);
         // Create The graphic instance wrapper
         //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
         IGraphicInstance wrapper = new SinkGraphicBaseWrapper
         {
             BaseWrapped = baseObj,
-            Position = new Vector3(pos.x, pos.y, harnessSettings.NodesPlaceHeight)
+            Position = new Vector3(pos.x, pos.y, HarnessSettings.NodesPlaceHeight)
         };
 
 
@@ -119,12 +123,12 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler//, IInteractionS
 
     private void PlaceNode(Vector3 pos)
     {
-        var baseObj = new ConnectionNodeBase(harnessSettings.DefaultNodePrefab);
+        var baseObj = new ConnectionNodeBase(HarnessSettings.DefaultNodePrefab);
 
         IGraphicInstance wrapper = new ConnectionNodeBaseGraphicBaseWrapper
         {
             BaseWrapped = baseObj,
-            Position = new Vector3(pos.x, pos.y, harnessSettings.NodesPlaceHeight)
+            Position = new Vector3(pos.x, pos.y, HarnessSettings.NodesPlaceHeight)
         };
 
         // Instantiate the scene GameObject prefab

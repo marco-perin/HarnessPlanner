@@ -12,6 +12,9 @@ namespace Assets.GraphicData.ScriptableObjects
     [CreateAssetMenu(fileName = "GraphicHarnessSettingsSO", menuName = "SO/Settings")]
     public class GraphicHarnessSettingsSO : ScriptableObject
     {
+
+        [SerializeField] private float snapGridSize = 0.5f;
+
         [SerializeField] private float nodesPlaceHeight = 0.1f;
         [SerializeField] private float connectionsPlaceHeight = 0.5f;
         [SerializeField] private SourceBaseSO defaultSourcePrefab;
@@ -19,12 +22,14 @@ namespace Assets.GraphicData.ScriptableObjects
         [SerializeField] private ConnectionNodeBaseSO defaultNodePrefab;
         [SerializeField] private NodeLinkBaseSO defaultLinkPrefab;
 
+
         public SourceBaseSO DefaultSourcePrefab { get => defaultSourcePrefab; }
         public SinkBaseSO DefaultSinkPrefab { get => defaultSinkPrefab; }
         public ConnectionNodeBaseSO DefaultNodePrefab { get => defaultNodePrefab; }
         public NodeLinkBaseSO DefaultLinkPrefab { get => defaultLinkPrefab; }
 
         public float NodesPlaceHeight => nodesPlaceHeight;
+        public float SnapGridSize => snapGridSize;
         public float ConnectionsPlaceHeight => connectionsPlaceHeight;
     }
 }
