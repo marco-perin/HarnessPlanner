@@ -621,6 +621,7 @@ GameObject:
   - component: {fileID: 12591273649658987}
   - component: {fileID: 2569642923288833934}
   - component: {fileID: -8502648164171115266}
+  - component: {fileID: 1655448401477266561}
   m_Layer: 0
   m_Name: ConnectionPrefab
   m_TagString: Untagged
@@ -827,7 +828,6 @@ MonoBehaviour:
   dragOtherTransform: 1
   transformToDrag: {fileID: 0}
   dragButton: 2
-  snapGridSize: 0.2
 --- !u!114 &-8502648164171115266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -841,3 +841,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transformToScroll: {fileID: 0}
+--- !u!114 &1655448401477266561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5917173387353544843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c328232738a1c3940a1ec81efbc7c983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDeleting: 0

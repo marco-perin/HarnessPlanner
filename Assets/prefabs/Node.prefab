@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7998560996435954914}
   - component: {fileID: 4651246790335169713}
   - component: {fileID: -6788178894959382120}
+  - component: {fileID: -3059895009138994361}
   m_Layer: 0
   m_Name: Node
   m_TagString: Untagged
@@ -120,7 +121,6 @@ MonoBehaviour:
   dragOtherTransform: 0
   transformToDrag: {fileID: 0}
   dragButton: 0
-  snapGridSize: 0.5
 --- !u!114 &7998560996435954914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,8 +133,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 602b17bfdac2ba94881dee47e897b11b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _so_clone: {fileID: 0}
-  _so_base_type: {fileID: 0}
 --- !u!114 &4651246790335169713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +150,6 @@ MonoBehaviour:
   dragOtherTransform: 1
   transformToDrag: {fileID: 0}
   dragButton: 2
-  snapGridSize: 0.2
 --- !u!114 &-6788178894959382120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +163,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transformToScroll: {fileID: 0}
+--- !u!114 &-3059895009138994361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 191237119019476421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c328232738a1c3940a1ec81efbc7c983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &854480132189489166
 GameObject:
   m_ObjectHideFlags: 0

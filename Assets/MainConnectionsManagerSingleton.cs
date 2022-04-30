@@ -52,12 +52,21 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         });
     }
 
-    public IEnumerable<INodeLinkBase> ActiveConnections
+    internal void DeleteConnection(GraphicalSOSync connGO, INodeLinkBase conn)
+    {
+        Destroy(connGO.gameObject);
+    }
+
+    public IEnumerable<GraphicalSOSync> ActiveConnectionsGO
     {
         get => connectionsParent
                         .GetComponentsInChildren<GraphicalSOSync>()
-                        .Where(mbgi => mbgi.GraphicInstance is NodeLinkBaseGraphicBaseWrapper nlbgi)
-                        .Select(mbgi => mbgi.GraphicInstance.BaseWrapped as NodeLinkBase);
+                        .Where(mbgi => mbgi.GraphicInstance is NodeLinkBaseGraphicBaseWrapper);
+    }
+
+    public IEnumerable<INodeLinkBase> ActiveConnections
+    {
+        get => ActiveConnectionsGO.Select(mbgi => mbgi.GraphicInstance.BaseWrapped as NodeLinkBase);
     }
 
     #region GRAPH_ALGORITHMS

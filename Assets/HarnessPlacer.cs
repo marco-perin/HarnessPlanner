@@ -17,7 +17,8 @@ public enum PlacingType
     Source,
     Sink,
     Node,
-    Link
+    Link,
+    Deleting
 }
 
 public class HarnessPlacer : MonoBehaviour, IPointerDownHandler

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3a8cf80298d754e8291c6fa0ec9cf3, type: 3}
   m_Name: GraphicHarnessSettingsSO
   m_EditorClassIdentifier: 
+  snapGridSize: 0.3
   nodesPlaceHeight: 0.1
   connectionsPlaceHeight: 0.2
   defaultSourcePrefab: {fileID: 11400000, guid: 0b397100059918f47963850c619392cd, type: 2}
