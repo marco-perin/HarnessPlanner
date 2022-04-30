@@ -3,14 +3,11 @@ using Assets.CoreData.Interfaces;
 using Assets.GraphicData.Interfaces;
 using UnityEngine;
 
-namespace Assets.GraphicData.ScriptableObjects
+namespace Assets.GraphicData.Types
 {
     [Serializable]
     public abstract class BaseGraphicObject : IGraphicInstance
     {
-        //[SerializeField]
-        //[SerializeReference]
-        //protected BaseNode baseWrapped;
 
         [SerializeField] protected Vector3 position;
         [SerializeField] protected Vector2 size;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assets.CoreData.Interfaces
 {
-    public interface ISink : IBaseNodeWithPinnedSO //, IBipole<IConnectibleRelative>
+    public interface ISink : IBaseNodeWithPinnedSO
     {
         double Consumption { get; set; }
     }
@@ -19,6 +19,4 @@ namespace Assets.CoreData.Interfaces
         INode ConnectedNode { get; set; }
         IPinData PinToData { get; set; }
     }
-
-    public interface ISinkWithSignal : ISink, ITerminalWithSignal { };
 }

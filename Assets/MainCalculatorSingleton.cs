@@ -12,9 +12,11 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
     {
         Debug.Assert(nodesParent != null);
 
-        var graphicInstances = nodesParent.GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>()
+        var graphicInstances = nodesParent
+            .GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>()
             .Where(mbContainer => mbContainer.GraphicInstance.BaseWrapped is IBaseNodeWithPinnedSO)
-            .Select(mb => mb.GraphicInstance).ToList();
+            .Select(mb => mb.GraphicInstance)
+            .ToList();
 
         var battGI = graphicInstances.SingleOrDefault(gi => gi.BaseWrapped is ISource isource && isource.Name == BatteryNodeName);
         var batt = battGI.BaseWrapped as ISource;

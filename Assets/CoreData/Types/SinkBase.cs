@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Assets.CoreData.Interfaces;
 using Assets.CoreData.ScriptableObjects;
-using Assets.CoreData.Types;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Assets.CoreData.ScriptableObjects
+namespace Assets.CoreData.Types
 {
 
     [Serializable]

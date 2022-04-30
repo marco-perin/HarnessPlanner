@@ -15,43 +15,33 @@ MonoBehaviour:
   availableConductors:
   - awg: 4
     cma: 41433
+    area: 21
     maxCurrent: 56
   - awg: 8
     cma: 16455
+    area: 8.34
     maxCurrent: 32
   - awg: 10
     cma: 10398
+    area: 5.27
     maxCurrent: 24
   - awg: 12
     cma: 6511
+    area: 3.3
     maxCurrent: 16
-  - awg: 14
-    cma: 4104
-    maxCurrent: 12
-  - awg: 15
-    cma: 3257
-    maxCurrent: 10
   - awg: 16
     cma: 2575
+    area: 1.31
     maxCurrent: 8
-  - awg: 17
-    cma: 2048
-    maxCurrent: 6.8
-  - awg: 18
-    cma: 1559
-    maxCurrent: 5.6
   - awg: 20
     cma: 1006
+    area: 0.51
     maxCurrent: 4
   - awg: 22
     cma: 631
+    area: 0.32
     maxCurrent: 2.4
-  - awg: 24
-    cma: 404
-    maxCurrent: 1.6
-  - awg: 26
-    cma: 254
-    maxCurrent: 0.8
   - awg: 28
     cma: 160
+    area: 0.08
     maxCurrent: 0.56

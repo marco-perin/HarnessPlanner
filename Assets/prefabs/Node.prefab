@@ -120,6 +120,7 @@ MonoBehaviour:
   dragOtherTransform: 0
   transformToDrag: {fileID: 0}
   dragButton: 0
+  snapGridSize: 0.5
 --- !u!114 &7998560996435954914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,6 +152,7 @@ MonoBehaviour:
   dragOtherTransform: 1
   transformToDrag: {fileID: 0}
   dragButton: 2
+  snapGridSize: 0.2
 --- !u!114 &-6788178894959382120
 MonoBehaviour:
   m_ObjectHideFlags: 0

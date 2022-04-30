@@ -8,7 +8,6 @@ public class TransformScrollable : MonoBehaviour, IScrollHandler
     public Transform transformToScroll;
     private IScrollHandler scrollHandler;
 
-
     void Start()
     {
         if (transformToScroll == null)

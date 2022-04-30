@@ -1,7 +1,7 @@
 ﻿using System;
 using Assets.CoreData.Interfaces;
 using Assets.GraphicData.Interfaces;
-using Assets.GraphicData.ScriptableObjects;
+using Assets.GraphicData.Types;
 using UnityEngine;
 
 namespace Assets.CoreData.Types

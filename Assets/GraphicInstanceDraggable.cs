@@ -12,6 +12,7 @@ public class GraphicInstanceDraggable : MonoBehaviourGraphicInstanced, IDragHand
     public Transform transformToDrag;
     public PointerEventData.InputButton dragButton = PointerEventData.InputButton.Left;
 
+    public float snapGridSize = 0.2f;
 
     Vector3 Position
     {
@@ -31,8 +32,10 @@ public class GraphicInstanceDraggable : MonoBehaviourGraphicInstanced, IDragHand
 
     void Update()
     {
-        if (!dragOtherTransform)
-            GraphicInstance.Position = Vector3.Lerp(Position, targetPosition, Time.deltaTime * dragSpeed * 10);
+        if (dragOtherTransform) return;
+
+        GraphicInstance.Position = Vector3.Lerp(Position, targetPosition, Time.deltaTime * dragSpeed * 10);
+
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -41,7 +44,11 @@ public class GraphicInstanceDraggable : MonoBehaviourGraphicInstanced, IDragHand
         if (!dragOtherTransform)
         {
             if (eventData.pointerCurrentRaycast.isValid)
+            {
                 targetPosition = transform.parent.InverseTransformPoint((Vector2)eventData.pointerCurrentRaycast.worldPosition);
+                targetPosition.x = Mathf.Round(targetPosition.x / snapGridSize) * snapGridSize;
+                targetPosition.y = Mathf.Round(targetPosition.y / snapGridSize) * snapGridSize;
+            }
             else
                 targetPosition += transform.parent.InverseTransformVector((Vector3)eventData.delta * screenScale);
         }

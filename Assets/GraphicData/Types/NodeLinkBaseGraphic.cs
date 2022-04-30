@@ -4,7 +4,7 @@ using Assets.CoreData.Types;
 using Assets.GraphicData.Interfaces;
 using UnityEngine;
 
-namespace Assets.GraphicData.ScriptableObjects
+namespace Assets.GraphicData.Types
 {
     [Serializable]
     public class NodeLinkBaseGraphic : BaseGraphicObject, IGraphicNodeLinkBase
@@ -13,8 +13,6 @@ namespace Assets.GraphicData.ScriptableObjects
         [SerializeReference] protected NodeLinkBase baseWrapped;
 
         public override IBaseType BaseWrapped { get => baseWrapped; set => baseWrapped = value as NodeLinkBase; }
-
-        //IBaseType IGraphicInstance.BaseWrapped { get => baseWrapped; set => BaseWrapped = value as INode; }
     }
 
 

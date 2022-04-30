@@ -21,13 +21,13 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
     public IGraphicInstance graphicInstance;
 
     public List<IBaseNodeWithPinnedSO> connectedNodesList;
-    private List<INode> selectedNodesList;
+    //private List<INode> selectedNodesList;
 
     //public IEnumerable<INode> AvailableNodes;
 
     void Awake()
     {
-        selectedNodesList ??= new();
+        //selectedNodesList ??= new();
         connectedNodesList ??= new();
     }
 
@@ -127,31 +127,36 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
 
         if (gInstance.BaseWrapped is INode pinned_obj && pinned_obj.BaseSO is IPinned pinned_so)
         {
-            var pinCount = pinned_so.PinConfiguration.PinDataArray.Count();
+            CreatePinDataWithPanelManager(gInstance, pinned_so);
+        }
+    }
 
-            // remove Additional childs, if any
-            for (int i = pinRowsContainer.childCount - 1; i >= pinCount; i--)
-            {
-                Destroy(pinRowsContainer.GetChild(i).gameObject);
-            }
+    private void CreatePinDataWithPanelManager(IGraphicInstance gInstance, IPinned pinned_so)
+    {
+        var pinCount = pinned_so.PinConfiguration.PinDataArray.Count();
 
-            for (int i = 0; i < pinCount; i++)
-            {
-                IPinData pinData = pinned_so.PinConfiguration.PinDataArray.ElementAt(i);
+        // remove Additional childs, if any
+        for (int i = pinRowsContainer.childCount - 1; i >= pinCount; i--)
+        {
+            Destroy(pinRowsContainer.GetChild(i).gameObject);
+        }
 
-                UIConnectionPanelManager panelMgr;
-                if (i < pinRowsContainer.childCount)
-                    panelMgr = pinRowsContainer.GetChild(i).GetComponent<UIConnectionPanelManager>();
-                else
-                    panelMgr = Instantiate(pinLinePrefab, pinRowsContainer).GetComponent<UIConnectionPanelManager>();
+        for (int i = 0; i < pinCount; i++)
+        {
+            IPinData pinData = pinned_so.PinConfiguration.PinDataArray.ElementAt(i);
 
-                panelMgr.SetPinData(pinData);
+            UIConnectionPanelManager panelMgr;
+            if (i < pinRowsContainer.childCount)
+                panelMgr = pinRowsContainer.GetChild(i).GetComponent<UIConnectionPanelManager>();
+            else
+                panelMgr = Instantiate(pinLinePrefab, pinRowsContainer).GetComponent<UIConnectionPanelManager>();
 
-                panelMgr.SetParent(this);
+            panelMgr.SetPinData(pinData);
 
-                panelMgr.InitOptions(gInstance.BaseWrapped as IBaseNodeWithPinnedSO);
+            panelMgr.SetParent(this);
 
-            }
+            panelMgr.InitOptions(gInstance.BaseWrapped as IBaseNodeWithPinnedSO);
+
         }
     }
 
@@ -221,33 +226,33 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         if (graphicInstance == null) return;
 
 
-        switch (graphicInstance.BaseWrapped)
-        {
-            case SinkBase sink:
+        //switch (graphicInstance.BaseWrapped)
+        //{
+        //    case SinkBase sink:
 
-                //name_input.text = sink.Name;
-                //gameObject.name = sink.Name;
+        //        //name_input.text = sink.Name;
+        //        //gameObject.name = sink.Name;
 
-                //attribute_text.text = 
+        //        //attribute_text.text = 
 
-                //ConnectionsBtn.onClick.RemoveAllListeners();
-                //ConnectionsBtn.onClick.AddListener(() =>);
+        //        //ConnectionsBtn.onClick.RemoveAllListeners();
+        //        //ConnectionsBtn.onClick.AddListener(() =>);
 
-                break;
-            case SourceBase source:
+        //        break;
+        //    case SourceBase source:
 
-                break;
+        //        break;
 
-            case ConnectionNodeBase node:
+        //    case ConnectionNodeBase node:
 
-                break;
+        //        break;
 
-            case NodeLinkBase nodeLink:
+        //    case NodeLinkBase nodeLink:
 
 
-                break;
-            default:
-                break;
-        }
+        //        break;
+        //    default:
+        //        break;
+        //}
     }
 }

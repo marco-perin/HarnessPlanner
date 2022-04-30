@@ -1,17 +1,14 @@
 ﻿using System;
 using Assets.CoreData.Interfaces;
-using Assets.CoreData.Types;
+using Assets.CoreData.ScriptableObjects;
 using UnityEngine;
 
-namespace Assets.CoreData.ScriptableObjects
+namespace Assets.CoreData.Types
 {
     [Serializable]
     public class SourceBase : BaseNodeWithPinnedSO<SourceBaseSO>, ISource
     {
         [SerializeField] private double maxAvailability;
-        //[SerializeField] private ConnectibleRelativeBase positiveConnectible;
-        //[SerializeField] private ConnectibleRelativeBase negativeConnectible;
-
 
         public SourceBase(SourceBaseSO baseSO) : base(baseSO)
         {
@@ -20,7 +17,5 @@ namespace Assets.CoreData.ScriptableObjects
 
         public double MaxAvailability { get => maxAvailability; set => maxAvailability = value; }
 
-        //public IConnectibleRelative PositiveConnectible { get => positiveConnectible; set => positiveConnectible = value as ConnectibleRelativeBase; }
-        //public IConnectibleRelative NegativeConnectible { get => negativeConnectible; set => negativeConnectible = value as ConnectibleRelativeBase; }
     }
 }

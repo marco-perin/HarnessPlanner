@@ -1,7 +1,7 @@
 ﻿using Assets.CoreData.Interfaces;
 using UnityEngine;
 
-namespace Assets.GraphicData.ScriptableObjects
+namespace Assets.GraphicData.Interfaces
 {
     public interface ICanGenerateConnectibles
     {

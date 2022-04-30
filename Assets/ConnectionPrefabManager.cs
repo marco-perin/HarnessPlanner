@@ -72,7 +72,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
 
         LengthTextCanvas.transform.position = Vector3.Lerp(From.position, To.position, 0.5f) + updir * textDistance;
         LineRenderer.SetPositions(points.Select(t => Vector3.Lerp(From.position, To.position, t)).ToArray());
-        EdgeCollider.SetPoints(points.Select(t => Vector2.Lerp(From.position, To.position, t)).ToList());
+        EdgeCollider.SetPoints(points.Select(t => Vector2.Lerp(From.localPosition, To.localPosition, t)).ToList());
     }
 
     public void OnPointerClick(PointerEventData eventData)

@@ -1,6 +1,6 @@
 ﻿using System;
 using Assets.CoreData.Interfaces;
-using Assets.CoreData.ScriptableObjects;
+using Assets.CoreData.Types;
 using Assets.GraphicData.ScriptableObjects;
 using UnityEngine;
 

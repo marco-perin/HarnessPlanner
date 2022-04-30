@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Assets.CoreData.Interfaces;
+using Assets.GraphicData.Interfaces;
 using Assets.GraphicData.ScriptableObjects;
 using Assets.GraphicData.Types;
 using UnityEngine;
@@ -57,18 +58,8 @@ public class SaveManager : Singleton<SaveManager>
         var mbgis = nodesParent.GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>();
         var basetypes = mbgis.Select(mbgi => mbgi.GraphicInstance);
 
-        var baseObjects = basetypes.Where(bt => bt is BaseGraphicObject);
-        var sinks = baseObjects.Where(bt => bt is SinkGraphicBaseWrapper);
-        var sources = baseObjects.Where(x => x is SourceGraphicBaseWrapper);
-        var nodes = baseObjects.Where(x => x is ConnectionNodeBaseGraphicBaseWrapper);
-        var links = baseObjects.Where(x => x is NodeLinkBaseGraphicBaseWrapper);
-
-        SaveData sd = new()
+        SaveData sd = new(basetypes)
         {
-            sinks = sinks.Select(n => n as SinkGraphicBaseWrapper).ToList(),
-            sources = sources.Select(n => n as SourceGraphicBaseWrapper).ToList(),
-            nodes = nodes.Select(n => n as ConnectionNodeBaseGraphicBaseWrapper).ToList(),
-            links = links.Select(n => n as NodeLinkBaseGraphicBaseWrapper).ToList(),
             // TODO: make this more robust.
             canvasShift = nodesParent.transform.position,
         };
@@ -146,6 +137,25 @@ public class SaveManager : Singleton<SaveManager>
 [Serializable]
 public class SaveData
 {
+    public SaveData() { }
+    public SaveData(IEnumerable<IGraphicInstance> basetypes)
+    {
+        var baseObjects = basetypes.Where(bt => bt is BaseGraphicObject);
+        //var sinks = baseObjects.Where(bt => bt is SinkGraphicBaseWrapper);
+        //var sources = baseObjects.Where(x => x is SourceGraphicBaseWrapper);
+        //var nodes = baseObjects.Where(x => x is ConnectionNodeBaseGraphicBaseWrapper);
+        //var links = baseObjects.Where(x => x is NodeLinkBaseGraphicBaseWrapper);
+
+        sinks = WhereSelect<SinkGraphicBaseWrapper>(baseObjects).ToList();
+        sources = WhereSelect<SourceGraphicBaseWrapper>(baseObjects).ToList();
+        nodes = WhereSelect<ConnectionNodeBaseGraphicBaseWrapper>(baseObjects).ToList();
+        links = WhereSelect<NodeLinkBaseGraphicBaseWrapper>(baseObjects).ToList();
+    }
+
+    private IEnumerable<T> WhereSelect<T>(IEnumerable<IGraphicInstance> baseObjects) where T : BaseGraphicObject
+    {
+        return baseObjects.Where(bo => bo is T).Select(bo => bo as T);
+    }
 
     public Vector2 canvasShift;
     [SerializeReference] public List<SinkGraphicBaseWrapper> sinks;

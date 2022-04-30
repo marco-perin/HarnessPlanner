@@ -31,19 +31,11 @@ public class TransformDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler
         //Camera.main.transform.position = new Vector3(pos.x, pos.y, cameraPos.z);
 
     }
-
-    // Start is called before the first frame update
     void Start()
     {
 
         if (transformToDrag == null)
             transformToDrag = transform.parent;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void OnBeginDrag(PointerEventData eventData)

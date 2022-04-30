@@ -4,7 +4,7 @@ using Assets.CoreData.Types;
 using Assets.GraphicData.Interfaces;
 using UnityEngine;
 
-namespace Assets.GraphicData.ScriptableObjects
+namespace Assets.GraphicData.Types
 {
     [Serializable]
     public class ConnectionNodeBaseGraphic : BaseGraphicObject, IConnectionNodeBase
