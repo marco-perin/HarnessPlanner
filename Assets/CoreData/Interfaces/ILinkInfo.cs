@@ -20,11 +20,17 @@ namespace Assets.CoreData.Types
         }
 
         public IFullLineData PowerData { get => powerData; set => powerData = value as FullLineData; }
-        public IEnumerable<IFullLineData> LineData { get => lineData; set => lineData = (value as IEnumerable<FullLineData>).ToList(); }
+        public IEnumerable<IFullLineData> LineData { get => lineData; set => lineData = (value.Select(ld => ld as FullLineData)).ToList(); }
 
         public override string ToString()
         {
-            return $"Power: {PowerData.Current}A - {PowerData.ConductorData.Awg}awg";
+            var result = $"Power: {PowerData.Current}A - {PowerData.ConductorData.Awg}awg\n";
+
+            if (LineData.Count() > 0)
+                result += $"Total Data Lines: {LineData.Count()}";
+
+            return result;
+
         }
     }
 }

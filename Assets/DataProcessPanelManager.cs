@@ -40,6 +40,6 @@ public class DataProcessPanelManager : MonoBehaviour
 
    public void ProcessData()
    {
-      MainCalculatorSingleton.Instance.CalculateCurrents();
+      MainCalculatorSingleton.Instance.CalculateEverything();
    }
 }

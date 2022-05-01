@@ -95,11 +95,11 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
     /// returning a dictionary representing the paths taken up to a certain node.
     /// </summary>
     /// <param name="currentNode"></param>
-    /// <param name="visitedNodes"></param>
+    /// <param name="visitedNodesWithPathDict"></param>
     /// <returns></returns>
-    public IEnumerable<IGraphicInstance> GetNodesConnectedToNodeWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes)
+    public IEnumerable<IGraphicInstance> GetNodesConnectedToNodeWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodesWithPathDict)
     {
-        return GetConnectedNodesWithPaths(currentNode, out visitedNodes);
+        return GetConnectedNodesWithPaths(currentNode, out visitedNodesWithPathDict);
     }
 
     private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode)
@@ -107,15 +107,15 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         return GetConnectedNodesWithPaths(currentNode, out _);
     }
 
-    private IEnumerable<IGraphicInstance> GetConnectedNodesWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes)
+    private IEnumerable<IGraphicInstance> GetConnectedNodesWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodesWithPathDict)
     {
-        visitedNodes = new();
+        visitedNodesWithPathDict = new();
 
         // ATTENTION: Without the following line the algorithm resets the nodes name, except for the currentNode, I still don't understand why.
         //            ( And also the program takes into account the starting node )
-        visitedNodes.Add(currentNode, new List<INodeLinkBase>());
+        visitedNodesWithPathDict.Add(currentNode, new List<INodeLinkBase>());
 
-        return GetConnectedNodesRecursive(currentNode, ref visitedNodes);
+        return GetConnectedNodesRecursive(currentNode, ref visitedNodesWithPathDict);
     }
 
     private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes)
@@ -124,7 +124,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         return GetConnectedNodesRecursive(currentNode, ref visitedNodes, previousEdges.AsEnumerable());
     }
 
-    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes, IEnumerable<INodeLinkBase> previousEdges)
+    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodesWithPathDict, IEnumerable<INodeLinkBase> previousEdges)
     {
         var edges = ActiveConnections.ToList();
         var incidentEdges = edges
@@ -147,15 +147,15 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
             IGraphicInstance toNode = edge.ToNode;
 
             // Node Already visited
-            if (visitedNodes.ContainsKey(toNode))
+            if (visitedNodesWithPathDict.ContainsKey(toNode))
                 continue;
 
             // Node not visited, add it
             result.Add(toNode);
             var edgesUpToHere = previousEdges.Append(edge);
-            visitedNodes[toNode] = edgesUpToHere;
+            visitedNodesWithPathDict[toNode] = edgesUpToHere;
 
-            result.AddRange(GetConnectedNodesRecursive(toNode, ref visitedNodes, edgesUpToHere));
+            result.AddRange(GetConnectedNodesRecursive(toNode, ref visitedNodesWithPathDict, edgesUpToHere));
         }
         //if (result.Any())
         //    Debug.Log(

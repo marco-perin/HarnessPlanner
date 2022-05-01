@@ -4048,7 +4048,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Battery
+  m_text: Option A
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4403,6 +4403,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodesParent: {fileID: 1296546496}
   BatteryNodeName: Battery
+  connectionConductorData:
+    awg: 22
+    cma: 0
+    area: 0
+    maxCurrent: 0
 --- !u!114 &1680205931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4470,7 +4475,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc916700ac3a1b479fe06187303949a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputField: {fileID: 1316787465}
   inputDropDownField: {fileID: 1653931111}
 --- !u!114 &1718509473
 MonoBehaviour:
