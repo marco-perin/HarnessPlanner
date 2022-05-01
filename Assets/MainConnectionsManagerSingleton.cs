@@ -57,7 +57,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         });
     }
 
-    internal void DeleteConnection(GraphicalSOSync connGO, INodeLinkBase conn)
+    internal void DeleteConnection(GraphicalSOSync connGO)
     {
         Destroy(connGO.gameObject);
     }

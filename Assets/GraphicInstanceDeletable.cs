@@ -37,7 +37,7 @@ public class GraphicInstanceDeletable : MonoBehaviourGraphicInstanced, IPointerD
         {
             var conn = connGO.GraphicInstance.BaseWrapped as INodeLinkBase;
             if (conn.ToNode == thisGraphicInstance || conn.FromNode == thisGraphicInstance)
-                connMgr.DeleteConnection(connGO, conn);
+                connMgr.DeleteConnection(connGO);
         }
 
         Destroy(gameObject);
