@@ -110,9 +110,10 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
         var pinnSO = graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO;
 
-        var connectedNodes = GetNodesConnectedToGraphicInstance(graphicInstance, out var visitedNodesWithPathDict);
+        if (pinnSO.Connections.Select(c => c.PinFromData.PinType).All(pt => pt == PinTypeEnum.Power || pt == PinTypeEnum.Ground))
+            return result;
 
-        //Debug.Log($"Node {pinnSO.Name} has {connectedNodes.Count()} connected nodes.");
+        var connectedNodes = GetNodesConnectedToGraphicInstance(graphicInstance, out var visitedNodesWithPathDict);
 
         foreach (var connectedNode in connectedNodes)
         {
@@ -120,10 +121,10 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
             if (inode.Connections.Count() <= 0) continue;
 
+
             //Debug.Log($" - Node {inode.Name} has {inode.Connections.Count()} connections.");
             foreach (var conn in inode.Connections)
             {
-
                 if (!countedConnections.ContainsKey(inode))
                     countedConnections[inode] = new() { conn.PinToData };
                 else
@@ -132,12 +133,11 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
                         continue;
 
                     countedConnections[inode].Add(conn.PinToData);
-
                 }
 
                 var path = visitedNodesWithPathDict[connectedNode];
 
-                AddConnectionsToPath(path);
+                AddConnectionsToPathLinks(path);
 
                 result.Add(new()
                 {
@@ -162,7 +162,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
           .ToList();
     }
 
-    private void AddConnectionsToPath(IEnumerable<INodeLinkBase> path)
+    private void AddConnectionsToPathLinks(IEnumerable<INodeLinkBase> path)
     {
         foreach (var link in path)
         {
