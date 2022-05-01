@@ -51,14 +51,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
         if (LengthText == null) return;
         if (DataText == null) return;
 
-        //var points = EdgeCollider.points;
-        ////points[0] = new Vector3(From.position.x, From.position.z);
-        //points[0] = From.position;
-        ////points[1] = new Vector3(To.position.x, To.position.z);
-        //points[1] = To.position;
-        //EdgeCollider.SetPoints(points.ToList());
-
-#if UNITY_EDITOR 
+#if UNITY_EDITOR
 #if DEBUG
 
         if (Application.isEditor && !Application.isPlaying)
@@ -72,18 +65,25 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
 
 
         var midpoint = Vector3.Lerp(From.position, To.position, 0.5f);
+
         LengthTextCanvas.transform.position = midpoint;
 
         var rot = Quaternion.FromToRotation(Vector3.right, To.position - From.position);
-        var angle = rot.eulerAngles.z;
+        //var angle = rot.eulerAngles.z;
         var updir = rot * Vector3.up;
+
         if (Vector3.Dot(updir, Vector3.up) < 0)
             updir = -updir;
 
         LengthText.transform.position = midpoint + updir * textDistance;
-        //updir = updir.normalized * InfoText.rectTransform.rect.width * Mathf.Sin(angle * Mathf.PI / 180);
         DataText.transform.position = midpoint - updir * infoDistance;
 
+        AssignLinePointsPositions();
+
+    }
+
+    private void AssignLinePointsPositions()
+    {
         LineRenderer.SetPositions(points.Select(t => Vector3.Lerp(From.position, To.position, t)).ToArray());
         EdgeCollider.SetPoints(points.Select(t => Vector2.Lerp(From.localPosition, To.localPosition, t)).ToList());
     }

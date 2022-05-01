@@ -31,11 +31,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
     {
         Debug.Assert(nodesParent != null);
 
-        var graphicInstances = nodesParent
-            .GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>()
-            .Where(mbContainer => mbContainer.GraphicInstance.BaseWrapped is IBaseNodeWithPinnedSO)
-            .Select(mb => mb.GraphicInstance)
-            .ToList();
+        var graphicInstances = GetAllGraphicInstances();
 
         var battGI = graphicInstances.SingleOrDefault(gi => gi.BaseWrapped is ISource isource && isource.Name == BatteryNodeName);
         var batt = battGI.BaseWrapped as ISource;
@@ -45,7 +41,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
         var connections = GetNodesConnectedToGraphicInstance(battGI, out var visitedNodesWithPathDict);
 
-        Dictionary<INodeLinkBase, double> currentPerLink = new();
+        Dictionary<INodeLinkBase, double> currentPerLinkDict = new();
 
         foreach (var c in connections)
         {
@@ -55,20 +51,26 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
             foreach (var link in path)
             {
-                if (!currentPerLink.ContainsKey(link))
-                    currentPerLink.Add(link, 0);
+                if (!currentPerLinkDict.ContainsKey(link))
+                    currentPerLinkDict.Add(link, 0);
 
-                currentPerLink[link] += (baseWrapped is ISink sink) ? sink.Consumption : 0;
+                currentPerLinkDict[link] += (baseWrapped is ISink sink) ? sink.Consumption : 0;
             }
 
-            #region LENGHTS_CALCS
+            //#region LENGHTS_CALCS
 
-            var toPath = string.Join("-", path.Select(l => "" + l.Length + "m"));
-            Debug.Log($"Path to node {baseWrapped.Name} ( {path.Sum(l => l.Length)}m ): {toPath}");
+            //var toPath = string.Join("-", path.Select(l => "" + l.Length + "m"));
+            //Debug.Log($"Path to node {baseWrapped.Name} ( {path.Sum(l => l.Length)}m ): {toPath}");
 
-            #endregion LENGHTS_CALCS
+            //#endregion LENGHTS_CALCS
         }
 
+        AssignPowerDataToLinks(currentPerLinkDict);
+
+    }
+
+    private static void AssignPowerDataToLinks(Dictionary<INodeLinkBase, double> currentPerLink)
+    {
         foreach (var link in currentPerLink.Keys)
         {
             var condData = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderBy(c => c.MaxCurrent).First(c => c.MaxCurrent >= currentPerLink[link]);
@@ -86,12 +88,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
     public List<FullPathData> CalculateConnections()
     {
-        var graphicInstances = nodesParent
-          .GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>()
-          .Where(mbContainer => mbContainer.GraphicInstance.BaseWrapped is IBaseNodeWithPinnedSO)
-          .Select(mb => mb.GraphicInstance)
-          .ToList();
-
+        var graphicInstances = GetAllGraphicInstances();
 
         Dictionary<INode, List<IPinData>> countedConnections = new();
 
@@ -100,76 +97,88 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
         // Foreach node
         foreach (var graphicInstance in graphicInstances)
         {
-            var pinnSO = graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO;
-
-            var connectedNodes = GetNodesConnectedToGraphicInstance(graphicInstance, out var visitedNodesWithPathDict);
-
-            //Debug.Log($"Node {pinnSO.Name} has {connectedNodes.Count()} connected nodes.");
-
-            foreach (var connectedNode in connectedNodes)
-            {
-                var inode = connectedNode.BaseWrapped as IBaseNodeWithPinnedSO;
-
-                if (inode.Connections.Count() <= 0) continue;
-
-                //Debug.Log($" - Node {inode.Name} has {inode.Connections.Count()} connections.");
-                foreach (var conn in inode.Connections)
-                {
-                    //if (visitedInstances.Contains(conn.ConnectedNode))
-                    // We already counted the connection from this node, skip it
-                    //continue;
-                    if (!countedConnections.ContainsKey(inode))
-                    {
-                        // We are making a new connection.
-
-                        countedConnections[inode] = new() { conn.PinToData };
-
-                    }
-                    else
-                    {
-                        var countedConn = countedConnections[inode];
-                        if (countedConn.Contains(conn.PinToData))
-                            continue;
-
-                        countedConnections[inode].Add(conn.PinToData);
-
-                    }
-
-                    var path = visitedNodesWithPathDict[connectedNode];
-
-                    //Debug.Log($" -- Node {inode.Name} considered: {path.Count()} paths");
-
-                    foreach (var link in path)
-                    {
-                        if (link.LinkInfo == null)
-                            link.LinkInfo = new LinkInfo();
-
-                        if (link.LinkInfo.LineData == null)
-                            link.LinkInfo.LineData = new List<FullLineData>();
-
-                        link.LinkInfo.LineData = link.LinkInfo.LineData
-                            .Append(new FullLineData()
-                            {
-                                ConductorData = connectionConductorData,
-                                Current = 0
-                            });
-                    }
-
-                    result.Add(new()
-                    {
-                        nodeA = pinnSO,
-                        nodeB = inode,
-                        conductorData = connectionConductorData,
-                        Length = path.Sum(x => x.Length)
-                    });
-
-                }
-            }
-
+            result.AddRange(ProcessGraphicInstanceForConnections(graphicInstance, countedConnections));
         }
 
         return result;
 
+    }
+
+    private List<FullPathData> ProcessGraphicInstanceForConnections(IGraphicInstance graphicInstance, Dictionary<INode, List<IPinData>> countedConnections)
+    {
+        List<FullPathData> result = new();
+
+        var pinnSO = graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO;
+
+        var connectedNodes = GetNodesConnectedToGraphicInstance(graphicInstance, out var visitedNodesWithPathDict);
+
+        //Debug.Log($"Node {pinnSO.Name} has {connectedNodes.Count()} connected nodes.");
+
+        foreach (var connectedNode in connectedNodes)
+        {
+            var inode = connectedNode.BaseWrapped as IBaseNodeWithPinnedSO;
+
+            if (inode.Connections.Count() <= 0) continue;
+
+            //Debug.Log($" - Node {inode.Name} has {inode.Connections.Count()} connections.");
+            foreach (var conn in inode.Connections)
+            {
+
+                if (!countedConnections.ContainsKey(inode))
+                    countedConnections[inode] = new() { conn.PinToData };
+                else
+                {
+                    if (countedConnections[inode].Contains(conn.PinToData))
+                        continue;
+
+                    countedConnections[inode].Add(conn.PinToData);
+
+                }
+
+                var path = visitedNodesWithPathDict[connectedNode];
+
+                AddConnectionsToPath(path);
+
+                result.Add(new()
+                {
+                    nodeA = pinnSO,
+                    nodeB = inode,
+                    conductorData = connectionConductorData,
+                    Length = path.Sum(x => x.Length)
+                });
+
+            }
+        }
+        return result;
+
+    }
+
+    private List<IGraphicInstance> GetAllGraphicInstances()
+    {
+        return nodesParent
+          .GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>()
+          .Where(mbContainer => mbContainer.GraphicInstance.BaseWrapped is IBaseNodeWithPinnedSO)
+          .Select(mb => mb.GraphicInstance)
+          .ToList();
+    }
+
+    private void AddConnectionsToPath(IEnumerable<INodeLinkBase> path)
+    {
+        foreach (var link in path)
+        {
+            if (link.LinkInfo == null)
+                link.LinkInfo = new LinkInfo();
+
+            if (link.LinkInfo.LineData == null)
+                link.LinkInfo.LineData = new List<FullLineData>();
+
+            link.LinkInfo.LineData = link.LinkInfo.LineData
+                .Append(new FullLineData()
+                {
+                    ConductorData = connectionConductorData,
+                    Current = 0
+                });
+        }
     }
 
     private static IEnumerable<IGraphicInstance> GetNodesConnectedToGraphicInstance(IGraphicInstance graphicInstance, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodesWithPathDict)

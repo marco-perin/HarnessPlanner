@@ -22,6 +22,8 @@ public class PinData : IPinData, IEquatable<PinData>
     [SerializeField] private string name;
     [TextArea]
     [SerializeField] private string description;
+    [SerializeField] private PinType pinType;
+
     public PinData()
     {
         Id = Guid.NewGuid().ToString();
@@ -31,6 +33,8 @@ public class PinData : IPinData, IEquatable<PinData>
     public string Name => name; public string Description => description;
 
     public int PinNumber { get => pinNumber; set => pinNumber = value; }
+
+    public PinType PinType { get => pinType; set => pinType = value; }
 
     public bool Equals(IPinData other)
     {

@@ -20,7 +20,9 @@ MonoBehaviour:
       pinNumber: 1
       name: POS
       description: 
+      pinType: 1
     - id: 2
       pinNumber: 2
-      name: NEG
+      name: GND
       description: 
+      pinType: 2

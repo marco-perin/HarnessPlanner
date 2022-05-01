@@ -95,22 +95,6 @@ public class UIConnectionPanelManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //if (graphicObject == null) return;
-
-        //if (node_dd != null)
-        //{
-        //    //node_dd.options = nodes_options;
-        //}
-
-        //if (harness_node_dd != null)
-        //{
-        //    //harness_node_dd.options = harness_options;
-        //}
-    }
-
     internal void InitOptions(IBaseNodeWithPinnedSO base_node)
     {
         if (base_node == null)

@@ -20,11 +20,14 @@ MonoBehaviour:
       pinNumber: 1
       name: POS
       description: 
+      pinType: 1
     - id: 2
       pinNumber: 2
-      name: NEG
+      name: GND
       description: 
+      pinType: 2
     - id: 3
       pinNumber: 3
       name: LOL
       description: 
+      pinType: 0
