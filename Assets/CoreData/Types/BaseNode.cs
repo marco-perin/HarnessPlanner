@@ -2,6 +2,7 @@
 using Assets.CoreData.Interfaces;
 using Assets.CoreData.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Assets.CoreData.Types
 {
@@ -9,8 +10,11 @@ namespace Assets.CoreData.Types
     public class BaseNode<TSO> : BaseNode where TSO : BaseObjectSO
     {
         [SerializeField]
-        [SerializeReference]
+        //[SerializeReference]
         protected TSO baseSO;
+
+        [SerializeField]
+        private AssetReferenceT<TSO> baseSOAddressable;
 
         public BaseNode(TSO baseSO) : base(baseSO) { }
 
@@ -21,6 +25,8 @@ namespace Assets.CoreData.Types
         }
 
         public override INodeSO BaseSO { get => baseSO; set => baseSO = value as TSO; }
+        public AssetReferenceT<TSO> BaseSOAddressableTyped { get => baseSOAddressable; set => baseSOAddressable = value; }
+        public override AssetReference BaseSOAddressable { get => baseSOAddressable; set => baseSOAddressable = value as AssetReferenceT<TSO>; }
 
         public override TNode Clone<TNode>()
         {
@@ -48,9 +54,9 @@ namespace Assets.CoreData.Types
         }
 
         public abstract INodeSO BaseSO { get; set; }
+        public abstract AssetReference BaseSOAddressable { get; set; }
         public string Name { get => _name; set => _name = value; }
         public string Id { get => _id; set => _id = value; }
         public abstract TNode Clone<TNode>() where TNode : class, INode;
     }
-    //public interface INodeSOWithPrefab : INodeSO, IWithPrefab { }
 }

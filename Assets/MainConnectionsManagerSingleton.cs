@@ -19,7 +19,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 {
     public ConnectionState connectionState;
 
-    public GraphicHarnessSettingsSO harnessSettings;
+    //public GraphicHarnessSettingsSO harnessSettings;
     public ConnectibleManager connectFrom;
     public ConnectibleManager connectTo;
 
@@ -28,13 +28,18 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
     public Transform connectionsParent;
 
+    private bool continousConnection = false;
+
+
+    public HarnessSettingSOLoaded HarnessSettings => ProgramManagerSingleton.Instance.HarnessSettingsSO;
+    public GraphicHarnessSettingsSO HarnessSettingsAddressable => ProgramManagerSingleton.Instance.HarnessSettingsSOAddressables;
+
     public void ResetConnectionState()
     {
         continousConnection = false;
         connectionState = ConnectionState.None;
     }
 
-    private bool continousConnection = false;
 
     private void Start()
     {
@@ -204,13 +209,14 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
         IGraphicInstance wrapper = new NodeLinkBaseGraphicBaseWrapper()
         {
-            BaseWrapped = new NodeLinkBase(harnessSettings.DefaultLinkPrefab)
+            BaseWrapped = new NodeLinkBase(HarnessSettings.DefaultLinkPrefab)
             {
                 Length = 0,
                 FromNode = from.GraphicInstance,
-                ToNode = to.GraphicInstance
+                ToNode = to.GraphicInstance,
+                BaseSOAddressableTyped = HarnessSettingsAddressable.DefaultLinkPrefab
             },
-            Position = Vector3.forward * harnessSettings.ConnectionsPlaceHeight
+            Position = Vector3.forward * HarnessSettings.ConnectionsPlaceHeight
         };
 
         HarnessPlacer.CreateGraphicWrapper(wrapper, connectionsParent);

@@ -1,8 +1,7 @@
 ﻿using Assets.CoreData.Interfaces;
-using Assets.CoreData.ScriptableObjects;
 using UnityEngine;
 
-namespace Assets.CoreData.Types
+namespace Assets.CoreData.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "NodeLinkBaseSO", menuName = "CoreDataBaseSO/NodeLinkBaseSO")]
     public class NodeLinkBaseSO : BaseObjectSO, INodeSO

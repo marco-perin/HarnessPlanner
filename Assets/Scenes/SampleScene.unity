@@ -2635,14 +2635,16 @@ MonoBehaviour:
 
     V - stop connecting
 
-    any
-    other - reset state
+    X
+    - delete node / connection
+
+    any other - reset state
 
 
-    Left btn over node - drag node
+    Left btn over node
+    - drag node
 
-    Mid btn - drag
-    canvas'
+    Mid btn - drag canvas'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2669,7 +2671,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12.2
+  m_fontSize: 11.05
   m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3161,7 +3163,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectionState: 0
-  harnessSettings: {fileID: 11400000, guid: b44ecbc61c4a5a14eb9b1b19cc2a9f55, type: 2}
   connectFrom: {fileID: 0}
   connectTo: {fileID: 0}
   connections: []
@@ -3220,6 +3221,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   harnessSettingsSO: {fileID: 11400000, guid: b44ecbc61c4a5a14eb9b1b19cc2a9f55, type: 2}
+  loadedRefCount: 0
+  hasLoaded: 0
 --- !u!114 &1680205930
 MonoBehaviour:
   m_ObjectHideFlags: 0

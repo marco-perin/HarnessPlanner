@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.CoreData.Interfaces;
+using Assets.CoreData.ScriptableObjects;
 using Assets.GraphicData.Interfaces;
 using Assets.GraphicData.Types;
 using UnityEngine;
@@ -10,7 +11,10 @@ namespace Assets.CoreData.Types
     public class NodeLinkBase : BaseNode<NodeLinkBaseSO>, INodeLinkBase
     {
         [SerializeField] private double length;
-        [SerializeField] private LinkInfo linkInfo;
+#nullable enable
+        [SerializeField] private LinkInfo? linkInfo;
+#nullable disable
+
         [SerializeField][SerializeReference] private BaseGraphicObject fromNode;
         [SerializeField][SerializeReference] private BaseGraphicObject toNode;
 
@@ -50,7 +54,8 @@ namespace Assets.CoreData.Types
                 return linkBase;
             }
         }
-
-        public ILinkInfo LinkInfo { get => linkInfo; set => linkInfo = value as LinkInfo; }
+#nullable enable
+        public ILinkInfo? LinkInfo { get => linkInfo; set => linkInfo = value as LinkInfo; }
+#nullable disable
     }
 }

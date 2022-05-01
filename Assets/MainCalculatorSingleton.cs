@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.CoreData.Interfaces;
+using Assets.CoreData.Types;
 using UnityEngine;
 
 public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 {
     public Transform nodesParent;
     public string BatteryNodeName;
+
 
     public void CalculateCurrents()
     {
@@ -52,10 +54,24 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
             #endregion LENGHTS_CALCS
         }
 
-        foreach (var l in currentPerLink.Keys)
+        foreach (var link in currentPerLink.Keys)
         {
-            var minAWG = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderBy(c => c.MaxCurrent).First(c => c.MaxCurrent >= currentPerLink[l]).Awg;
-            Debug.Log($"Current for Link [{(l.FromNode.BaseWrapped is INode fn ? fn.Name : "Node")}-{(l.ToNode.BaseWrapped is INode tn ? tn.Name : "Node")}]: {currentPerLink[l]}A -> {minAWG}awg");
+            var condData = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderBy(c => c.MaxCurrent).First(c => c.MaxCurrent >= currentPerLink[link]);
+
+            link.LinkInfo = new LinkInfo()
+            {
+                PowerData = new FullLineData()
+                {
+                    ConductorData = condData,
+                    Current = currentPerLink[link]
+                }
+            };
         }
+
+        //foreach (var l in currentPerLink.Keys)
+        //{
+        //    var minAWG = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderBy(c => c.MaxCurrent).First(c => c.MaxCurrent >= currentPerLink[l]).Awg;
+        //    Debug.Log($"Current for Link [{(l.FromNode.BaseWrapped is INode fn ? fn.Name : "Node")}-{(l.ToNode.BaseWrapped is INode tn ? tn.Name : "Node")}]: {currentPerLink[l]}A -> {minAWG}awg");
+        //}
     }
 }

@@ -15,7 +15,23 @@ MonoBehaviour:
   snapGridSize: 0.3
   nodesPlaceHeight: 0.1
   connectionsPlaceHeight: 0.2
-  defaultSourcePrefab: {fileID: 11400000, guid: 0b397100059918f47963850c619392cd, type: 2}
-  defaultSinkPrefab: {fileID: 11400000, guid: ccb597df71e9d6c47a76963f62b38005, type: 2}
-  defaultNodePrefab: {fileID: 11400000, guid: 094d17249552dec4d8175788b16579b2, type: 2}
-  defaultLinkPrefab: {fileID: 11400000, guid: 9d8dfbef6f90a7e40a51ce754c8130ad, type: 2}
+  defaultSourcePrefab:
+    m_AssetGUID: 0b397100059918f47963850c619392cd
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  defaultSinkPrefab:
+    m_AssetGUID: ccb597df71e9d6c47a76963f62b38005
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  defaultNodePrefab:
+    m_AssetGUID: 094d17249552dec4d8175788b16579b2
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  defaultLinkPrefab:
+    m_AssetGUID: 9d8dfbef6f90a7e40a51ce754c8130ad
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0

@@ -95,8 +95,6 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
 
                 AttributeText.text = "" + sink.Consumption + " A";
 
-                //ConnectionsBtn.onClick.RemoveAllListeners();
-
                 break;
             case SourceBase source:
 
@@ -107,11 +105,9 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
 
                 AttributeText.text = "Max: " + source.MaxAvailability + " A";
 
-                //ConnectionsBtn.onClick.RemoveAllListeners();
-
                 break;
 
-            case ConnectionNodeBase node:
+            case ConnectionNodeBase:
                 Position = GraphicInstance.Position;
                 break;
 
@@ -123,7 +119,11 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 connectionPrefabManager.To.localPosition = nodeLink.ToNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.From.localPosition = nodeLink.FromNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.LengthText.text = nodeLink.Length + "m";
-                connectionPrefabManager.DataText.text = "m";
+
+                if (nodeLink.LinkInfo != null)
+                    connectionPrefabManager.DataText.text = (nodeLink.LinkInfo as LinkInfo).ToString();
+                else
+                    connectionPrefabManager.DataText.gameObject.SetActive(false);
 
                 break;
             default:

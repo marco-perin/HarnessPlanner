@@ -21,6 +21,11 @@ namespace Assets.CoreData.Types
 
         public IFullLineData PowerData { get => powerData; set => powerData = value as FullLineData; }
         public IEnumerable<IFullLineData> LineData { get => lineData; set => lineData = (value as IEnumerable<FullLineData>).ToList(); }
+
+        public override string ToString()
+        {
+            return $"Power: {PowerData.Current}A - {PowerData.ConductorData.Awg}awg";
+        }
     }
 }
 

@@ -5,6 +5,7 @@ using Assets.GraphicData.Interfaces;
 using Assets.GraphicData.ScriptableObjects;
 using Assets.GraphicData.Types;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
 
 #if  ENABLE_INPUT_SYSTEM
@@ -27,7 +28,8 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
     public Transform newObjectsParentTransform;
 
     //[Header("Scriptable Objects")]
-    public GraphicHarnessSettingsSO HarnessSettings { get => ProgramManagerSingleton.Instance.HarnessSettingsSO; }
+    public HarnessSettingSOLoaded HarnessSettings { get => ProgramManagerSingleton.Instance.HarnessSettingsSO; }
+    public GraphicHarnessSettingsSO HarnessSettingsAddressable { get => ProgramManagerSingleton.Instance.HarnessSettingsSOAddressables; }
 
     [Header("Runtime Variables")]
     public PlacingType placing;
@@ -94,8 +96,12 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
 
     private void PlaceSource(Vector3 pos)
     {
+
         //throw new NotImplementedException();
-        var baseObj = new SourceBase(HarnessSettings.DefaultSourcePrefab);
+        var baseObj = new SourceBase(HarnessSettings.DefaultSourcePrefab)
+        {
+            BaseSOAddressableTyped = HarnessSettingsAddressable.DefaultSourcePrefab
+        };
 
         IGraphicInstance wrapper = new SourceGraphicBaseWrapper
         {
@@ -109,7 +115,11 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
 
     private void PlaceSink(Vector3 pos)
     {
-        var baseObj = new SinkBase(HarnessSettings.DefaultSinkPrefab);
+        var baseObj = new SinkBase(HarnessSettings.DefaultSinkPrefab)
+        {
+            BaseSOAddressableTyped = HarnessSettingsAddressable.DefaultSinkPrefab
+        };
+
         // Create The graphic instance wrapper
         //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
         IGraphicInstance wrapper = new SinkGraphicBaseWrapper
@@ -124,7 +134,10 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
 
     private void PlaceNode(Vector3 pos)
     {
-        var baseObj = new ConnectionNodeBase(HarnessSettings.DefaultNodePrefab);
+        var baseObj = new ConnectionNodeBase(HarnessSettings.DefaultNodePrefab)
+        {
+            BaseSOAddressableTyped = HarnessSettingsAddressable.DefaultNodePrefab
+        };
 
         IGraphicInstance wrapper = new ConnectionNodeBaseGraphicBaseWrapper
         {

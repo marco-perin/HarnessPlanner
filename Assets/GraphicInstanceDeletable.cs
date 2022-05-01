@@ -50,9 +50,4 @@ public class GraphicInstanceDeletable : MonoBehaviourGraphicInstanced, IPointerD
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

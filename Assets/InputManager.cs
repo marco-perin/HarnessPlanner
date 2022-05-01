@@ -21,7 +21,7 @@ public class InputManager : Singleton<InputManager>
     void Update()
     {
         var arr = actionsKeyUp;
-        if (!Input.GetMouseButtonUp(0))
+        if (!Input.GetMouseButtonUp(0) && !Input.GetMouseButtonUp(2))
             if (arr.ContainsKey(KeyCode.None) && arr[KeyCode.None]?.actions.Count > 0)
             {
                 ExecuteKeyCodeForActionsDict(KeyCode.None, arr);
@@ -39,7 +39,7 @@ public class InputManager : Singleton<InputManager>
 
         arr = actionsKeyDown;
 
-        if (!Input.GetMouseButtonDown(0))
+        if (!Input.GetMouseButtonDown(0) && !Input.GetMouseButtonDown(2))
             if (arr.ContainsKey(KeyCode.None) && arr[KeyCode.None]?.actions.Count > 0)
             {
                 ExecuteKeyCodeForActionsDict(KeyCode.None, arr);

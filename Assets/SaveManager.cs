@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Assets.CoreData.Interfaces;
+using Assets.CoreData.ScriptableObjects;
+using Assets.CoreData.Types;
 using Assets.GraphicData.Interfaces;
 using Assets.GraphicData.ScriptableObjects;
 using Assets.GraphicData.Types;
@@ -73,19 +76,26 @@ public class SaveManager : Singleton<SaveManager>
         File.WriteAllText(fullPath, json);
     }
 
-    public void Load()
+    public async void Load()
     {
         if (!saveFileName.EndsWith(Extension))
             saveFileName += Extension;
 
-        Load(saveFileName);
+        if (!ProgramManagerSingleton.Instance.HasLoaded)
+        {
+            Debug.Log("Not yet loaded all assets");
+            return;
+        }
+
+        await Load(saveFileName);
     }
 
-    public void Load(string fileName)
+    public async Task Load(string fileName)
     {
 
         for (int i = nodesParent.childCount - 1; i >= 0; i--)
             Destroy(nodesParent.GetChild(i).gameObject);
+
         var fullPath = Path.Combine(BaseSavePath, fileName);
         if (!File.Exists(fullPath)) return;
 
@@ -94,34 +104,52 @@ public class SaveManager : Singleton<SaveManager>
 
         nodesParent.transform.position = sd.canvasShift;
 
+        List<Task<bool>> tasks = new();
+
         foreach (var sinkGraphic in sd.sinks)
         {
-            CreateGraphicWrapper(sinkGraphic);
+            tasks.Add(CreateGraphicWrapper(sinkGraphic));
         }
 
         foreach (var sourceGraphic in sd.sources)
         {
-            CreateGraphicWrapper(sourceGraphic);
+            tasks.Add(CreateGraphicWrapper(sourceGraphic));
         }
 
         foreach (var nodeGraphic in sd.nodes)
         {
-            CreateGraphicWrapper(nodeGraphic);
+            tasks.Add(CreateGraphicWrapper(nodeGraphic));
         }
 
         foreach (var link in sd.links)
         {
-            CreateGraphicWrapper(link);
+            tasks.Add(CreateGraphicWrapper(link));
         }
+
+        var result = await Task.WhenAll(tasks.ToArray());
+        if (result.Any(r => r == false))
+            Debug.LogWarning($"Failed Loading {result.Where(r => !r).Count()} assets");
     }
 
-    private void CreateGraphicWrapper(BaseGraphicObject wrapper)
+    private async Task<bool> CreateGraphicWrapper(BaseGraphicObject wrapper)
     {
         // Create The graphic instance wrapper
         //IGraphicInstance graphicInstanceWrapper = ScriptableObject.CreateInstance<SinkGraphicBaseWrapperSO>();
 
+        // NOTE: this is used temporarily to make this an awaitable task.
+        //      It will be instead used in the next line to wait for the object SO to load.
+        //await Task.Yield();
+
         // Instantiate the scene GameObject prefab
-        var sinkPrefabGo = Instantiate((wrapper.BaseWrapped as INode).BaseSO.Prefab, nodesParent);
+        //var sinkPrefabGo = Instantiate((wrapper.BaseWrapped as INode).BaseSO.Prefab, nodesParent);
+        var sinkPrefabGoHandle = (wrapper.BaseWrapped as BaseNode).BaseSOAddressable.LoadAssetAsync<BaseObjectSO>();
+        var sinkPrefabGoTask = await sinkPrefabGoHandle.Task;
+
+        if (sinkPrefabGoHandle.Status != UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+            return false;
+
+        var sinkPrefabGo = Instantiate(sinkPrefabGoTask.Prefab, nodesParent);
+
         sinkPrefabGo.transform.localPosition = wrapper.Position;
         sinkPrefabGo.name = (wrapper.BaseWrapped as INode).BaseSO.Name;
 
@@ -130,6 +158,8 @@ public class SaveManager : Singleton<SaveManager>
         graphSyncMB.GraphicInstance = wrapper;
 
         graphSyncMB.GenerateConnectibles();
+
+        return true;
     }
 
 }
