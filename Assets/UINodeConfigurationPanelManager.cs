@@ -131,6 +131,7 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         }
     }
 
+
     private void CreatePinDataWithPanelManager(IGraphicInstance gInstance, IPinned pinned_so)
     {
         var pinCount = pinned_so.PinConfiguration.PinDataArray.Count();
@@ -219,6 +220,20 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         // TODO: Check for faster implementations (caching)
         //return connectedNodesList.Where(cn => !selectedNodesList.Contains(cn));
     }
+
+    internal void SetPinType(IPinData thisPinData, PinTypeEnum type)
+    {
+        var pinSO = graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO;
+
+        // TODO: this should create copy of arrays, can be optimized.
+        pinSO.Connections = pinSO.Connections.Select(c =>
+        {
+            if (c.PinFromData == thisPinData)
+                c.PinFromData.PinType = type;
+            return c;
+        });
+    }
+
 
 
     void Update()

@@ -22,7 +22,7 @@ public class PinData : IPinData, IEquatable<PinData>
     [SerializeField] private string name;
     [TextArea]
     [SerializeField] private string description;
-    [SerializeField] private PinType pinType;
+    [SerializeField] private PinTypeEnum pinType;
 
     public PinData()
     {
@@ -34,7 +34,7 @@ public class PinData : IPinData, IEquatable<PinData>
 
     public int PinNumber { get => pinNumber; set => pinNumber = value; }
 
-    public PinType PinType { get => pinType; set => pinType = value; }
+    public PinTypeEnum PinType { get => pinType; set => pinType = value; }
 
     public bool Equals(IPinData other)
     {

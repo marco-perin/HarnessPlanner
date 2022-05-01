@@ -14,10 +14,12 @@ public interface IPinData : IWithId, IEquatable<IPinData>
     int PinNumber { get; set; }
     string Name { get; }
     string Description { get; }
-    PinType PinType { get; set; }
+    PinTypeEnum PinType { get; set; }
 
 }
-public enum PinType
+
+[Serializable]
+public enum PinTypeEnum
 {
     Generic,
     Power,

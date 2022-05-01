@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.CoreData.Interfaces;
@@ -14,6 +15,7 @@ public class UIConnectionPanelManager : MonoBehaviour
 
     public TMP_Dropdown node_dd;
     public TMP_Text node_dd_text;
+    public TMP_Dropdown pin_type_dd;
     public TMP_Dropdown harness_node_dd;
     public TMP_Dropdown harness_pin_dd;
 
@@ -31,15 +33,22 @@ public class UIConnectionPanelManager : MonoBehaviour
 
     public void SetParent(UINodeConfigurationPanelManager parent)
     {
+        parentPanelManager = parent;
+
+        pin_type_dd.onValueChanged.RemoveAllListeners();
         harness_node_dd.onValueChanged.RemoveAllListeners();
         harness_pin_dd.onValueChanged.RemoveAllListeners();
 
-        parentPanelManager = parent;
+        pin_type_dd.ClearOptions();
+        harness_node_dd.ClearOptions();
+        harness_pin_dd.ClearOptions();
+
+        pin_type_dd.options = Enum.GetNames(typeof(PinTypeEnum)).Select(s => new TMP_Dropdown.OptionData(s)).ToList();
+        pin_type_dd.onValueChanged.AddListener((value) => SelectPinType(value));
+
 
         selectableNodes = parentPanelManager.connectedNodesList;
 
-        harness_node_dd.ClearOptions();
-        harness_pin_dd.ClearOptions();
 
         harness_options = selectableNodes.Select(node => new TMP_Dropdown.OptionData(node.Name)).Prepend(new("none")).ToList();
 
@@ -68,6 +77,14 @@ public class UIConnectionPanelManager : MonoBehaviour
         harness_pin_dd.onValueChanged.AddListener((value) => SelectPinForNode(thisPinData, node, value - 1));
     }
 
+    private void SelectPinType(int selectionIndex)
+    {
+        if (selectionIndex < 0) return;
+        var type = (PinTypeEnum)selectionIndex;
+
+        parentPanelManager.SetPinType(thisPinData, type);
+    }
+
     private void SelectPinForNode(IPinData thisPinData, IBaseNodeWithPinnedSO node, int value)
     {
         var pinData = selectablePins[node].ElementAt(value);
@@ -93,6 +110,7 @@ public class UIConnectionPanelManager : MonoBehaviour
         {
             node_dd_text.text = pinDataString;
         }
+
     }
 
     internal void InitOptions(IBaseNodeWithPinnedSO base_node)
@@ -101,14 +119,18 @@ public class UIConnectionPanelManager : MonoBehaviour
         {
             harness_node_dd.value = 0;
             harness_pin_dd.value = 0;
+            pin_type_dd.value = 0;
             return;
         }
+
+        pin_type_dd.value = (int)thisPinData.PinType;
 
         var c = base_node.Connections.SingleOrDefault(c => c.PinFromData.Equals(thisPinData));
 
         var harness_value = 0;
         if (c != null)
             harness_value = selectableNodes.FindIndex(n => n == c.ConnectedNode) + 1;
+
         harness_node_dd.value = harness_value;
         //harness_node_dd.onValueChanged.Invoke(harness_value);
 
