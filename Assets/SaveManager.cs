@@ -65,6 +65,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             // TODO: make this more robust.
             canvasShift = nodesParent.transform.position,
+            canvasZoom = Camera.main.orthographicSize
         };
 
         string json = JsonUtility.ToJson(sd, true);
@@ -103,6 +104,8 @@ public class SaveManager : Singleton<SaveManager>
         SaveData sd = JsonUtility.FromJson<SaveData>(json);
 
         nodesParent.transform.position = sd.canvasShift;
+        if (sd.canvasZoom > 0)
+            Camera.main.orthographicSize = sd.canvasZoom;
 
         List<Task<bool>> tasks = new();
 
@@ -188,6 +191,8 @@ public class SaveData
     }
 
     public Vector2 canvasShift;
+    public float canvasZoom;
+
     [SerializeReference] public List<SinkGraphicBaseWrapper> sinks;
     [SerializeReference] public List<SourceGraphicBaseWrapper> sources;
     [SerializeReference] public List<ConnectionNodeBaseGraphicBaseWrapper> nodes;
