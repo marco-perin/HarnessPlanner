@@ -166,25 +166,27 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         return double.TryParse(inValue, out var res) ? res : field;
     }
 
-    internal void SelectPinForNode(IPinData fromPinData, IBaseNodeWithPinnedSO node, IPinData pinData)
+    internal void SelectPinForNode(IPinData fromPinData, IBaseNodeWithPinnedSO node, IPinData pinToData)
     {
 
         Debug.Assert(node != null);
-        Debug.Assert(pinData != null);
+        Debug.Assert(pinToData != null);
 
         if (graphicInstance.BaseWrapped is not IBaseNodeWithPinnedSO pinnedSo)
             return;
 
         var connections = pinnedSo.Connections as IEnumerable<NodeConnectionTo>;
 
+        //Debug.Log($"Trying to connect pin {fromPinData.Name} to pin {pinToData.Name} of node {node.Name}");
         if (connections != null && connections.Any(c => c.PinFromData.Equals(fromPinData)))
         {
             connections = connections.Select(c =>
             {
+                //Debug.Log($"Connecting pin {c.PinFromData.Name} to pin {c.PinToData.Name} of node {node.Name}");
                 if (c.PinFromData.Equals(fromPinData))
                 {
                     c.ConnectedNode = node;
-                    c.PinToData = pinData;
+                    c.PinToData = pinToData;
                 }
 
                 return c;
@@ -196,7 +198,7 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
             {
                 PinFromData = fromPinData,
                 ConnectedNode = node,
-                PinToData = pinData
+                PinToData = pinToData
             };
 
             if (connections != null)
@@ -205,8 +207,8 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
                 connections = new List<NodeConnectionTo>() { newConnection };
             //connections.
 
-            pinnedSo.Connections = connections;
         }
+        pinnedSo.Connections = connections;
     }
 
     public void SelectNode(IBaseNodeWithPinnedSO node, IBaseNodeWithPinnedSO previousSelectedNode)
