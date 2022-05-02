@@ -12,7 +12,6 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
     public ConductorData connectionConductorData;
 
-
     private void Start()
     {
         connectionConductorData = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderByDescending(ac => float.Parse(ac.Awg)).First(ac => float.Parse(ac.Awg) <= float.Parse(connectionConductorData.Awg));
