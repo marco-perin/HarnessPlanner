@@ -219,26 +219,18 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
         var newData = new FullLineData()
         {
             ConductorData = connectionConductorData,
-            Current = 69
+            Current = 0
         };
 
         foreach (var link_ref in path)
         {
+            // TODO: Check why this is necessary
             var link = MainConnectionsManagerSingleton.Instance.ActiveConnections.FirstOrDefault(c => c.Id == link_ref.Id);
 
             Debug.Assert(link != null);
 
             if (link.LinkInfo == null)
-                link.LinkInfo = new LinkInfo
-                {
-
-                    //if (link.LinkInfo.PowerData == null)
-                    PowerData = new FullLineData()
-                    {
-                        Current = 69
-                    }
-                };
-
+                link.LinkInfo = new LinkInfo();
 
             if (link.LinkInfo.LineData == null)
                 link.LinkInfo.LineData = new List<FullLineData>()
@@ -246,14 +238,9 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
                     newData
                 };
             else
-                link.LinkInfo.LineData = link.LinkInfo.LineData.Append(newData).ToList();
+                link.LinkInfo.AddLineData(newData);
 
             //Debug.Log("Adding LinkInfo LineData");
-            //link.LinkInfo.AddLineData(new FullLineData()
-            //{
-            //    ConductorData = connectionConductorData,
-            //    Current = 69
-            //});
         }
     }
 

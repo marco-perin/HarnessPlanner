@@ -59,16 +59,25 @@ public class UIConnectionPanelManager : MonoBehaviour
 
     private void SelectNode(int selectionIndex)
     {
+        Debug.Log($"selecting node w/ index {selectionIndex}");
         if (selectionIndex < 0)
         {
             harness_pin_dd.value = 0;
+
+            parentPanelManager.SelectNode(thisPinData, null, null);
+            harness_pin_dd.onValueChanged.RemoveAllListeners();
+            harness_pin_dd.ClearOptions();
+
             return;
+
         }
+
         var node = selectableNodes[selectionIndex];
 
-        parentPanelManager.SelectNode(node, null);
+        parentPanelManager.SelectNode(thisPinData, node, null);
 
         Debug.Assert(node.BaseSO is IPinnedObjectSO);
+
         if (selectablePins == null)
             selectablePins = new Dictionary<IBaseNodeWithPinnedSO, IEnumerable<IPinData>>();
 
@@ -79,6 +88,7 @@ public class UIConnectionPanelManager : MonoBehaviour
         harness_pin_dd.options = selectablePins[node].Select(x => new TMP_Dropdown.OptionData($"{x.PinNumber}-{x.Name}")).Prepend(new("none")).ToList();
 
         harness_pin_dd.onValueChanged.AddListener((value) => SelectPinForNode(thisPinData, node, value - 1));
+
     }
 
     private void SelectPinType(int selectionIndex)

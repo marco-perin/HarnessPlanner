@@ -211,9 +211,18 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         pinnedSo.Connections = connections;
     }
 
-    public void SelectNode(IBaseNodeWithPinnedSO node, IBaseNodeWithPinnedSO previousSelectedNode)
+    public void SelectNode(IPinData thisPinData, IBaseNodeWithPinnedSO node, IBaseNodeWithPinnedSO previousSelectedNode)
     {
-        Debug.Assert(node != null);
+        //Debug.Assert(node != null);
+
+        if (node == null)
+        {
+            if (graphicInstance.BaseWrapped is not IBaseNodeWithPinnedSO pinnedSo)
+                return;
+
+            pinnedSo.Connections = pinnedSo.Connections.Where(c => !c.PinFromData.Equals(thisPinData));
+        }
+
         //    if (previousSelectedNode != null)
         //        selectedNodesList.Remove(previousSelectedNode);
 
