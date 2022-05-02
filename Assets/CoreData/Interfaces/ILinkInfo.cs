@@ -16,18 +16,49 @@ namespace Assets.CoreData.Types
 
         public LinkInfo()
         {
-            lineData = new List<FullLineData>();
+            LineData = new List<FullLineData>();
         }
 
         public IFullLineData PowerData { get => powerData; set => powerData = value as FullLineData; }
-        public IEnumerable<IFullLineData> LineData { get => lineData; set => lineData = (value.Select(ld => ld as FullLineData)).ToList(); }
+        //public IEnumerable<FullLineData> LineData { get => lineData; set => lineData = value.ToList(); }
+
+        public IEnumerable<IFullLineData> LineData
+        {
+            get
+            {
+                //if (lineData != null)
+                //    Debug.Log($"Got {string.Join("-", lineData.Select(l => "" + l.ConductorData.Awg))} from lineData");
+                return lineData.Select(ld => ld as IFullLineData).AsEnumerable();
+
+            }
+            set
+            {
+                if (value != null)
+                    Debug.Log($"Assigned {string.Join("-", (value.Select(ld => ld as FullLineData))?.ToList().Select(l => "" + l.ConductorData.Awg))} to lineData");
+                lineData = (value?.Select(ld => ld as FullLineData))?.ToList();
+            }
+        }
+
+        public void AddLineData(IFullLineData newData)
+        {
+            lineData.Add(newData as FullLineData);
+        }
+
+        public void ClearLineData()
+        {
+            powerData = new();
+            Debug.Log("Clearing Line data");
+            lineData.Clear();
+        }
 
         public override string ToString()
         {
-            var result = $"Power: {PowerData.Current}A - {PowerData.ConductorData.Awg}awg\n";
+            var result = "";
+            if (PowerData != null && PowerData.Current > 0)
+                result += $"Power\n {PowerData.Current}A - {PowerData.ConductorData?.Awg ?? "NO"}awg\n";
 
             if (LineData.Count() > 0)
-                result += $"Total Data Lines: {LineData.Count()}";
+                result += $"Signals\n {LineData.Count()}";
 
             return result;
 
@@ -41,6 +72,8 @@ namespace Assets.CoreData.Interfaces
     {
         IFullLineData PowerData { get; set; }
         IEnumerable<IFullLineData> LineData { get; set; }
+        void AddLineData(IFullLineData newData);
+        void ClearLineData();
     }
 
     public interface IFullLineData

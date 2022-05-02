@@ -59,7 +59,11 @@ public class UIConnectionPanelManager : MonoBehaviour
 
     private void SelectNode(int selectionIndex)
     {
-        if (selectionIndex < 0) return;
+        if (selectionIndex < 0)
+        {
+            harness_pin_dd.value = 0;
+            return;
+        }
         var node = selectableNodes[selectionIndex];
 
         parentPanelManager.SelectNode(node, null);
@@ -85,9 +89,10 @@ public class UIConnectionPanelManager : MonoBehaviour
         parentPanelManager.SetPinType(thisPinData, type);
     }
 
-    private void SelectPinForNode(IPinData thisPinData, IBaseNodeWithPinnedSO node, int value)
+    private void SelectPinForNode(IPinData thisPinData, IBaseNodeWithPinnedSO node, int selectionIndex)
     {
-        var pinData = selectablePins[node].ElementAt(value);
+        if (selectionIndex < 0) return;
+        var pinData = selectablePins[node].ElementAt(selectionIndex);
 
         parentPanelManager.SelectPinForNode(thisPinData, node, pinData);
     }

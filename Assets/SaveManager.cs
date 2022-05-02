@@ -151,6 +151,8 @@ public class SaveManager : Singleton<SaveManager>
         if (sinkPrefabGoHandle.Status != UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
             return false;
 
+        (wrapper.BaseWrapped as INode).BaseSO = sinkPrefabGoTask;
+
         var sinkPrefabGo = Instantiate(sinkPrefabGoTask.Prefab, nodesParent);
 
         sinkPrefabGo.transform.localPosition = wrapper.Position;

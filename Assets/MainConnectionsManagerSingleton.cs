@@ -97,7 +97,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
     /// <param name="currentNode"></param>
     /// <param name="visitedNodesWithPathDict"></param>
     /// <returns></returns>
-    public IEnumerable<IGraphicInstance> GetNodesConnectedToNodeWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodesWithPathDict)
+    public IEnumerable<IGraphicInstance> GetNodesConnectedToNodeWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, List<INodeLinkBase>> visitedNodesWithPathDict)
     {
         return GetConnectedNodesWithPaths(currentNode, out visitedNodesWithPathDict);
     }
@@ -107,7 +107,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         return GetConnectedNodesWithPaths(currentNode, out _);
     }
 
-    private IEnumerable<IGraphicInstance> GetConnectedNodesWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodesWithPathDict)
+    private IEnumerable<IGraphicInstance> GetConnectedNodesWithPaths(IGraphicInstance currentNode, out Dictionary<IGraphicInstance, List<INodeLinkBase>> visitedNodesWithPathDict)
     {
         visitedNodesWithPathDict = new();
 
@@ -118,13 +118,13 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         return GetConnectedNodesRecursive(currentNode, ref visitedNodesWithPathDict);
     }
 
-    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodes)
+    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, List<INodeLinkBase>> visitedNodesWithPathDict)
     {
         List<INodeLinkBase> previousEdges = new();
-        return GetConnectedNodesRecursive(currentNode, ref visitedNodes, previousEdges.AsEnumerable());
+        return GetConnectedNodesRecursive(currentNode, ref visitedNodesWithPathDict, previousEdges.AsEnumerable());
     }
 
-    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodesWithPathDict, IEnumerable<INodeLinkBase> previousEdges)
+    private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, List<INodeLinkBase>> visitedNodesWithPathDict, IEnumerable<INodeLinkBase> previousEdges)
     {
         var edges = ActiveConnections.ToList();
         var incidentEdges = edges
@@ -152,7 +152,7 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
 
             // Node not visited, add it
             result.Add(toNode);
-            var edgesUpToHere = previousEdges.Append(edge);
+            var edgesUpToHere = previousEdges.Append(edge).ToList();
             visitedNodesWithPathDict[toNode] = edgesUpToHere;
 
             result.AddRange(GetConnectedNodesRecursive(toNode, ref visitedNodesWithPathDict, edgesUpToHere));

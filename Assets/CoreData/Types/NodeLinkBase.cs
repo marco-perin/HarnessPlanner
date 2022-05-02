@@ -55,7 +55,11 @@ namespace Assets.CoreData.Types
             }
         }
 #nullable enable
-        public ILinkInfo? LinkInfo { get => linkInfo; set => linkInfo = value as LinkInfo; }
+        public ILinkInfo? LinkInfo
+        {
+            get => linkInfo;
+            set => linkInfo = value as LinkInfo;
+        }
 #nullable disable
     }
 }

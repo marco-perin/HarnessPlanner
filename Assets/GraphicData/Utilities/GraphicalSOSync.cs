@@ -120,10 +120,17 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 connectionPrefabManager.From.localPosition = nodeLink.FromNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.LengthText.text = nodeLink.Length + "m";
 
+
                 if (nodeLink.LinkInfo != null)
+                {
+                    connectionPrefabManager.DataText.gameObject.SetActive(true);
                     connectionPrefabManager.DataText.text = (nodeLink.LinkInfo as LinkInfo).ToString();
+                }
                 else
+                {
+                    //Debug.Log($"LinkInfo of {nodeLink.Id} Is null");
                     connectionPrefabManager.DataText.gameObject.SetActive(false);
+                }
 
                 break;
             default:

@@ -19,11 +19,15 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
     public void CalculateEverything()
     {
+        ClearAllLinkData();
         CalculateCurrents();
         var fullConnections = CalculateConnections();
 
         foreach (var c in fullConnections)
             Debug.Log($"Connection [{c.nodeA.Name}-{c.nodeB.Name}]: {c.Length}m @ {c.conductorData.Awg}awg");
+
+
+        Debug.Log($"Link datas: {string.Join("\n", MainConnectionsManagerSingleton.Instance.ActiveConnections.Select(c => (c.LinkInfo as LinkInfo)?.ToString() ?? ""))}");
     }
 
     public void CalculateCurrents()
@@ -38,7 +42,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
         Debug.Assert(batt != null);
         Debug.Log("Selected Source: " + batt.Name);
 
-        var connections = GetNodesConnectedToGraphicInstance(battGI, out var visitedNodesWithPathDict);
+        var connections = GetNodesConnectedToGraphicInstance(battGI, out var visitedNodesWithPathDict, true);
 
         Dictionary<INodeLinkBase, double> currentPerLinkDict = new();
 
@@ -68,23 +72,6 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
     }
 
-    private static void AssignPowerDataToLinks(Dictionary<INodeLinkBase, double> currentPerLink)
-    {
-        foreach (var link in currentPerLink.Keys)
-        {
-            var condData = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderBy(c => c.MaxCurrent).First(c => c.MaxCurrent >= currentPerLink[link]);
-
-            link.LinkInfo = new LinkInfo()
-            {
-                PowerData = new FullLineData()
-                {
-                    ConductorData = condData,
-                    Current = currentPerLink[link]
-                }
-            };
-        }
-    }
-
     public List<FullPathData> CalculateConnections()
     {
         var graphicInstances = GetAllGraphicInstances();
@@ -97,6 +84,8 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
         foreach (var graphicInstance in graphicInstances)
         {
             result.AddRange(ProcessGraphicInstanceForConnections(graphicInstance, countedConnections));
+
+            Debug.Log($"Link datas: {string.Join("\n", MainConnectionsManagerSingleton.Instance.ActiveConnections.Select(c => (c.LinkInfo as LinkInfo)?.ToString() ?? ""))}");
         }
 
         return result;
@@ -107,47 +96,76 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
     {
         List<FullPathData> result = new();
 
-        var pinnSO = graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO;
+        var currentNodeAsBasePinnedSO = graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO;
 
-        if (pinnSO.Connections.Select(c => c.PinFromData.PinType).All(pt => pt == PinTypeEnum.Power || pt == PinTypeEnum.Ground))
+        // Filter out nodes that only have power pins
+        if (currentNodeAsBasePinnedSO.Connections
+            .Select(c => c.PinFromData.PinType)
+            .Where(pt => pt != PinTypeEnum.Power && pt != PinTypeEnum.Ground)
+            .Count() == 0
+            )
             return result;
 
         var connectedNodes = GetNodesConnectedToGraphicInstance(graphicInstance, out var visitedNodesWithPathDict);
 
-        foreach (var connectedNode in connectedNodes)
+        Debug.Log($" Node {currentNodeAsBasePinnedSO.Name} has {currentNodeAsBasePinnedSO.Connections.Count()} connections and {connectedNodes.Count()} connected nodes.");
+        foreach (var connectedNode in connectedNodes
+                .Where(connectedNode =>
+                    currentNodeAsBasePinnedSO.Connections
+                    .Any(nodd => nodd.ConnectedNode == (connectedNode.BaseWrapped as INode))
+                )
+                )
         {
-            var inode = connectedNode.BaseWrapped as IBaseNodeWithPinnedSO;
+            var connectedNodeAsBaseWithPinnedSO = connectedNode.BaseWrapped as IBaseNodeWithPinnedSO;
 
-            if (inode.Connections.Count() <= 0) continue;
+            var validConnectedNodePins = (connectedNodeAsBaseWithPinnedSO.BaseSO as IPinnedObjectSO).PinConfiguration.PinDataArray
+            .Where(pin =>
+                    pin.PinType != PinTypeEnum.Power &&
+                    pin.PinType != PinTypeEnum.Ground
+                    )
+            .Where(pin =>
+                    currentNodeAsBasePinnedSO.Connections
+                        .Any(c => c.PinToData.Equals(pin))
+                    )
+            ;
+
+            //Debug.Log($" - Node {inode.Name}?");
+            Debug.Log($" - Node {connectedNodeAsBaseWithPinnedSO.Name} has {validConnectedNodePins.Count()} connections.");
+            if (validConnectedNodePins.Count() == 0)
+                continue;
 
 
-            //Debug.Log($" - Node {inode.Name} has {inode.Connections.Count()} connections.");
-            foreach (var conn in inode.Connections)
+            foreach (var connectedPin in validConnectedNodePins)
             {
-                if (!countedConnections.ContainsKey(inode))
-                    countedConnections[inode] = new() { conn.PinToData };
+                //Debug.Log($" -- Node {inode.Name} conn {conn.PinFromData.Name}");
+                if (!countedConnections.ContainsKey(connectedNodeAsBaseWithPinnedSO))
+                    countedConnections[connectedNodeAsBaseWithPinnedSO] = new() { connectedPin };
                 else
                 {
-                    if (countedConnections[inode].Contains(conn.PinToData))
+                    if (countedConnections[connectedNodeAsBaseWithPinnedSO].Contains(connectedPin))
                         continue;
 
-                    countedConnections[inode].Add(conn.PinToData);
+                    countedConnections[connectedNodeAsBaseWithPinnedSO].Add(connectedPin);
                 }
 
                 var path = visitedNodesWithPathDict[connectedNode];
 
+                //Debug.Log($"path lenght: {path.Count()}");
+
                 AddConnectionsToPathLinks(path);
 
+                Debug.Log($"Link datas after add: {string.Join("\n", MainConnectionsManagerSingleton.Instance.ActiveConnections.Select(c => (c.LinkInfo as LinkInfo)?.ToString() ?? ""))}");
                 result.Add(new()
                 {
-                    nodeA = pinnSO,
-                    nodeB = inode,
+                    nodeA = currentNodeAsBasePinnedSO,
+                    nodeB = connectedNodeAsBaseWithPinnedSO,
                     conductorData = connectionConductorData,
                     Length = path.Sum(x => x.Length)
                 });
 
             }
         }
+
         return result;
 
     }
@@ -161,29 +179,89 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
           .ToList();
     }
 
-    private void AddConnectionsToPathLinks(IEnumerable<INodeLinkBase> path)
+    private void ClearAllLinkData()
     {
-        foreach (var link in path)
+        var links = MainConnectionsManagerSingleton.
+            Instance.ActiveConnections;
+        Debug.Log($"Clearing {links.Count()} links");
+
+        foreach (var c in links)
         {
-            if (link.LinkInfo == null)
-                link.LinkInfo = new LinkInfo();
-
-            if (link.LinkInfo.LineData == null)
-                link.LinkInfo.LineData = new List<FullLineData>();
-
-            link.LinkInfo.LineData = link.LinkInfo.LineData
-                .Append(new FullLineData()
-                {
-                    ConductorData = connectionConductorData,
-                    Current = 0
-                });
+            //c.LinkInfo.PowerData = null;
+            //if (c.LinkInfo != null)
+            //    c.LinkInfo.ClearLineData();
+            //else
+            c.LinkInfo = null;
         }
     }
 
-    private static IEnumerable<IGraphicInstance> GetNodesConnectedToGraphicInstance(IGraphicInstance graphicInstance, out Dictionary<IGraphicInstance, IEnumerable<INodeLinkBase>> visitedNodesWithPathDict)
+    private static void AssignPowerDataToLinks(Dictionary<INodeLinkBase, double> currentPerLink)
     {
-        var connections = MainConnectionsManagerSingleton.Instance.GetNodesConnectedToNodeWithPaths(graphicInstance, out visitedNodesWithPathDict);
-        return connections.Where(c => c.BaseWrapped is IBaseNodeWithPinnedSO ipso && ipso.Connections.Any(conn => conn.ConnectedNode == (graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO))).ToList();
+        foreach (var link in currentPerLink.Keys)
+        {
+            var condData = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderBy(c => c.MaxCurrent).First(c => c.MaxCurrent >= currentPerLink[link]);
+
+            //if (link.LinkInfo == null)
+            link.LinkInfo = new LinkInfo
+            {
+                PowerData = new FullLineData()
+                {
+                    ConductorData = condData,
+                    Current = currentPerLink[link]
+                }
+            };
+        }
+    }
+    private void AddConnectionsToPathLinks(IEnumerable<INodeLinkBase> path)
+    {
+        Debug.Log($"Iterating over {path.Count()} items");
+
+        var newData = new FullLineData()
+        {
+            ConductorData = connectionConductorData,
+            Current = 69
+        };
+
+        foreach (var link_ref in path)
+        {
+            var link = MainConnectionsManagerSingleton.Instance.ActiveConnections.FirstOrDefault(c => c.Id == link_ref.Id);
+
+            Debug.Assert(link != null);
+
+            if (link.LinkInfo == null)
+                link.LinkInfo = new LinkInfo
+                {
+
+                    //if (link.LinkInfo.PowerData == null)
+                    PowerData = new FullLineData()
+                    {
+                        Current = 69
+                    }
+                };
+
+
+            if (link.LinkInfo.LineData == null)
+                link.LinkInfo.LineData = new List<FullLineData>()
+                {
+                    newData
+                };
+            else
+                link.LinkInfo.LineData = link.LinkInfo.LineData.Append(newData).ToList();
+
+            //Debug.Log("Adding LinkInfo LineData");
+            //link.LinkInfo.AddLineData(new FullLineData()
+            //{
+            //    ConductorData = connectionConductorData,
+            //    Current = 69
+            //});
+        }
+    }
+
+    private static IEnumerable<IGraphicInstance> GetNodesConnectedToGraphicInstance(IGraphicInstance graphicInstance, out Dictionary<IGraphicInstance, List<INodeLinkBase>> visitedNodesWithPathDict, bool filterNodesConnections = false)
+    {
+        var connectedNodes = MainConnectionsManagerSingleton.Instance.GetNodesConnectedToNodeWithPaths(graphicInstance, out visitedNodesWithPathDict);
+        //Debug.Log($"{connections.Count()} connections before ibaseNodew/pinnedso filter");
+        return connectedNodes.Where(c => c.BaseWrapped is IBaseNodeWithPinnedSO ipso && (!filterNodesConnections || ipso.Connections.Any(conn => conn.ConnectedNode == (graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO))));
     }
 
 }
