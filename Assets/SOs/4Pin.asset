@@ -13,24 +13,24 @@ MonoBehaviour:
   m_Name: 4Pin
   m_EditorClassIdentifier: 
   prefab: {fileID: 0}
-  _name: 
+  _name: 4 Pins
   pinConfiguration:
     pinNames:
     - name: Pin1
       pinNumber: 1
       id: PIN
       description: 
-      pinType: 1
+      pinType: 0
     - name: Pin2
       pinNumber: 2
       id: PIN
       description: 
-      pinType: 2
+      pinType: 0
     - name: Pin3
       pinNumber: 3
       id: PIN
       description: 
-      pinType: 3
+      pinType: 0
     - name: Pin4
       pinNumber: 4
       id: PIN

@@ -173,7 +173,8 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
         {
             var connectedNodeAsBaseWithPinnedSO = connectedNode.BaseWrapped as IBaseNodeWithPinnedSO;
 
-            var validConnectedNodePins = (connectedNodeAsBaseWithPinnedSO.BaseSO as IPinnedObjectSO).PinConfiguration.PinDataArray
+            var validConnectedNodePins = (connectedNodeAsBaseWithPinnedSO.BaseSO as IPinnedObjectSO)
+                .PinConfiguration.PinDataArray
             .Where(pin =>
                     pin.PinType != PinTypeEnum.Power &&
                     pin.PinType != PinTypeEnum.Ground
@@ -285,6 +286,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
         return conductorDataPerLink;
     }
+
     private void AddConnectionsToPathLinks(IEnumerable<INodeLinkBase> path)
     {
         //Debug.Log($"Iterating over {path.Count()} items");
@@ -298,7 +300,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
         foreach (var link_ref in path)
         {
             // TODO: Check why this is necessary
-            var link = link_ref; MainConnectionsManagerSingleton.Instance.ActiveConnections.FirstOrDefault(c => c.Id == link_ref.Id);
+            var link = MainConnectionsManagerSingleton.Instance.ActiveConnections.FirstOrDefault(c => c.Id == link_ref.Id);
 
             Debug.Assert(link != null);
 

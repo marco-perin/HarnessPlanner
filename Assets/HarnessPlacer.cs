@@ -160,6 +160,7 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
     }
     private void PlaceConnector(Vector3 pos)
     {
+        
         var baseObj = new ConnectorBase(HarnessSettings.DefaultConnectorPrefab)
         {
             BaseSOAddressableTyped = HarnessSettingsAddressable.DefaultConnectorPrefab
@@ -175,25 +176,12 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
         CreateGraphicWrapper(wrapper, newObjectsParentTransform);
     }
 
-    public void CreateGraphicWrapper(IGraphicInstance wrapper, Transform parent)
+    public static void CreateGraphicWrapper(IGraphicInstance wrapper, Transform parent)
     {
         Object prefab = (wrapper.BaseWrapped as INode).BaseSO.Prefab;
         GameObject sinkPrefabGo;
 
-        if (prefab != null)
-            sinkPrefabGo = Instantiate(prefab as GameObject, parent);
-        else
-        {
-            prefab = wrapper.BaseWrapped switch
-            {
-                ISink => HarnessSettings.DefaultSinkPrefab,
-                ISource => HarnessSettings.DefaultSourcePrefab,
-                IConnectionNode => HarnessSettings.DefaultNodePrefab,
-                IConnectorNode => HarnessSettings.DefaultConnectorPrefab,
-                _ => null
-            };
-            sinkPrefabGo = Instantiate(prefab as GameObject, parent);
-        }
+        sinkPrefabGo = Instantiate(prefab as GameObject, parent);
 
         sinkPrefabGo.transform.localPosition = wrapper.Position;
         sinkPrefabGo.name = (wrapper.BaseWrapped as INode).Name;

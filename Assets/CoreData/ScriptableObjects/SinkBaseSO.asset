@@ -18,11 +18,16 @@ MonoBehaviour:
     pinNames:
     - name: POS
       pinNumber: 1
-      id: 1
+      id: PIN
       description: 
       pinType: 1
     - name: GND
       pinNumber: 2
-      id: 2
+      id: PIN
       description: 
       pinType: 2
+    - name: Signal
+      pinNumber: 3
+      id: PIN
+      description: 
+      pinType: 3

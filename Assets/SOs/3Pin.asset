@@ -12,24 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 878f12210ece2b24e87065f73ea37045, type: 3}
   m_Name: 3Pin
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  _name: 
+  prefab: {fileID: 1365347144011331628, guid: 65c9f39cfe8712b4288ce77366274a19, type: 3}
+  _name: 3 Pins
   pinConfiguration:
     pinNames:
     - name: Pin1
       pinNumber: 1
       id: PIN
       description: 
-      pinType: 1
+      pinType: 0
     - name: Pin2
       pinNumber: 2
       id: PIN
       description: 
-      pinType: 2
+      pinType: 0
     - name: Pin3
       pinNumber: 3
       id: PIN
       description: 
-      pinType: 3
+      pinType: 0
   imgTexture: {fileID: 0}
   variants: []
