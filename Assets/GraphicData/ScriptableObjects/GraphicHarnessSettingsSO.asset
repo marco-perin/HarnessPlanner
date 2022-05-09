@@ -35,3 +35,8 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+  defaultConnectorPrefab:
+    m_AssetGUID: e8234d4c4c588ea41b15f2602629f928
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Assets.GraphicData.Types
 {
     [Serializable]
-    public class ConnectionNodeBaseGraphic : BaseGraphicObject, IConnectionNodeBase
+    public class ConnectionNodeBaseGraphic : BaseGraphicObject, IGraphicConnectionNodeBase
     {
         [SerializeField]
         [SerializeReference] protected ConnectionNodeBase baseWrapped;

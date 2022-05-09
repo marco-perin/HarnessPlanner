@@ -16,18 +16,13 @@ MonoBehaviour:
   _name: test sink
   pinConfiguration:
     pinNames:
-    - id: 1
+    - name: POS
       pinNumber: 1
-      name: POS
+      id: 1
       description: 
       pinType: 1
-    - id: 2
+    - name: GND
       pinNumber: 2
-      name: GND
+      id: 2
       description: 
       pinType: 2
-    - id: 3
-      pinNumber: 3
-      name: LOL
-      description: 
-      pinType: 0

@@ -107,9 +107,28 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5893423982507429993, guid: 9b5cb6cd16a7232459859cb52d2d409e, type: 3}
+      propertyPath: m_text
+      value: Type
+      objectReference: {fileID: 0}
     - target: {fileID: 7103087692872857645, guid: 9b5cb6cd16a7232459859cb52d2d409e, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9001592953893478620, guid: 9b5cb6cd16a7232459859cb52d2d409e, type: 3}
+      propertyPath: pin_type_text
+      value: 
+      objectReference: {fileID: 6166739593540635462}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b5cb6cd16a7232459859cb52d2d409e, type: 3}
+--- !u!114 &6166739593540635462 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5893423982507429993, guid: 9b5cb6cd16a7232459859cb52d2d409e, type: 3}
+  m_PrefabInstance: {fileID: 314421979594365743}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

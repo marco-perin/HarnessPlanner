@@ -16,4 +16,10 @@ namespace Assets.GraphicData.Types
 
         public new ISink BaseWrapped { get => baseWrapped; set => baseWrapped = value as SinkBase; }
     }
+
+    [Serializable]
+    public class ConnectorGraphicBaseWrapper : ConnectorGraphic, IConnectorNodeBaseWrapper
+    {
+        public new IConnectorNode BaseWrapped { get => baseWrapped; set => baseWrapped = value as ConnectorBase; }
+    }
 }

@@ -7,17 +7,25 @@ using Assets.CoreData.Types;
 using Assets.GraphicData.Interfaces;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.UI;
 
 public class UINodeConfigurationPanelManager : MonoBehaviour
 {
+
     public TMP_InputField name_input;
     public TMP_Text name_text;
+
+    [Space(10)]
     public TMP_InputField attribute_input;
     public TMP_Text attribute_text;
+    public Button connectionConfigBtn;
 
+    [Space(10)]
     public Transform pinRowsContainer;
     public GameObject pinLinePrefab;
 
+    [Space(15)]
     public IGraphicInstance graphicInstance;
 
     public List<IBaseNodeWithPinnedSO> connectedNodesList;
@@ -40,6 +48,37 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
             attribute_input.onValueChanged.RemoveAllListeners();
 
         UINodePanelSpawner.Instance.ClosePanels();
+    }
+
+    public void CloseSinglePanel()
+    {
+        if (name_input != null)
+            name_input.onValueChanged.RemoveAllListeners();
+
+        if (attribute_input != null)
+            attribute_input.onValueChanged.RemoveAllListeners();
+
+        UINodePanelSpawner.Instance.ClosePanel(this);
+    }
+
+    public void SpawnConnectorSelectionConfig(IGraphicInstance instanceWrapper)
+    {
+        UINodePanelSpawner.Instance.SpawnConnectorPanel(instanceWrapper);
+    }
+
+    public void SetConnectorData(IGraphicInstance gInstance)
+    {
+
+        graphicInstance = gInstance;
+        if (gInstance == null)
+            return;
+
+
+        if (gInstance.BaseWrapped is INode pinned_obj && pinned_obj.BaseSO is IPinned pinned_so)
+        {
+            CreateConnectorsDataWithPanelManager(gInstance, pinned_so);
+        }
+
     }
 
     public void SetGraphicInstance(IGraphicInstance gInstance)
@@ -96,22 +135,35 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
             _ => ""
         };
 
+        connectionConfigBtn.gameObject.SetActive(false);
+
+        connectionConfigBtn.onClick.RemoveAllListeners();
+
         switch (gInstance.BaseWrapped)
         {
             case SinkBase:
             case SourceBase:
+            case ConnectorBase:
                 name_input.onValueChanged.RemoveAllListeners();
 
                 name_input.text = (gInstance.BaseWrapped as INode).Name;
                 name_input.onValueChanged.AddListener((newName) => (gInstance.BaseWrapped as INode).Name = newName);
 
                 break;
+        }
+
+        switch (gInstance.BaseWrapped)
+        {
             case NodeLinkBase lb:
                 attribute_input.Select();
                 attribute_input.ActivateInputField();
                 break;
-
+            case ConnectorBase cb:
+                connectionConfigBtn.gameObject.SetActive(true);
+                connectionConfigBtn.onClick.AddListener(() => UINodePanelSpawner.Instance.SpawnConnectorPanel(gInstance));
+                break;
         }
+
 
         IEnumerable<IGraphicInstance> connectedNodes = MainConnectionsManagerSingleton.Instance.GetNodesConnectedToNode(gInstance);
 
@@ -130,6 +182,54 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
             CreatePinDataWithPanelManager(gInstance, pinned_so);
         }
     }
+
+    internal void SetConnectorType(ConnectorNodeBaseSO connData, ConnectorTypeEnum connectorType)
+    {
+        (graphicInstance.BaseWrapped as IConnectorNode).ConnectorType = connectorType;
+    }
+
+    internal void SetConnectorVariant(ConnectorNodeBaseSO connData, string variant)
+    {
+        (graphicInstance.BaseWrapped as IConnectorNode).Variant = variant;
+    }
+
+    private void CreateConnectorsDataWithPanelManager(IGraphicInstance gInstance, IPinned pinned_so)
+    {
+        if (!ProgramManagerSingleton.Instance.HasLoadedConnectors)
+        {
+            Debug.Log("Connectors not still loaded");
+            return;
+        }
+
+        var optionsCount = ProgramManagerSingleton.Instance.connectorsReferencesLoaded.Count();
+
+        // remove Additional childs, if any
+        for (int i = pinRowsContainer.childCount - 1; i >= optionsCount; i--)
+        {
+            Destroy(pinRowsContainer.GetChild(i).gameObject);
+        }
+
+        for (int i = 0; i < optionsCount; i++)
+        {
+
+            var connectorData = ProgramManagerSingleton.Instance.connectorsReferencesLoaded[i];
+            var connectorDataRef = ProgramManagerSingleton.Instance.connectorsReferences[i];
+
+            UIConnectionPanelManager panelMgr;
+            if (i < pinRowsContainer.childCount)
+                panelMgr = pinRowsContainer.GetChild(i).GetComponent<UIConnectionPanelManager>();
+            else
+                panelMgr = Instantiate(pinLinePrefab, pinRowsContainer).GetComponent<UIConnectionPanelManager>();
+
+            panelMgr.SetConnectorData(connectorData, connectorDataRef);
+
+            panelMgr.SetParent(this);
+
+            panelMgr.InitOptions(gInstance.BaseWrapped as IBaseNodeWithPinnedSO);
+
+        }
+    }
+
 
 
     private void CreatePinDataWithPanelManager(IGraphicInstance gInstance, IPinned pinned_so)
@@ -245,6 +345,12 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         });
     }
 
+    public void SelectConnectorSO(ConnectorNodeBaseSO thisConnData, AssetReference thisAddrAsset)
+    {
+        (graphicInstance.BaseWrapped as ConnectorBase).BaseSO = thisConnData;
+        (graphicInstance.BaseWrapped as ConnectorBase).BaseSOAddressable = thisAddrAsset;
+        UINodePanelSpawner.Instance.panelManager.SetGraphicInstance(graphicInstance);
+    }
 
 
     void Update()

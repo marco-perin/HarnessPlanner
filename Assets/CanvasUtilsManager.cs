@@ -7,8 +7,14 @@ using UnityEngine;
 
 public class CanvasUtilsManager : MonoBehaviour
 {
+    Transform nodesParent;
 
-    public float fitPadding = 1;
+    public TransformDraggable canvasTransformDraggable;
+    public CameraScrollHandler cameraScrollHandler;
+
+    public float fitBasePadding = 0.6f;
+    public float fitPaddingPercentage = 1;
+
     public void ResizeToFit()
     {
         var camera = Camera.main;
@@ -26,14 +32,38 @@ public class CanvasUtilsManager : MonoBehaviour
         var delta = max - min;
         var center = (max + min) / 2;
 
-        camera.orthographicSize = Mathf.Max(delta.x, delta.y) / 2 + fitPadding;
+        var aspectRatio = (float)camera.pixelWidth / (float)camera.pixelHeight;
+
+        cameraScrollHandler.IsScolling = false;
+
+        camera.orthographicSize = Mathf.Max(delta.x / aspectRatio, delta.y) / 2 * (1 + fitPaddingPercentage) + fitBasePadding;
+
+
+        canvasTransformDraggable.StopTracking();
+
         MainConnectionsManagerSingleton.Instance.connectionsParent.transform
         .position -= new Vector3(
             center.x,
             center.y,
         MainConnectionsManagerSingleton.Instance.connectionsParent.transform.position.z);
 
+    }
 
+    public static List<IGraphicInstance> GetAllGraphicInstanceWithBaseType<T>() where T : IBaseType
+    {
+        return MainCalculatorSingleton.Instance.nodesParent
+          .GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>()
+          .Select(mb => mb.GraphicInstance)
+          .Where(gi => gi.BaseWrapped is T)
+          .ToList();
+    }
 
+    public static List<IGraphicInstance> GetAllGraphicInstanceWithType<T>() where T : IGraphicInstance
+    {
+        return MainCalculatorSingleton.Instance.nodesParent
+          .GetComponentsInChildren<MonoBehaviourGraphicInstanceContainer>()
+          .Select(mb => mb.GraphicInstance)
+          .Where(gi => gi is T)
+          .ToList();
     }
 }

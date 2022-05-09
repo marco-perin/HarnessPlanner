@@ -129,6 +129,11 @@ public class SaveManager : Singleton<SaveManager>
             tasks.Add(CreateGraphicWrapper(link));
         }
 
+        foreach (var connector in sd.connectors)
+        {
+            tasks.Add(CreateGraphicWrapper(connector));
+        }
+
         var result = await Task.WhenAll(tasks.ToArray());
         if (result.Any(r => r == false))
             Debug.LogWarning($"Failed Loading {result.Where(r => !r).Count()} assets");
@@ -184,6 +189,7 @@ public class SaveData
         sinks = WhereSelect<SinkGraphicBaseWrapper>(baseObjects).ToList();
         sources = WhereSelect<SourceGraphicBaseWrapper>(baseObjects).ToList();
         nodes = WhereSelect<ConnectionNodeBaseGraphicBaseWrapper>(baseObjects).ToList();
+        connectors = WhereSelect<ConnectorGraphicBaseWrapper>(baseObjects).ToList();
         links = WhereSelect<NodeLinkBaseGraphicBaseWrapper>(baseObjects).ToList();
     }
 
@@ -198,5 +204,6 @@ public class SaveData
     [SerializeReference] public List<SinkGraphicBaseWrapper> sinks;
     [SerializeReference] public List<SourceGraphicBaseWrapper> sources;
     [SerializeReference] public List<ConnectionNodeBaseGraphicBaseWrapper> nodes;
+    [SerializeReference] public List<ConnectorGraphicBaseWrapper> connectors;
     public List<NodeLinkBaseGraphicBaseWrapper> links;
 }

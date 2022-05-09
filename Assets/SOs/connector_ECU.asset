@@ -1,0 +1,300 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 878f12210ece2b24e87065f73ea37045, type: 3}
+  m_Name: connector_ECU
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1365347144011331628, guid: 65c9f39cfe8712b4288ce77366274a19, type: 3}
+  _name: ECU Connector
+  pinConfiguration:
+    pinNames:
+    - name: IGN 1
+      pinNumber: 1
+      id: PIN
+      description: 
+      pinType: 0
+    - name: IGN 5
+      pinNumber: 2
+      id: PIN
+      description: 
+      pinType: 0
+    - name: IGN 3
+      pinNumber: 3
+      id: PIN
+      description: 
+      pinType: 0
+    - name: ECCM Relay ctrl
+      pinNumber: 4
+      id: PIN
+      description: 
+      pinType: 0
+    - name: TACHO
+      pinNumber: 5
+      id: PIN
+      description: 
+      pinType: 0
+    - name: IGN 6
+      pinNumber: 7
+      id: PIN
+      description: 
+      pinType: 0
+    - name: IGN 2
+      pinNumber: 8
+      id: PIN
+      description: 
+      pinType: 0
+    - name: IGN 4
+      pinNumber: 9
+      id: PIN
+      description: 
+      pinType: 0
+    - name: AAC valve ctrl
+      pinNumber: 10
+      id: PIN
+      description: 
+      pinType: 0
+    - name: FP Relay ctrl
+      pinNumber: 13
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Fault Lamp
+      pinNumber: 17
+      id: PIN
+      description: 
+      pinType: 0
+    - name: START Signal
+      pinNumber: 20
+      id: PIN
+      description: 
+      pinType: 0
+    - name: CHK
+      pinNumber: 22
+      id: PIN
+      description: (CHK) Diagnosis start
+      pinType: 0
+    - name: Throttle pos sens
+      pinNumber: 23
+      id: PIN
+      description: 
+      pinType: 0
+    - name: IGN
+      pinNumber: 24
+      id: PIN
+      description: Ignition switch signal
+      pinType: 0
+    - name: ECU GND
+      pinNumber: 25
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Speed sens
+      pinNumber: 29
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Headlamps
+      pinNumber: 30
+      id: PIN
+      description: Headlamp switch signal
+      pinType: 0
+    - name: Ign pow supply
+      pinNumber: 31
+      id: PIN
+      description: 
+      pinType: 0
+    - name: ECU GND
+      pinNumber: 32
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Throttle open signal
+      pinNumber: 37
+      id: PIN
+      description: 
+      pinType: 0
+    - name: N signal
+      pinNumber: 39
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Sens GND
+      pinNumber: 43
+      id: PIN
+      description: 
+      pinType: 0
+    - name: CPS 120
+      pinNumber: 44
+      id: PIN
+      description: Crankshaft position sensor 120' (REF) signal
+      pinType: 0
+    - name: CPS 120
+      pinNumber: 45
+      id: PIN
+      description: Crankshaft position sensor 120' (REF) signal
+      pinType: 0
+    - name: CPS 1
+      pinNumber: 46
+      id: PIN
+      description: Crankshaft position sensor 1' (POS) signal
+      pinType: 0
+    - name: Turbo press sens
+      pinNumber: 47
+      id: PIN
+      description: 
+      pinType: 0
+    - name: '"POW throttl'
+      pinNumber: 48
+      id: PIN
+      description: refr press
+      pinType: 0
+    - name: Rear defogger
+      pinNumber: 49
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Heated O2 sens
+      pinNumber: 50
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Thrott mot sens
+      pinNumber: 51
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Thrott mot switch signal
+      pinNumber: 53
+      id: PIN
+      description: 
+      pinType: 0
+    - name: MAF sens
+      pinNumber: 54
+      id: PIN
+      description: 
+      pinType: 0
+    - name: MAF GND
+      pinNumber: 55
+      id: PIN
+      description: 
+      pinType: 0
+    - name: H2O temp sens
+      pinNumber: 56
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Knock 1
+      pinNumber: 62
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Knock 2
+      pinNumber: 63
+      id: PIN
+      description: 
+      pinType: 0
+    - name: ECU PS
+      pinNumber: 67
+      id: PIN
+      description: 
+      pinType: 0
+    - name: ECU PS
+      pinNumber: 72
+      id: PIN
+      description: 
+      pinType: 0
+    - name: RX
+      pinNumber: 75
+      id: PIN
+      description: 
+      pinType: 0
+    - name: TX
+      pinNumber: 76
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Aux fan
+      pinNumber: 78
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Batt PS
+      pinNumber: 80
+      id: PIN
+      description: 
+      pinType: 0
+    - name: INJ 1
+      pinNumber: 101
+      id: PIN
+      description: 
+      pinType: 0
+    - name: INJ 3
+      pinNumber: 103
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Turbo press solenoid ctrl
+      pinNumber: 104
+      id: PIN
+      description: 
+      pinType: 0
+    - name: INJ 2
+      pinNumber: 105
+      id: PIN
+      description: 
+      pinType: 0
+    - name: ECU PS (counter EMC fb)
+      pinNumber: 109
+      id: PIN
+      description: 
+      pinType: 0
+    - name: INJ 5
+      pinNumber: 110
+      id: PIN
+      description: 
+      pinType: 0
+    - name: FP terminal voltage ctrl
+      pinNumber: 111
+      id: PIN
+      description: 
+      pinType: 0
+    - name: INJ 6
+      pinNumber: 112
+      id: PIN
+      description: 
+      pinType: 0
+    - name: INJ 4
+      pinNumber: 114
+      id: PIN
+      description: 
+      pinType: 0
+    - name: INJ GND
+      pinNumber: 116
+      id: PIN
+      description: 
+      pinType: 0
+    - name: VTCS valve ctrl signal
+      pinNumber: 117
+      id: PIN
+      description: 
+      pinType: 0
+    - name: Heated O2 ctrl
+      pinNumber: 118
+      id: PIN
+      description: 
+      pinType: 0
+    - name: INJ GND
+      pinNumber: 124
+      id: PIN
+      description: 
+      pinType: 0
+  imgTexture: {fileID: 2800000, guid: ba6d9d9e3a4c1ed438a556c97316b4ab, type: 3}
+  variants: []

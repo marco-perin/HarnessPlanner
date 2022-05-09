@@ -18,7 +18,7 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
         get
         {
             if (nameText == null)
-                nameText = transform.GetChild(0).Find("NameText").GetComponent<TMP_Text>();
+                nameText = transform.GetChild(0).Find("NameText")?.GetComponent<TMP_Text>();
 
             return nameText;
         }
@@ -48,11 +48,26 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
         get
         {
             if (connectionsBtn == null)
-                connectionsBtn = transform.GetChild(0).Find("ConnectionsBtn").GetComponent<Button>();
+                connectionsBtn = transform.GetChild(0).Find("ConnectionsBtn")?.GetComponent<Button>();
 
             return connectionsBtn;
         }
         set => connectionsBtn = value;
+    }
+
+    [SerializeField]
+    private RawImage imgTexture;
+
+    public RawImage ImgTexture
+    {
+        get
+        {
+            if (imgTexture == null)
+                imgTexture = transform.GetChild(0).Find("Icon")?.GetComponent<RawImage>();
+
+            return imgTexture;
+        }
+        set => imgTexture = value;
     }
 
     ConnectionPrefabManager connectionPrefabManager;
@@ -61,14 +76,26 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
     {
         switch (GraphicInstance.BaseWrapped)
         {
-            case SinkBase:
-            case SourceBase:
+            //case SinkBase:
+            //case SourceBase:
+            case IBaseNodeWithPinnedSO:
                 ConnectionsBtn.onClick.RemoveAllListeners();
                 ConnectionsBtn.onClick.AddListener(() => UINodePanelSpawner.Instance.SpawnPanel(GraphicInstance));
                 break;
+            case INodeLinkBase:
+                break;
             default:
+                if (ConnectionsBtn != null)
+                    ConnectionsBtn.gameObject.SetActive(false);
                 break;
         }
+
+        if (GraphicInstance.BaseWrapped is not INodeLinkBase)
+            if (GraphicInstance.BaseWrapped is IConnectionNode)
+                NameText.gameObject.SetActive(false);
+            else
+                NameText.gameObject.SetActive(GraphicInstance.BaseWrapped is INamed);
+
     }
 
     private Vector3 Position
@@ -82,6 +109,10 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
     void Update()
     {
         if (GraphicInstance == null) return;
+
+        if (GraphicInstance.BaseWrapped is not INodeLinkBase)
+            if (GraphicInstance.BaseWrapped is INamed wrappedNamed)
+                NameText.text = wrappedNamed.Name;
 
 
         switch (GraphicInstance.BaseWrapped)
@@ -107,9 +138,23 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
 
                 break;
 
-            case ConnectionNodeBase:
+            case ConnectorBase connectorNode:
                 Position = GraphicInstance.Position;
+                gameObject.name = connectorNode.Name;
+                var img = (connectorNode.BaseSO as ConnectorNodeBaseSO).ImgTexture;
+                if (img != null)
+                {
+                    ImgTexture.gameObject.SetActive(true);
+                    ImgTexture.texture = img;
+                }
                 break;
+
+            case ConnectionNodeBase connectionNode:
+                Position = GraphicInstance.Position;
+                if (connectionNode.NodeInfo != null && connectionNode.NodeInfo.CMA > 0)
+                    AttributeText.text = "" + connectionNode.NodeInfo.CMA + "\nCMA";
+                break;
+
 
             case NodeLinkBase nodeLink:
 
@@ -120,7 +165,6 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 connectionPrefabManager.From.localPosition = nodeLink.FromNode.Position + GraphicInstance.Position.z * Vector3.forward;
                 connectionPrefabManager.LengthText.text = nodeLink.Length + "m";
 
-
                 if (nodeLink.LinkInfo != null)
                 {
                     connectionPrefabManager.DataText.gameObject.SetActive(true);
@@ -128,7 +172,6 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
                 }
                 else
                 {
-                    //Debug.Log($"LinkInfo of {nodeLink.Id} Is null");
                     connectionPrefabManager.DataText.gameObject.SetActive(false);
                 }
 

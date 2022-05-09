@@ -19,6 +19,7 @@ public enum PlacingType
     Sink,
     Node,
     Link,
+    Connector,
     Deleting
 }
 
@@ -52,6 +53,11 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
 
         InputManager.Instance.AddKeyDownAction(KeyCode.N,
             () => placing = PlacingType.Node,
+            true
+            );
+
+        InputManager.Instance.AddKeyDownAction(KeyCode.D,
+            () => placing = PlacingType.Connector,
             true
             );
 
@@ -89,6 +95,10 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
 
                 case PlacingType.Source:
                     PlaceSource(param);
+                    break;
+
+                case PlacingType.Connector:
+                    PlaceConnector(param);
                     break;
             }
         }
@@ -148,10 +158,43 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
         // Instantiate the scene GameObject prefab
         CreateGraphicWrapper(wrapper, newObjectsParentTransform);
     }
-
-    public static void CreateGraphicWrapper(IGraphicInstance wrapper, Transform parent)
+    private void PlaceConnector(Vector3 pos)
     {
-        var sinkPrefabGo = Instantiate((wrapper.BaseWrapped as INode).BaseSO.Prefab, parent);
+        var baseObj = new ConnectorBase(HarnessSettings.DefaultConnectorPrefab)
+        {
+            BaseSOAddressableTyped = HarnessSettingsAddressable.DefaultConnectorPrefab
+        };
+
+        IGraphicInstance wrapper = new ConnectorGraphicBaseWrapper
+        {
+            BaseWrapped = baseObj,
+            Position = new Vector3(pos.x, pos.y, HarnessSettings.NodesPlaceHeight)
+        };
+
+        // Instantiate the scene GameObject prefab
+        CreateGraphicWrapper(wrapper, newObjectsParentTransform);
+    }
+
+    public void CreateGraphicWrapper(IGraphicInstance wrapper, Transform parent)
+    {
+        Object prefab = (wrapper.BaseWrapped as INode).BaseSO.Prefab;
+        GameObject sinkPrefabGo;
+
+        if (prefab != null)
+            sinkPrefabGo = Instantiate(prefab as GameObject, parent);
+        else
+        {
+            prefab = wrapper.BaseWrapped switch
+            {
+                ISink => HarnessSettings.DefaultSinkPrefab,
+                ISource => HarnessSettings.DefaultSourcePrefab,
+                IConnectionNode => HarnessSettings.DefaultNodePrefab,
+                IConnectorNode => HarnessSettings.DefaultConnectorPrefab,
+                _ => null
+            };
+            sinkPrefabGo = Instantiate(prefab as GameObject, parent);
+        }
+
         sinkPrefabGo.transform.localPosition = wrapper.Position;
         sinkPrefabGo.name = (wrapper.BaseWrapped as INode).Name;
 

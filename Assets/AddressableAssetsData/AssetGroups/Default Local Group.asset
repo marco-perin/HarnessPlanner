@@ -17,24 +17,20 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 8cb7bfc3f1f4995409e51990b4e8c579
   m_SerializeEntries:
-  - m_GUID: 9d8dfbef6f90a7e40a51ce754c8130ad
-    m_Address: NodeLinkBaseSO
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: ccb597df71e9d6c47a76963f62b38005
-    m_Address: SinkBaseSO
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 0b397100059918f47963850c619392cd
     m_Address: SourceBaseSO
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 094d17249552dec4d8175788b16579b2
-    m_Address: ConnectionNodeBaseSO
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: b44ecbc61c4a5a14eb9b1b19cc2a9f55
     m_Address: GraphicHarnessSettingsSO
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 3049437d510e9fd4b983390a2b46b3c2
+    m_Address: ScriptableObjects
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 54950c76752c2614095d812224ae1655
+    m_Address: SOs
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

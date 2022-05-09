@@ -13,7 +13,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 854480132189489166, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528962547273881873, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1528962547273881873, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2004263798266097267, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -21,11 +29,15 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 19b1d2f39d67f00449cab9fb9a5fc08e, type: 2}
     - target: {fileID: 2986948488429089138, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6393844520243736739, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6597402338504096717, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
+      propertyPath: m_Name
+      value: Icon
       objectReference: {fileID: 0}
     - target: {fileID: 6655062902175122834, guid: 20b43bc7994ba734e8aad84b11654dac, type: 3}
       propertyPath: m_RootOrder

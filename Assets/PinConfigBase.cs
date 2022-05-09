@@ -17,9 +17,9 @@ public class PinConfigBase : IPinConfiguration
 [Serializable]
 public class PinData : IPinData, IEquatable<PinData>
 {
-    [SerializeField] private string id;
-    [SerializeField] private int pinNumber;
     [SerializeField] private string name;
+    [SerializeField] private int pinNumber;
+    [SerializeField] private string id;
     [TextArea]
     [SerializeField] private string description;
     [SerializeField] private PinTypeEnum pinType;
@@ -29,8 +29,28 @@ public class PinData : IPinData, IEquatable<PinData>
         Id = Guid.NewGuid().ToString();
     }
 
-    public string Id { get => id; set => id = value; }
-    public string Name => name; public string Description => description;
+    public string Id
+    {
+        get
+        {
+            if (id == "PIN")
+                return "" + pinNumber;
+
+            return id;
+        }
+        set => id = value;
+    }
+    public string Name
+    {
+        get => name;
+        set => name = value;
+    }
+
+    public string Description
+    {
+        get => description;
+        set => description = value;
+    }
 
     public int PinNumber { get => pinNumber; set => pinNumber = value; }
 

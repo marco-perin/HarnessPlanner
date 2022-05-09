@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TransformDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler
+public class TransformDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     private float screenScale = 0.01f;
 
     public bool dragOtherTransform = false;
     public Transform transformToDrag;
     public PointerEventData.InputButton dragButton = PointerEventData.InputButton.Left;
+
+    public float dragSmoothness = 1;
+    private Vector3 targetPos;
+
     public void OnDrag(PointerEventData eventData)
     {
         if (eventData.button != dragButton) return;
@@ -25,24 +29,61 @@ public class TransformDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler
             transformToDrag.GetComponent<IDragHandler>().OnDrag(eventData);
         }
         else
-            transform.position += (Vector3)eventData.delta * screenScale;
+            targetPos += (Vector3)eventData.delta * screenScale;
 
 
         //Camera.main.transform.position = new Vector3(pos.x, pos.y, cameraPos.z);
 
     }
+
     void Start()
     {
 
         if (transformToDrag == null)
-            transformToDrag = transform.parent;
+            transformToDrag = transform;
+
+        //targetPos = transformToDrag.position;
+    }
+    bool tracking = false;
+    bool finishedDragging = true;
+
+    private void Update()
+    {
+        if (finishedDragging && (transform.position - targetPos).sqrMagnitude < 1e-3)
+            tracking = false;
+
+        if (!tracking) return;
+
+        transformToDrag.position = Vector3.Lerp(transformToDrag.position, targetPos, Time.deltaTime / dragSmoothness * 15);
+
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (dragOtherTransform)
+        {
             transformToDrag.GetComponent<IBeginDragHandler>().OnBeginDrag(eventData);
-        else
-            screenScale = eventData.enterEventCamera.orthographicSize * 2 / eventData.enterEventCamera.pixelHeight;
+            return;
+        }
+        targetPos = transformToDrag.position;
+        screenScale = eventData.enterEventCamera.orthographicSize * 2 / eventData.enterEventCamera.pixelHeight;
+        tracking = true;
+        finishedDragging = false;
+
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (dragOtherTransform)
+        {
+            transformToDrag.GetComponent<IEndDragHandler>().OnEndDrag(eventData);
+            return;
+        }
+        finishedDragging = true;
+    }
+
+    public void StopTracking()
+    {
+        tracking = false;
     }
 }

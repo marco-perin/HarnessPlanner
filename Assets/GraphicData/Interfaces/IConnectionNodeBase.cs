@@ -1,6 +1,6 @@
 ﻿namespace Assets.GraphicData.Interfaces
 {
-    internal interface IConnectionNodeBase : IGraphicInstance
+    public interface IGraphicConnectionNodeBase : IGraphicInstance
     {
     }
 }

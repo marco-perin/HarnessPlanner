@@ -121,21 +121,14 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
     private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, List<INodeLinkBase>> visitedNodesWithPathDict)
     {
         List<INodeLinkBase> previousEdges = new();
-        return GetConnectedNodesRecursive(currentNode, ref visitedNodesWithPathDict, previousEdges.AsEnumerable());
+        return GetConnectedNodesRecursive(currentNode, ref visitedNodesWithPathDict, previousEdges);
     }
 
     private IEnumerable<IGraphicInstance> GetConnectedNodesRecursive(IGraphicInstance currentNode, ref Dictionary<IGraphicInstance, List<INodeLinkBase>> visitedNodesWithPathDict, IEnumerable<INodeLinkBase> previousEdges)
     {
         var edges = ActiveConnections.ToList();
-        var incidentEdges = edges
-            .Where(e => e.FromNode.Id == currentNode.Id);//.ToList();
 
-        var reversedIncidentEdges = edges
-                .Where(e => e.ToNode.Id == currentNode.Id);//.ToList();
-
-        reversedIncidentEdges = reversedIncidentEdges.Select(e => e.SwappedEdges);//.ToList();
-
-        incidentEdges = incidentEdges.Union(reversedIncidentEdges);//.ToList();
+        IEnumerable<INodeLinkBase> incidentEdges = GetGraphicInstanceIncidentEdges(currentNode, edges);
 
         var result = new List<IGraphicInstance>();
 
@@ -162,6 +155,30 @@ public class MainConnectionsManagerSingleton : Singleton<MainConnectionsManagerS
         //        $"connectedNodes @{(currentNode.BaseWrapped is INode inode ? inode.Name : "Node")} :  {result.Select(n => (n.BaseWrapped is INode inode ? inode.Name : "Name")).Aggregate("", (curr, newNode) => curr + "[" + newNode + "]")}");
 
         return result;
+    }
+
+    public static IEnumerable<INodeLinkBase> GetGraphicInstanceIncidentEdges(IGraphicInstance currentNode, IEnumerable<INodeLinkBase> edges)
+    {
+        return GetWithIDIncidentEdges(currentNode, edges);
+    }
+    public static IEnumerable<INodeLinkBase> GetBaseTypeIncidentEdges(IBaseType currentNode, IEnumerable<INodeLinkBase> edges)
+    {
+        return GetWithIDIncidentEdges(currentNode, edges);
+    }
+
+    public static IEnumerable<INodeLinkBase> GetWithIDIncidentEdges<T>(T currentNode, IEnumerable<INodeLinkBase> edges) where T : IWithId
+    {
+        var incidentEdges = edges
+            .Where(e => e.FromNode.Id == currentNode.Id);
+
+        var reversedIncidentEdges = edges
+                .Where(e => e.ToNode.Id == currentNode.Id);
+
+        reversedIncidentEdges = reversedIncidentEdges.Select(e => e.SwappedEdges);
+
+        incidentEdges = incidentEdges.Union(reversedIncidentEdges);
+
+        return incidentEdges;
     }
 
     #endregion GRAPH_ALGORITHMS

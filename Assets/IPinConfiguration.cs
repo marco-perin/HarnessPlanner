@@ -6,14 +6,14 @@ using UnityEngine;
 public interface IPinConfiguration
 {
     int PinCount { get; }
-    IEnumerable<IPinData> PinDataArray { get; }
+    IEnumerable<IPinData> PinDataArray { get; set; }
 }
 
 public interface IPinData : IWithId, IEquatable<IPinData>
 {
     int PinNumber { get; set; }
-    string Name { get; }
-    string Description { get; }
+    string Name { get; set; }
+    string Description { get; set; }
     PinTypeEnum PinType { get; set; }
 
 }

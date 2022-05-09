@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.CoreData.Interfaces;
+using Assets.CoreData.ScriptableObjects;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.UI;
 
 public class UIConnectionPanelManager : MonoBehaviour
 {
@@ -15,12 +18,17 @@ public class UIConnectionPanelManager : MonoBehaviour
 
     public TMP_Dropdown node_dd;
     public TMP_Text node_dd_text;
+    public TMP_Text pin_type_text;
     public TMP_Dropdown pin_type_dd;
     public TMP_Dropdown harness_node_dd;
     public TMP_Dropdown harness_pin_dd;
 
+    public Button thisButton;
+
 
     private IPinData thisPinData;
+    private ConnectorNodeBaseSO thisConnData;
+    private AssetReference thisAddrAsset;
 
 
     void Start()
@@ -31,35 +39,61 @@ public class UIConnectionPanelManager : MonoBehaviour
     private List<IBaseNodeWithPinnedSO> selectableNodes;
     private Dictionary<IBaseNodeWithPinnedSO, IEnumerable<IPinData>> selectablePins;
 
+
     public void SetParent(UINodeConfigurationPanelManager parent)
     {
         parentPanelManager = parent;
 
         pin_type_dd.onValueChanged.RemoveAllListeners();
-        harness_node_dd.onValueChanged.RemoveAllListeners();
-        harness_pin_dd.onValueChanged.RemoveAllListeners();
 
         pin_type_dd.ClearOptions();
-        harness_node_dd.ClearOptions();
-        harness_pin_dd.ClearOptions();
 
-        pin_type_dd.options = Enum.GetNames(typeof(PinTypeEnum)).Select(s => new TMP_Dropdown.OptionData(s)).ToList();
-        pin_type_dd.onValueChanged.AddListener((value) => SelectPinType(value));
+        if (thisPinData != null)
+        {
+            harness_pin_dd.onValueChanged.RemoveAllListeners();
+            harness_pin_dd.ClearOptions();
+            harness_node_dd.onValueChanged.RemoveAllListeners();
+            harness_node_dd.ClearOptions();
 
 
-        selectableNodes = parentPanelManager.connectedNodesList;
+            pin_type_dd.options = Enum.GetNames(typeof(PinTypeEnum)).Select(s => new TMP_Dropdown.OptionData(s)).ToList();
+            pin_type_dd.onValueChanged.AddListener((value) => SelectPinType(value));
 
 
-        harness_options = selectableNodes.Select(node => new TMP_Dropdown.OptionData(node.Name)).Prepend(new("none")).ToList();
+            selectableNodes = parentPanelManager.connectedNodesList;
 
-        harness_node_dd.options = harness_options;
-        harness_node_dd.onValueChanged.AddListener((selectionIndex) => SelectNode(selectionIndex - 1));
+            harness_options = selectableNodes.Select(node => new TMP_Dropdown.OptionData(node.Name)).Prepend(new("none")).ToList();
+
+            harness_node_dd.options = harness_options;
+            harness_node_dd.onValueChanged.AddListener((selectionIndex) => SelectNode(selectionIndex - 1));
+
+        }
+        else if (thisConnData != null)
+        {
+
+            //harness_node_dd.options = thisConnData.Variants.Select(s => new TMP_Dropdown.OptionData(s)).ToList();
+            //harness_node_dd.onValueChanged.AddListener((value) => SelectConnectorVariant(value));
+
+            //harness_options = selectableNodes.Select(node => new TMP_Dropdown.OptionData(node.Name)).Prepend(new("none")).ToList();
+            if (thisButton == null)
+                thisButton = GetComponent<Button>();
+
+            node_dd.options = new string[] { thisConnData.Name }.Select(s => new TMP_Dropdown.OptionData(s)).ToList();
+
+            //pin_type_dd.options = Enum.GetNames(typeof(ConnectorTypeEnum)).Select(str => new TMP_Dropdown.OptionData(str)).ToList();
+            //pin_type_dd.onValueChanged.AddListener((selectionIndex) => SelectConnectorType(selectionIndex));
+
+            thisButton.onClick.RemoveAllListeners();
+            thisButton.onClick.AddListener(() => parent.SelectConnectorSO(thisConnData, thisAddrAsset));
+
+
+            pin_type_dd.options = new string[] { "" + thisConnData.PinConfiguration.PinCount }.Select(s => new TMP_Dropdown.OptionData(s)).ToList();
+        }
     }
 
 
     private void SelectNode(int selectionIndex)
     {
-        Debug.Log($"selecting node w/ index {selectionIndex}");
         if (selectionIndex < 0)
         {
             harness_pin_dd.value = 0;
@@ -88,7 +122,6 @@ public class UIConnectionPanelManager : MonoBehaviour
         harness_pin_dd.options = selectablePins[node].Select(x => new TMP_Dropdown.OptionData($"{x.PinNumber}-{x.Name}")).Prepend(new("none")).ToList();
 
         harness_pin_dd.onValueChanged.AddListener((value) => SelectPinForNode(thisPinData, node, value - 1));
-
     }
 
     private void SelectPinType(int selectionIndex)
@@ -98,6 +131,23 @@ public class UIConnectionPanelManager : MonoBehaviour
 
         parentPanelManager.SetPinType(thisPinData, type);
     }
+
+    //private void SelectConnectorVariant(int selectionIndex)
+    //{
+    //    if (selectionIndex < 0) return;
+    //    var variant = thisConnData.Variants[selectionIndex];
+
+    //    //parentPanelManager.SetConnectorVariant(thisConnData, variant);
+
+    //}
+
+    //private void SelectConnectorType(int selectionIndex)
+    //{
+    //    if (selectionIndex < 0) return;
+    //    var connType = (ConnectorTypeEnum)selectionIndex;
+
+    //    parentPanelManager.SetConnectorType(thisConnData, connType);
+    //}
 
     private void SelectPinForNode(IPinData thisPinData, IBaseNodeWithPinnedSO node, int selectionIndex)
     {
@@ -138,23 +188,52 @@ public class UIConnectionPanelManager : MonoBehaviour
             return;
         }
 
-        pin_type_dd.value = (int)thisPinData.PinType;
+        if (thisPinData != null)
+        {
 
-        var c = base_node.Connections.SingleOrDefault(c => c.PinFromData.Equals(thisPinData));
+            pin_type_dd.value = (int)thisPinData.PinType;
 
-        var harness_value = 0;
-        if (c != null)
-            harness_value = selectableNodes.FindIndex(n => n == c.ConnectedNode) + 1;
+            var c = base_node.Connections.SingleOrDefault(c => c.PinFromData.Equals(thisPinData));
 
-        harness_node_dd.value = harness_value;
-        //harness_node_dd.onValueChanged.Invoke(harness_value);
+            var harness_value = 0;
+            if (c != null)
+                harness_value = selectableNodes.FindIndex(n => n == c.ConnectedNode) + 1;
 
-        var pin_value = 0;
-        if (harness_value > 0)
-            if (c.ConnectedNode is IBaseNodeWithPinnedSO connected_as_with_pinned_so)
-                pin_value = selectablePins[connected_as_with_pinned_so].ToList().FindIndex(p => p.Equals(c.PinToData)) + 1;
+            harness_node_dd.value = harness_value;
+            //harness_node_dd.onValueChanged.Invoke(harness_value);
 
-        harness_pin_dd.value = pin_value;
+            var pin_value = 0;
+            if (harness_value > 0)
+                if (c.ConnectedNode is IBaseNodeWithPinnedSO connected_as_with_pinned_so)
+                    pin_value = selectablePins[connected_as_with_pinned_so].ToList().FindIndex(p => p.Equals(c.PinToData)) + 1;
+
+            harness_pin_dd.value = pin_value;
+
+        }
         //harness_pin_dd.onValueChanged.Invoke(pin_value);
+    }
+
+    internal void SetConnectorData(ConnectorNodeBaseSO connectorData, AssetReference assetReference)
+    {
+        thisConnData = connectorData;
+        thisAddrAsset = assetReference;
+
+        var pinDataString = connectorData.Name;
+
+        nodes_options.Clear();
+        nodes_options.Add(new(pinDataString));
+
+        if (node_dd != null)
+        {
+            node_dd.options = nodes_options;
+            //node_dd.SetValueWithoutNotify(0);
+            node_dd.value = 0;
+        }
+
+        else if (node_dd_text != null)
+        {
+            node_dd_text.text = pinDataString;
+        }
+
     }
 }

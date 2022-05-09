@@ -20,5 +20,10 @@ namespace Assets.CoreData.Types
         public int CMA { get => cma; set => cma = value; }
         public double Area { get => area; set => area = value; }
         public double MaxCurrent { get => maxCurrent; set => maxCurrent = value; }
+
+        public string GetTableRowString(char separator)
+        {
+            return string.Join(separator, new string[] { Awg, CMA.ToString(), Area.ToString() });
+        }
     }
 }

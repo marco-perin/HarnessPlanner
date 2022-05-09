@@ -34,8 +34,18 @@ namespace Assets.CoreData.Types
             set
             {
                 if (value != null)
-                    Debug.Log($"Assigned {string.Join("-", (value.Select(ld => ld as FullLineData))?.ToList().Select(l => "" + l.ConductorData.Awg))} to lineData");
-                lineData = (value?.Select(ld => ld as FullLineData))?.ToList();
+                    //Debug.Log($"Assigned {string.Join("-", (value.Select(ld => ld as FullLineData))?.ToList().Select(l => "" + l.ConductorData.Awg))} to lineData");
+                    lineData = (value?.Select(ld => ld as FullLineData))?.ToList();
+                else
+                    lineData = null;
+            }
+        }
+
+        public bool IsValid
+        {
+            get
+            {
+                return (PowerData != null) || (LineData != null && LineData.Any());
             }
         }
 
@@ -68,12 +78,17 @@ namespace Assets.CoreData.Types
 
 namespace Assets.CoreData.Interfaces
 {
-    public interface ILinkInfo
+    public interface ILinkInfo : IHasDataValidation
     {
         IFullLineData PowerData { get; set; }
         IEnumerable<IFullLineData> LineData { get; set; }
         void AddLineData(IFullLineData newData);
         void ClearLineData();
+    }
+
+    public interface IHasDataValidation
+    {
+        bool IsValid { get; }
     }
 
     public interface IFullLineData
@@ -82,11 +97,19 @@ namespace Assets.CoreData.Interfaces
         double Current { get; set; }
     }
 
-    public interface IConductorData
+    public interface IConductorData : ITableRowData
     {
         public string Awg { get; set; }
         public int CMA { get; set; }
         public double Area { get; set; }
         public double MaxCurrent { get; set; }
+        static new string GetTableRowHeader(char separator) => string.Join(separator, new string[] { "Awg", "CMA", "Area" });
+
+    }
+
+    public interface ITableRowData
+    {
+        static string GetTableRowHeader(char separator) => "";
+        string GetTableRowString(char separator);
     }
 }

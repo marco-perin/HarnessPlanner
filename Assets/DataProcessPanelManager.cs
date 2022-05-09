@@ -37,6 +37,11 @@ public class DataProcessPanelManager : MonoBehaviour
 
     }
 
+    public void ExportData()
+    {
+        DataExportManagerSingleton.Instance.ExportAll();
+    }
+
 
     public void SetBatteryName()
     {

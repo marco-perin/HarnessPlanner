@@ -13,23 +13,22 @@ namespace Assets.GraphicData.ScriptableObjects
     [CreateAssetMenu(fileName = "GraphicHarnessSettingsSO", menuName = "SO/Settings")]
     public class GraphicHarnessSettingsSO : ScriptableObject
     {
-
         [SerializeField] private float snapGridSize = 0.5f;
 
         [SerializeField] private float nodesPlaceHeight = 0.1f;
         [SerializeField] private float connectionsPlaceHeight = 0.5f;
-        //[SerializeField] private SourceBaseSO defaultSourcePrefab;
         [SerializeField] private AssetReferenceT<SourceBaseSO> defaultSourcePrefab;
         [SerializeField] private AssetReferenceT<SinkBaseSO> defaultSinkPrefab;
         [SerializeField] private AssetReferenceT<ConnectionNodeBaseSO> defaultNodePrefab;
         [SerializeField] private AssetReferenceT<NodeLinkBaseSO> defaultLinkPrefab;
+        [SerializeField] private AssetReferenceT<ConnectorNodeBaseSO> defaultConnectorPrefab;
 
 
         public AssetReferenceT<SourceBaseSO> DefaultSourcePrefab => defaultSourcePrefab;
         public AssetReferenceT<SinkBaseSO> DefaultSinkPrefab => defaultSinkPrefab;
         public AssetReferenceT<ConnectionNodeBaseSO> DefaultNodePrefab => defaultNodePrefab;
         public AssetReferenceT<NodeLinkBaseSO> DefaultLinkPrefab => defaultLinkPrefab;
-
+        public AssetReferenceT<ConnectorNodeBaseSO> DefaultConnectorPrefab => defaultConnectorPrefab;
         public float NodesPlaceHeight => nodesPlaceHeight;
         public float SnapGridSize => snapGridSize;
         public float ConnectionsPlaceHeight => connectionsPlaceHeight;
@@ -41,6 +40,7 @@ namespace Assets.GraphicData.ScriptableObjects
         public SinkBaseSO DefaultSinkPrefab { get; set; }
         public ConnectionNodeBaseSO DefaultNodePrefab { get; set; }
         public NodeLinkBaseSO DefaultLinkPrefab { get; set; }
+        public ConnectorNodeBaseSO DefaultConnectorPrefab { get; set; }
 
         public float NodesPlaceHeight { get; set; }
         public float SnapGridSize { get; set; }

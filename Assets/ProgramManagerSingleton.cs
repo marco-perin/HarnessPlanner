@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Assets.CoreData.ScriptableObjects;
 using Assets.GraphicData.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class ProgramManagerSingleton : Singleton<ProgramManagerSingleton>
@@ -17,9 +19,17 @@ public class ProgramManagerSingleton : Singleton<ProgramManagerSingleton>
     public HarnessSettingSOLoaded HarnessSettingsSO { get => harnessSettingsSOLoaded; }
     public GraphicHarnessSettingsSO HarnessSettingsSOAddressables { get => harnessSettingsSO; }
 
+
+    public List<AssetReferenceT<ConnectorNodeBaseSO>> connectorsReferences = new();
+    public List<ConnectorNodeBaseSO> connectorsReferencesLoaded = new();
+
     public bool HasLoaded => hasLoaded;
     [SerializeField]
     private bool hasLoaded = false;
+
+    public bool HasLoadedConnectors => hasLoadedConnectors;
+    [SerializeField]
+    private bool hasLoadedConnectors = false;
 
     private void Start()
     {
@@ -27,11 +37,26 @@ public class ProgramManagerSingleton : Singleton<ProgramManagerSingleton>
         {
             NodesPlaceHeight = harnessSettingsSO.NodesPlaceHeight,
             ConnectionsPlaceHeight = harnessSettingsSO.ConnectionsPlaceHeight,
-            SnapGridSize = harnessSettingsSO.SnapGridSize
+            SnapGridSize = harnessSettingsSO.SnapGridSize,
         };
 
-
         StartCoroutine(LoadAssets());
+        StartCoroutine(LoadConnectors());
+    }
+
+    private IEnumerator LoadConnectors()
+    {
+        yield return StartCoroutine(Task.WhenAll(
+            connectorsReferences
+                .Select(cr => cr.LoadAssetAsync().Task)
+                ).ToCoroutine((result) =>
+                {
+                    connectorsReferencesLoaded = result.ToList();
+                    hasLoadedConnectors = true;
+                }));
+
+        Debug.Log("Loaded All Connectors");
+
     }
 
     private IEnumerator LoadAssets()
@@ -41,19 +66,23 @@ public class ProgramManagerSingleton : Singleton<ProgramManagerSingleton>
         var sinkload = harnessSettingsSO.DefaultSinkPrefab.LoadAssetAsync();
         var nodeload = harnessSettingsSO.DefaultNodePrefab.LoadAssetAsync();
         var linkload = harnessSettingsSO.DefaultLinkPrefab.LoadAssetAsync();
+        var connectorload = harnessSettingsSO.DefaultConnectorPrefab.LoadAssetAsync();
 
         var operations = new List<AsyncOperationHandle>
         {
             sourceload,
             sinkload,
             nodeload,
-            linkload
+            linkload,
+            connectorload
         };
 
-        while (loadedRefCount < 4)
+        var taskCount = operations.Count();
+
+        while (loadedRefCount < taskCount)
         {
             loadedRefCount = operations.Where(o => o.IsDone).Count();
-            if (loadedRefCount < 4)
+            if (loadedRefCount < taskCount)
                 yield return operations.First(o => !o.IsDone);
             else
                 break;
@@ -63,6 +92,7 @@ public class ProgramManagerSingleton : Singleton<ProgramManagerSingleton>
         harnessSettingsSOLoaded.DefaultSinkPrefab = sinkload.Result;
         harnessSettingsSOLoaded.DefaultNodePrefab = nodeload.Result;
         harnessSettingsSOLoaded.DefaultLinkPrefab = linkload.Result;
+        harnessSettingsSOLoaded.DefaultConnectorPrefab = connectorload.Result;
 
         hasLoaded = true;
 
