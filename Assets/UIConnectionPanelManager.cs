@@ -33,10 +33,12 @@ public class UIConnectionPanelManager : MonoBehaviour
 
     void Start()
     {
+        //allPins = new Dictionary<IBaseNodeWithPinnedSO, IEnumerable<IPinData>>();
         selectablePins = new Dictionary<IBaseNodeWithPinnedSO, IEnumerable<IPinData>>();
     }
 
     private List<IBaseNodeWithPinnedSO> selectableNodes;
+    //private Dictionary<IBaseNodeWithPinnedSO, IEnumerable<IPinData>> allPins;
     private Dictionary<IBaseNodeWithPinnedSO, IEnumerable<IPinData>> selectablePins;
 
 
@@ -103,7 +105,7 @@ public class UIConnectionPanelManager : MonoBehaviour
         {
             harness_pin_dd.value = 0;
 
-            parentPanelManager.SelectNode(thisPinData, null, null);
+            parentPanelManager.RemoveNodeSelection(thisPinData, null);
             harness_pin_dd.onValueChanged.RemoveAllListeners();
             harness_pin_dd.ClearOptions();
 
@@ -113,14 +115,19 @@ public class UIConnectionPanelManager : MonoBehaviour
 
         var node = selectableNodes[selectionIndex];
 
-        parentPanelManager.SelectNode(thisPinData, node, null);
+        //parentPanelManager.SelectNode(thisPinData, node);
 
         Debug.Assert(node.BaseSO is IPinnedObjectSO);
+
+        //if (allPins == null)
+        //    allPins = new Dictionary<IBaseNodeWithPinnedSO, IEnumerable<IPinData>>();
 
         if (selectablePins == null)
             selectablePins = new Dictionary<IBaseNodeWithPinnedSO, IEnumerable<IPinData>>();
 
-        selectablePins[node] = (node.BaseSO as IPinnedObjectSO).PinConfiguration.PinDataArray.OrderBy(p => p.Id);
+        selectablePins[node] = (node.BaseSO as IPinnedObjectSO).PinConfiguration.PinDataArray.OrderBy(p => p.PinNumber);
+        //selectablePins[node] = allPins[node];//.Where(pin => !node.Connections.Any(c => c.PinFromData.Equals(pin)));
+        //selectablePins[node] = (node.BaseSO as IPinnedObjectSO).PinConfiguration.PinDataArray.OrderBy(p => p.PinNumber).Where(pin => !node.Connections.Any(c => c.PinFromData.Equals(pin)));
 
         harness_pin_dd.onValueChanged.RemoveAllListeners();
         harness_pin_dd.ClearOptions();
@@ -156,7 +163,12 @@ public class UIConnectionPanelManager : MonoBehaviour
 
     private void SelectPinForNode(IPinData thisPinData, IBaseNodeWithPinnedSO node, int selectionIndex)
     {
-        if (selectionIndex < 0) return;
+        if (selectionIndex < 0)
+        {
+            parentPanelManager.RemoveNodeSelection(thisPinData, null);
+            SelectNode(selectableNodes.IndexOf(node));
+            return;
+        }
         var pinData = selectablePins[node].ElementAt(selectionIndex);
 
         parentPanelManager.SelectPinForNode(thisPinData, node, pinData);

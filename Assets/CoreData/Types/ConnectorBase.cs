@@ -13,7 +13,7 @@ namespace Assets.CoreData.Types
 
         public ConnectorBase(ConnectorNodeBaseSO baseSO) : base(baseSO)
         {
-            if (baseSO.Variants.Length > 0)
+            if (baseSO.Variants != null && baseSO.Variants.Length > 0)
                 variant = baseSO.Variants[0];
         }
 

@@ -183,10 +183,32 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         }
     }
 
-    internal void SetConnectorType(ConnectorNodeBaseSO connData, ConnectorTypeEnum connectorType)
+    //internal void SetConnectorType(ConnectorNodeBaseSO connData, ConnectorTypeEnum connectorType)
+    //{
+    //    (graphicInstance.BaseWrapped as IConnectorNode).ConnectorType = connectorType;
+    //}
+
+    internal void RemovePinConnectionForNode(IPinData pinFromData, bool doNotPropagate = false, IBaseNodeWithPinnedSO nodeToPropagateConnection = null)
     {
-        (graphicInstance.BaseWrapped as IConnectorNode).ConnectorType = connectorType;
+
+        var pinnedSO = !doNotPropagate ? graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO : nodeToPropagateConnection;
+
+        if (pinnedSO == null)
+            return;
+
+        var connections = pinnedSO.Connections as IEnumerable<NodeConnectionTo>;
+
+        var prevConnection = connections.First(c => c.PinFromData.Equals(pinFromData));
+        //Debug.Log($"Trying to connect pin {fromPinData.Name} to pin {pinToData.Name} of node {node.Name}");
+
+        pinnedSO.Connections = connections.Where(c => !c.PinFromData.Equals(pinFromData));
+
+        if (!doNotPropagate)
+        {
+            RemovePinConnectionForNode(prevConnection.PinToData, true, prevConnection.ConnectedNode as IBaseNodeWithPinnedSO);
+        }
     }
+
 
     internal void SetConnectorVariant(ConnectorNodeBaseSO connData, string variant)
     {
@@ -318,17 +340,29 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         }
     }
 
-    public void SelectNode(IPinData thisPinData, IBaseNodeWithPinnedSO node, IBaseNodeWithPinnedSO previousSelectedNode)
+    public void RemoveNodeSelection(IPinData thisPinData, IBaseNodeWithPinnedSO nodeToSetConnectionTo, bool stopPropagatingRemoval = false, IBaseNodeWithPinnedSO overriddenNode = null)
     {
         //Debug.Assert(node != null);
+        //IBaseNodeWithPinnedSO node = nodeToSetConnectionTo;
 
-        if (node == null)
+        var nodeFromWhicToRemoveConnection = graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO;
+
+        if (stopPropagatingRemoval)
+            nodeFromWhicToRemoveConnection = overriddenNode;
+
+        INodeConnectionTo prevConn = null;
+
+        if (!stopPropagatingRemoval)
+            prevConn = nodeFromWhicToRemoveConnection.Connections.First(c => c.PinFromData.Equals(thisPinData));
+
+        if (nodeToSetConnectionTo == null)
         {
-            if (graphicInstance.BaseWrapped is not IBaseNodeWithPinnedSO pinnedSo)
-                return;
+            nodeFromWhicToRemoveConnection.Connections = nodeFromWhicToRemoveConnection.Connections.Where(c => !c.PinFromData.Equals(thisPinData));
 
-            pinnedSo.Connections = pinnedSo.Connections.Where(c => !c.PinFromData.Equals(thisPinData));
+            if (!stopPropagatingRemoval)
+                RemoveNodeSelection(prevConn.PinToData, null, true, prevConn.ConnectedNode as IBaseNodeWithPinnedSO);
         }
+
 
         //    if (previousSelectedNode != null)
         //        selectedNodesList.Remove(previousSelectedNode);
