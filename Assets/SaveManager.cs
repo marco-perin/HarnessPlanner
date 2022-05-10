@@ -19,6 +19,9 @@ public class SaveManager : Singleton<SaveManager>
     public string saveFileName = "SaveFile";
     private string extension = ".json";
 
+    public HarnessSettingSOLoaded HarnessSettings { get => ProgramManagerSingleton.Instance.HarnessSettingsSO; }
+    public GraphicHarnessSettingsSO HarnessSettingsAddressable { get => ProgramManagerSingleton.Instance.HarnessSettingsSOAddressables; }
+
     private string BaseSavePath
     {
         get
@@ -158,7 +161,22 @@ public class SaveManager : Singleton<SaveManager>
 
         (wrapper.BaseWrapped as INode).BaseSO = sinkPrefabGoTask;
 
-        var sinkPrefabGo = Instantiate(sinkPrefabGoTask.Prefab, nodesParent);
+        var prefab = sinkPrefabGoTask.Prefab;
+
+        if (prefab == null)
+        {
+            prefab = wrapper.BaseWrapped switch
+            {
+                ISink => HarnessSettings.DefaultSinkPrefab.Prefab,
+                ISource => HarnessSettings.DefaultSourcePrefab.Prefab,
+                IConnectionNode => HarnessSettings.DefaultNodePrefab.Prefab,
+                INodeLinkBase => HarnessSettings.DefaultLinkPrefab.Prefab,
+                IConnectorNode => HarnessSettings.DefaultConnectorPrefab.Prefab,
+                _ => null
+            };
+        }
+
+        var sinkPrefabGo = Instantiate(prefab, nodesParent);
 
         sinkPrefabGo.transform.localPosition = wrapper.Position;
         sinkPrefabGo.name = (wrapper.BaseWrapped as INode).BaseSO.Name;

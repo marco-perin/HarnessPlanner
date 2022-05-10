@@ -98,7 +98,6 @@ public class UIConnectionPanelManager : MonoBehaviour
         }
     }
 
-
     private void SelectNode(int selectionIndex)
     {
         if (selectionIndex < 0)
@@ -169,6 +168,7 @@ public class UIConnectionPanelManager : MonoBehaviour
             SelectNode(selectableNodes.IndexOf(node));
             return;
         }
+
         var pinData = selectablePins[node].ElementAt(selectionIndex);
 
         parentPanelManager.SelectPinForNode(thisPinData, node, pinData);

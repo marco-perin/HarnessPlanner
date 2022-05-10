@@ -181,7 +181,9 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
                     )
             .Where(pin =>
                     currentNodeAsBasePinnedSO.Connections
-                        .Any(c => c.PinToData.Equals(pin))
+                        .Any(c => 
+                        c.PinToData.Equals(pin)
+                        && c.ConnectedNode.Id == connectedNodeAsBaseWithPinnedSO.Id)
                     )
             ;
 
@@ -190,25 +192,24 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
             if (validConnectedNodePins.Count() == 0)
                 continue;
 
-
-            foreach (var connectedPin in validConnectedNodePins)
+            var validPins = validConnectedNodePins.ToList();
+            foreach (var connectedPin in validPins)
             {
-                var thisNodeSO = currentNodeAsBasePinnedSO;
-                var currentLookingPin = currentNodeAsBasePinnedSO.Connections.First(c => c.PinToData.Equals(connectedPin)).PinFromData;
+                var currentLookingPin = currentNodeAsBasePinnedSO.Connections.First(c => c.ConnectedNode.Id == connectedNodeAsBaseWithPinnedSO.Id && c.PinToData.Equals(connectedPin)).PinFromData;
 
-                // Check that this node is not yet being counted
+                // Check that this node - pin is not yet being counted
                 //Debug.Log($" -- Node {inode.Name} conn {conn.PinFromData.Name}");
-                if (!countedConnections.ContainsKey(thisNodeSO))
-                    countedConnections[thisNodeSO] = new() { currentLookingPin };
+                if (!countedConnections.ContainsKey(currentNodeAsBasePinnedSO))
+                    countedConnections[currentNodeAsBasePinnedSO] = new() { currentLookingPin };
                 else
                 {
-                    if (countedConnections[thisNodeSO].Contains(currentLookingPin))
+                    if (countedConnections[currentNodeAsBasePinnedSO].Contains(currentLookingPin))
                         continue;
 
-                    countedConnections[thisNodeSO].Add(currentLookingPin);
+                    countedConnections[currentNodeAsBasePinnedSO].Add(currentLookingPin);
                 }
-                
-                // Check that the other node has not been counted
+
+                // Check that the other node - pin has not been counted
                 if (!countedConnections.ContainsKey(connectedNodeAsBaseWithPinnedSO))
                     countedConnections[connectedNodeAsBaseWithPinnedSO] = new() { connectedPin };
                 else
@@ -229,7 +230,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
                 result.Add(new()
                 {
                     nodeA = currentNodeAsBasePinnedSO,
-                    pinA = currentNodeAsBasePinnedSO.Connections.First(c => c.PinToData.Equals(connectedPin)).PinFromData,
+                    pinA = currentLookingPin,
                     nodeB = connectedNodeAsBaseWithPinnedSO,
                     pinB = connectedPin,
                     conductorData = connectionConductorData,

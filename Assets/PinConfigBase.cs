@@ -96,7 +96,7 @@ public class PinData : IPinData, IEquatable<PinData>
 
     public bool Equals(PinData other)
     {
-        return Equals(other as PinData);
+        return Equals(other as IPinData);
     }
 
     public override int GetHashCode()
