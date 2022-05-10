@@ -4,11 +4,14 @@ using System.Linq;
 using Assets.CoreData.Interfaces;
 using Assets.GraphicData.Types;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DataProcessPanelManager : MonoBehaviour
 {
     //public TMPro.TMP_InputField inputField;
     public TMPro.TMP_Dropdown inputDropDownField;
+
+    public Toggle autoRouteToggle;
 
     private void Start()
     {
@@ -17,6 +20,7 @@ public class DataProcessPanelManager : MonoBehaviour
         inputDropDownField.onValueChanged.AddListener((value) => SetBatteryNameDirect(inputDropDownField.options[value].text));
 
     }
+
     bool first = true;
     private void Update()
     {
@@ -55,6 +59,6 @@ public class DataProcessPanelManager : MonoBehaviour
 
     public void ProcessData()
     {
-        MainCalculatorSingleton.Instance.CalculateEverything();
+        MainCalculatorSingleton.Instance.CalculateEverything(autoRouteToggle.isOn);
     }
 }

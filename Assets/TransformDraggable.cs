@@ -13,6 +13,16 @@ public class TransformDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler
 
     public float dragSmoothness = 1;
     private Vector3 targetPos;
+    public Vector3 TargetPosition
+    {
+        get => targetPos;
+        set
+        {
+            targetPos = value;
+            if (!tracking || finishedDragging)
+                BeginDrag();
+        }
+    }
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -65,11 +75,16 @@ public class TransformDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler
             transformToDrag.GetComponent<IBeginDragHandler>().OnBeginDrag(eventData);
             return;
         }
-        targetPos = transformToDrag.position;
         screenScale = eventData.enterEventCamera.orthographicSize * 2 / eventData.enterEventCamera.pixelHeight;
+        BeginDrag();
+
+    }
+
+    private void BeginDrag()
+    {
+        targetPos = transformToDrag.position;
         tracking = true;
         finishedDragging = false;
-
     }
 
     public void OnEndDrag(PointerEventData eventData)

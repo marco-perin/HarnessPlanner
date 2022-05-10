@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.CoreData.Interfaces;
 using Assets.CoreData.ScriptableObjects;
 using Assets.CoreData.Types;
@@ -105,6 +106,11 @@ public class GraphicalSOSync : MonoBehaviourGraphicInstanced
             transform.localPosition = value;
         }
     }
+
+    //public void UpdateGraphics()
+    //{
+    //    MainConnectionsManagerSingleton.Instance.ActiveConnections.Where(ac => ac.FromNode == GraphicInstance || ac.ToNode == GraphicInstance).Count() > 2 &&
+    //}
 
     void Update()
     {

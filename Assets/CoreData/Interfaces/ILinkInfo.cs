@@ -65,10 +65,10 @@ namespace Assets.CoreData.Types
         {
             var result = "";
             if (PowerData != null && PowerData.Current > 0)
-                result += $"Power\n {PowerData.Current}A - {PowerData.ConductorData?.Awg ?? "NO"}awg\n";
-
-            if (LineData.Count() > 0)
-                result += $"Signals\n {LineData.Count()}";
+                result += $"Power\n {PowerData.Current.ToString()}A - {PowerData.ConductorData?.Awg ?? "NO"}awg\n";
+            var c = lineData.Count();
+            if (c > 0)
+                result += $"Signals\n {c.ToString()}";
 
             return result;
 

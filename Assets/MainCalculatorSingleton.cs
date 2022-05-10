@@ -20,8 +20,14 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
         connectionConductorData = MaterialDataManager.Instance.harnessDataSO.availableConductorsData.availableConductors.OrderByDescending(ac => float.Parse(ac.Awg)).First(ac => float.Parse(ac.Awg) <= float.Parse(connectionConductorData.Awg));
     }
 
-    public void CalculateEverything()
+    public void CalculateEverything(bool autoRouteToPowerSource)
     {
+
+        if (autoRouteToPowerSource)
+        {
+            AutoRouteToPowerSource();
+        }
+
         ClearAllLinkData();
         Dictionary<IConnectionNode, double> cmaPerLink = CalculateCurrents();
         AssignCMAs(cmaPerLink);
@@ -50,6 +56,80 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
             nodeBase.NodeInfo.CMA = cma;
         }
     }
+    private void AutoRouteToPowerSource()
+    {
+
+        var graphicInstances = GetAllGraphicinstancesWithBasePinnedSO();
+
+        var battGI = graphicInstances.SingleOrDefault(gi => gi.BaseWrapped is ISource isource && isource.Name == BatteryNodeName);
+        var batt = battGI.BaseWrapped as ISource;
+
+
+        //var connectedNodes = MainConnectionsManagerSingleton.Instance.GetNodesConnectedToNodeWithPaths(graphicInstance, out visitedNodesWithPathDict);
+        var connectedNodes = GetNodesConnectedToGraphicInstance(battGI, out var visitedNodesWithPathDict).ToList();
+
+        foreach (var connectedNode in connectedNodes)
+        {
+            var pinnedSOWrapper = connectedNode.BaseWrapped as IBaseNodeWithPinnedSO;
+            var pinnedBaseSo = pinnedSOWrapper.BaseSO as IPinnedObjectSO;
+            var pinArray = pinnedBaseSo.PinConfiguration.PinDataArray;
+
+            var powerPin = pinArray
+                // TODO: Implement locking data
+                //.Where(p => !p.IsLocked )
+                .FirstOrDefault(p => p.PinType == PinTypeEnum.Power);
+
+            if (powerPin != null)
+            {
+                //pinnedSOWrapper.Connections = pinnedSOWrapper.Connections.Select(conn =>
+                //{
+                //    if (conn.PinFromData == powerPin)
+                //    {
+                //        conn.ConnectedNode = batt;
+                //        conn.PinToData = (batt.BaseSO as IPinnedObjectSO).PinConfiguration.PinDataArray.FirstOrDefault();
+                //    };
+
+                //    return conn;
+                //});
+                var connections = pinnedSOWrapper.Connections as IEnumerable<NodeConnectionTo>;
+                var pinToData = (batt.BaseSO as IPinnedObjectSO).PinConfiguration.PinDataArray.FirstOrDefault();
+                //Debug.Log($"Trying to connect pin {fromPinData.Name} to pin {pinToData.Name} of node {node.Name}");
+                if (connections != null && connections.Any(c => c.PinFromData.Equals(powerPin)))
+                {
+                    connections = connections.Select(c =>
+                    {
+                        //Debug.Log($"Connecting pin {c.PinFromData.Name} to pin {c.PinToData.Name} of node {node.Name}");
+                        if (c.PinFromData.Equals(powerPin))
+                        {
+                            c.ConnectedNode = batt;
+                            c.PinToData = pinToData;
+                        }
+
+                        return c;
+                    });
+                }
+                else
+                {
+                    var newConnection = new NodeConnectionTo()
+                    {
+                        PinFromData = powerPin,
+                        ConnectedNode = batt,
+                        PinToData = pinToData
+                    };
+
+                    if (connections != null)
+                        connections = connections.Append(newConnection);
+                    else
+                        connections = new List<NodeConnectionTo>() { newConnection };
+
+                }
+
+                pinnedSOWrapper.Connections = connections;
+
+            }
+        }
+    }
+
 
     public Dictionary<IConnectionNode, double> CalculateCurrents()
     {
@@ -181,7 +261,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
                     )
             .Where(pin =>
                     currentNodeAsBasePinnedSO.Connections
-                        .Any(c => 
+                        .Any(c =>
                         c.PinToData.Equals(pin)
                         && c.ConnectedNode.Id == connectedNodeAsBaseWithPinnedSO.Id)
                     )

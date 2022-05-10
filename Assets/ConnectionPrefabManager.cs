@@ -41,6 +41,7 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
         Debug.Assert(pointNumber >= 2);
         points = Enumerable.Range(0, pointNumber + 1).Select(n => (float)n / (float)pointNumber);
         LineRenderer.positionCount = pointNumber + 1;
+        UpdatePoints();
     }
 
     void Update()
@@ -82,10 +83,26 @@ public class ConnectionPrefabManager : MonoBehaviourGraphicInstanced, IPointerCl
 
     }
 
+    Vector3 prevFromPos;
+    Vector3 prevToPos;
+
     private void AssignLinePointsPositions()
+    {
+        if (
+            (prevFromPos - From.position).sqrMagnitude < 1e-3 &&
+            (prevToPos - To.position).sqrMagnitude < 1e-3)
+            return;
+
+        UpdatePoints();
+    }
+
+    private void UpdatePoints()
     {
         LineRenderer.SetPositions(points.Select(t => Vector3.Lerp(From.position, To.position, t)).ToArray());
         EdgeCollider.SetPoints(points.Select(t => Vector2.Lerp(From.localPosition, To.localPosition, t)).ToList());
+
+        prevFromPos = From.position;
+        prevToPos = To.position;
     }
 
     public void OnPointerClick(PointerEventData eventData)
