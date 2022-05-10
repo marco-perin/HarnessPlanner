@@ -62,6 +62,11 @@ public class UIConnectionPanelManager : MonoBehaviour
 
             selectableNodes = parentPanelManager.connectedNodesList;
 
+            if (thisPinData.PinType == PinTypeEnum.Power)
+            {
+                selectableNodes = selectableNodes.Where(n => n is ISource).ToList();
+            }
+
             harness_options = selectableNodes.Select(node => new TMP_Dropdown.OptionData(node.Name)).Prepend(new("none")).ToList();
 
             harness_node_dd.options = harness_options;

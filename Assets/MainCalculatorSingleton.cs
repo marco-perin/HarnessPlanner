@@ -46,7 +46,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
             if (nodeBase.NodeInfo == null)
                 nodeBase.NodeInfo = new ConnectionNodeInfo();
-            Debug.Log($"Assigning {cma} CMA to node");
+
             nodeBase.NodeInfo.CMA = cma;
         }
     }

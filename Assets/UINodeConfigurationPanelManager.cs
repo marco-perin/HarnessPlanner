@@ -266,24 +266,26 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         return double.TryParse(inValue, out var res) ? res : field;
     }
 
-    internal void SelectPinForNode(IPinData fromPinData, IBaseNodeWithPinnedSO node, IPinData pinToData)
+    internal void SelectPinForNode(IPinData pinFromData, IBaseNodeWithPinnedSO node, IPinData pinToData, bool doNotPropagate = false, IBaseNodeWithPinnedSO nodeToPropagateConnection = null)
     {
 
         Debug.Assert(node != null);
         Debug.Assert(pinToData != null);
 
-        if (graphicInstance.BaseWrapped is not IBaseNodeWithPinnedSO pinnedSo)
+        var pinnedSO = !doNotPropagate ? graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO : nodeToPropagateConnection;
+
+        if (pinnedSO == null)
             return;
 
-        var connections = pinnedSo.Connections as IEnumerable<NodeConnectionTo>;
+        var connections = pinnedSO.Connections as IEnumerable<NodeConnectionTo>;
 
         //Debug.Log($"Trying to connect pin {fromPinData.Name} to pin {pinToData.Name} of node {node.Name}");
-        if (connections != null && connections.Any(c => c.PinFromData.Equals(fromPinData)))
+        if (connections != null && connections.Any(c => c.PinFromData.Equals(pinFromData)))
         {
             connections = connections.Select(c =>
             {
                 //Debug.Log($"Connecting pin {c.PinFromData.Name} to pin {c.PinToData.Name} of node {node.Name}");
-                if (c.PinFromData.Equals(fromPinData))
+                if (c.PinFromData.Equals(pinFromData))
                 {
                     c.ConnectedNode = node;
                     c.PinToData = pinToData;
@@ -296,7 +298,7 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
         {
             var newConnection = new NodeConnectionTo()
             {
-                PinFromData = fromPinData,
+                PinFromData = pinFromData,
                 ConnectedNode = node,
                 PinToData = pinToData
             };
@@ -308,7 +310,12 @@ public class UINodeConfigurationPanelManager : MonoBehaviour
             //connections.
 
         }
-        pinnedSo.Connections = connections;
+        pinnedSO.Connections = connections;
+
+        if (!doNotPropagate)
+        {
+            SelectPinForNode(pinToData, graphicInstance.BaseWrapped as IBaseNodeWithPinnedSO, pinFromData, true, node);
+        }
     }
 
     public void SelectNode(IPinData thisPinData, IBaseNodeWithPinnedSO node, IBaseNodeWithPinnedSO previousSelectedNode)
