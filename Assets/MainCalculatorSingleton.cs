@@ -193,7 +193,22 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
 
             foreach (var connectedPin in validConnectedNodePins)
             {
+                var thisNodeSO = currentNodeAsBasePinnedSO;
+                var currentLookingPin = currentNodeAsBasePinnedSO.Connections.First(c => c.PinToData.Equals(connectedPin)).PinFromData;
+
+                // Check that this node is not yet being counted
                 //Debug.Log($" -- Node {inode.Name} conn {conn.PinFromData.Name}");
+                if (!countedConnections.ContainsKey(thisNodeSO))
+                    countedConnections[thisNodeSO] = new() { currentLookingPin };
+                else
+                {
+                    if (countedConnections[thisNodeSO].Contains(currentLookingPin))
+                        continue;
+
+                    countedConnections[thisNodeSO].Add(currentLookingPin);
+                }
+                
+                // Check that the other node has not been counted
                 if (!countedConnections.ContainsKey(connectedNodeAsBaseWithPinnedSO))
                     countedConnections[connectedNodeAsBaseWithPinnedSO] = new() { connectedPin };
                 else
