@@ -42,11 +42,24 @@ public class GraphicInstanceDeletable : MonoBehaviourGraphicInstanced, IPointerD
 
         Destroy(gameObject);
     }
+    private void SetInfoStatus()
+    {
+        if (isDeleting)
+            InfoPanelManagerSingleton.Instance.SetStatus("Deleting");
+        else
+            InfoPanelManagerSingleton.Instance.ResetStatus();
+    }
+
+    private void SetDeleting(bool deleting)
+    {
+        isDeleting = deleting;
+        SetInfoStatus();
+    }
 
     void Start()
     {
-        InputManager.Instance.AddKeyDownAction(KeyCode.X, () => isDeleting = true);
-        InputManager.Instance.AddKeyDownAction(KeyCode.None, () => isDeleting = false);
+        InputManager.Instance.AddKeyDownAction(KeyCode.X, () => SetDeleting(true));
+        InputManager.Instance.AddKeyDownAction(KeyCode.None, () => SetDeleting(false));
 
     }
 

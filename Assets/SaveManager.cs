@@ -10,6 +10,7 @@ using Assets.GraphicData.Interfaces;
 using Assets.GraphicData.ScriptableObjects;
 using Assets.GraphicData.Types;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class SaveManager : Singleton<SaveManager>
 {
@@ -157,7 +158,10 @@ public class SaveManager : Singleton<SaveManager>
         var sinkPrefabGoTask = await sinkPrefabGoHandle.Task;
 
         if (sinkPrefabGoHandle.Status != UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+        {
+            Addressables.Release(sinkPrefabGoHandle);
             return false;
+        }
 
         (wrapper.BaseWrapped as INode).BaseSO = sinkPrefabGoTask;
 

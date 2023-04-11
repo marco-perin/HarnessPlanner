@@ -23,12 +23,14 @@ public class ConnectibleManager : MonoBehaviourGraphicInstanced, IPointerClickHa
     {
         MainConnectionsManagerSingleton.Instance.ResetConnectionState();
         connecting = true;
+        InfoPanelManagerSingleton.Instance.SetStatus("Connecting");
     }
 
     private void StopConnecting()
     {
         MainConnectionsManagerSingleton.Instance.ResetConnectionState();
         connecting = false;
+        InfoPanelManagerSingleton.Instance.ResetStatus();
     }
 
     public void OnPointerClick(PointerEventData eventData)

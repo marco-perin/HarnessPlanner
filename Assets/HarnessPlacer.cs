@@ -42,28 +42,37 @@ public class HarnessPlacer : MonoBehaviour, IPointerDownHandler
     private void Start()
     {
         InputManager.Instance.AddKeyDownAction(KeyCode.S,
-            () => placing = PlacingType.Sink,
+            () => SetPlacing(PlacingType.Sink),
             true
             );
 
         InputManager.Instance.AddKeyDownAction(KeyCode.P,
-            () => placing = PlacingType.Source,
+            () => SetPlacing(PlacingType.Source),
             true
             );
 
         InputManager.Instance.AddKeyDownAction(KeyCode.N,
-            () => placing = PlacingType.Node,
+            () => SetPlacing(PlacingType.Node),
             true
             );
 
         InputManager.Instance.AddKeyDownAction(KeyCode.D,
-            () => placing = PlacingType.Connector,
+            () => SetPlacing(PlacingType.Connector),
             true
             );
 
         InputManager.Instance.AddKeyDownAction(KeyCode.None,
-            () => placing = PlacingType.None
+            () => SetPlacing(PlacingType.None)
             );
+    }
+
+    private void SetPlacing(PlacingType placingType)
+    {
+        placing = placingType;
+        if (placingType != PlacingType.None)
+            InfoPanelManagerSingleton.Instance.SetStatus("Placing " + placingType.ToString());
+        else
+            InfoPanelManagerSingleton.Instance.ResetStatus();
     }
 
 
