@@ -22,6 +22,8 @@ namespace Assets.CoreData.Types
         {
             Id = node.Id;
             Name = node.Name;
+            // TODO: Understand if it is right to assign this here
+            BaseSOAddressable = node.BaseSOAddressable;
         }
 
         public override INodeSO BaseSO { get => baseSO; set => baseSO = value as TSO; }
@@ -37,7 +39,7 @@ namespace Assets.CoreData.Types
     }
 
     [Serializable]
-    public abstract class BaseNode : INode
+    public abstract class BaseNode : INode, IEquatable<BaseNode>
     {
         [SerializeField] protected string _id;
         [SerializeField] protected string _name;
@@ -58,5 +60,74 @@ namespace Assets.CoreData.Types
         public string Name { get => _name; set => _name = value; }
         public string Id { get => _id; set => _id = value; }
         public abstract TNode Clone<TNode>() where TNode : class, INode;
+
+        public bool Equals(INode other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            // Optimization for a common success case.
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            // If run-time types are not exactly the same, return false.
+            if (this.GetType() != other.GetType())
+            {
+                return false;
+            }
+
+            // Return true if the fields match.
+            // Note that the base class is not invoked because it is
+            // System.Object, which defines Equals as reference equality.
+            return Id == other.Id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                return this.Equals((BaseNode)obj);
+            }
+        }
+
+        public bool Equals(BaseNode other)
+        {
+            return Equals(other as INode);
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = HashCode.Combine(Id, BaseSOAddressable.AssetGUID);
+            return hash;
+        }
+
+        public static bool operator ==(BaseNode lhs, BaseNode rhs)
+        {
+            if (lhs is null)
+            {
+                if (rhs is null)
+                {
+                    return true;
+                }
+
+                // Only the left side is null.
+                return false;
+            }
+
+            // Equals handles case of null on right side.
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(BaseNode lhs, BaseNode rhs) => !(lhs == rhs);
+
     }
 }

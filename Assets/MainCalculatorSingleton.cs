@@ -159,6 +159,7 @@ public class MainCalculatorSingleton : Singleton<MainCalculatorSingleton>
             {
                 if (!currentPerLinkDict.ContainsKey(link))
                     currentPerLinkDict.Add(link, 0);
+                Debug.Assert(currentPerLinkDict.ContainsKey(link));
 
                 currentPerLinkDict[link] += (baseWrapped is ISink sink) ? sink.Consumption : 0;
             }

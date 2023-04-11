@@ -4677,6 +4677,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537548409}
   m_CullTransparentMesh: 1
+--- !u!114 &1545607398 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8216206719949065024, guid: bd5e70f71cadf3b44810dd48ad4e0386, type: 3}
+  m_PrefabInstance: {fileID: 5279201527639855655}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1597073622
 GameObject:
   m_ObjectHideFlags: 0
@@ -6298,6 +6309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -6358,6 +6370,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438454579}
     m_Modifications:
+    - target: {fileID: 8045484422579685288, guid: bd5e70f71cadf3b44810dd48ad4e0386, type: 3}
+      propertyPath: connectionConfigBtn
+      value: 
+      objectReference: {fileID: 1545607398}
     - target: {fileID: 8657222045724797664, guid: bd5e70f71cadf3b44810dd48ad4e0386, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
