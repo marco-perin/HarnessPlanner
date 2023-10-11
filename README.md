@@ -32,7 +32,4 @@ together with some basic signal routing informations (the number of signal carry
 
 An insight into the future is provided by the ECU node, where a picture is provided, but for the time being it is not possible to create a custom node with its image from inside the program.
 
-
 ![screen](Docs/Images/closeup_screen.png)
-
-ss
