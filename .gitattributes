@@ -125,4 +125,4 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-/Assets/TextMesh Pro/** linguist-detectable=false
+/Assets/TextMesh?Pro/** linguist-detectable=false
